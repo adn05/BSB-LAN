@@ -7,3 +7,4 @@
 | # | Document | Phase | État |
 |---|---|---|---|
 | 00 | [00_MISSION.md](00_MISSION.md) | 0 | copie de la feuille de route |
+| 01 | [01_architecture_bsb-lan.md](01_architecture_bsb-lan.md) | 1 | structure, cycle de vie, cmdtbl, configuration |
