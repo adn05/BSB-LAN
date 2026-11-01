@@ -5,6 +5,8 @@
 #   alfea : configuration alfea/config + liste réduite alfea/params (firmware Alféa, lecture seule)
 #   alfea-ecriture : idem, compilé avec ALFEA_ECRITURE (écriture de la liste blanche possible
 #                    après choix du mode d'écriture dans /C ; docs/claude/08 §5.2)
+#   pont : firmware du 2e SuperMini servant de pont USB <-> bus logique pour le simulateur
+#          (alfea/tools/pont_bsb, docs/claude/README_docker.md §3)
 # L'arbre BSB_LAN/ n'est jamais modifié : on compile une copie dans un répertoire temporaire.
 set -eu
 CIBLE="${1:-alfea}"
@@ -12,6 +14,14 @@ DEPOT=/work
 SORTIE="$DEPOT/alfea/build/$CIBLE"
 FQBN="esp32:esp32:esp32c3:PartitionScheme=min_spiffs,CDCOnBoot=cdc"
 SEUIL_POURCENT=85
+
+if [ "$CIBLE" = pont ]; then
+  rm -rf "$SORTIE"
+  mkdir -p "$SORTIE"
+  arduino-cli compile --fqbn "esp32:esp32:esp32c3:CDCOnBoot=cdc" --warnings default --output-dir "$SORTIE"     "$DEPOT/alfea/tools/pont_bsb" 2>&1 | tee "$SORTIE/compile.log"
+  [ -f "$SORTIE/pont_bsb.ino.merged.bin" ] || { echo "ÉCHEC de compilation" >&2; exit 1; }
+  exit 0
+fi
 
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
@@ -32,7 +42,7 @@ case "$CIBLE" in
       cp "$DEPOT/alfea/config/alfea_secrets.h.example" "$TMP/BSB_LAN/alfea_secrets.h"
     fi
     ;;
-  *) echo "cible inconnue : $CIBLE (amont | alfea | alfea-ecriture)" >&2; exit 2 ;;
+  *) echo "cible inconnue : $CIBLE (amont | alfea | alfea-ecriture | pont)" >&2; exit 2 ;;
 esac
 OPTIONS=""
 [ "$CIBLE" = alfea-ecriture ] && OPTIONS="-DALFEA_ECRITURE"
