@@ -221,13 +221,24 @@ def projet(chemin):
 
 
 def main():
+    """Le schéma et le projet, une fois édités dans KiCad, deviennent la référence : on ne les écrase
+    que s'ils n'existent pas (ou avec --schema). Le PCB (placement) est toujours régénéré ; le DRC avec
+    parité vérifie qu'il correspond au schéma."""
     sortie = sys.argv[1]
+    force = '--schema' in sys.argv[2:]
     os.makedirs(sortie, exist_ok=True)
     base = os.path.join(sortie, carte.PROJET)
-    open(base + '.kicad_sch', 'w', encoding='utf-8').write(schema())
-    projet(base + '.kicad_pro')
+    pro_existe = os.path.exists(base + '.kicad_pro')
+    if force or not os.path.exists(base + '.kicad_sch'):
+        open(base + '.kicad_sch', 'w', encoding='utf-8').write(schema())
+    if pro_existe:
+        sauve = open(base + '.kicad_pro', encoding='utf-8').read()
     pcb(base + '.kicad_pcb')
-    print('généré :', base + '.{kicad_pro,kicad_sch,kicad_pcb}')
+    if pro_existe:          # SaveBoard réécrit le .kicad_pro : on restaure celui de KiCad
+        open(base + '.kicad_pro', 'w', encoding='utf-8').write(sauve)
+    else:
+        projet(base + '.kicad_pro')
+    print('généré :', base + '.kicad_pcb')
 
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ et affectation broche -> net. Les broches listées dans `nc` sont non connectée
 PROJET = 'carte_bsb_c3'
 
 # Nets côté bus : BUS_*, côté ESP32 : le reste. Aucun net ne traverse la frontière.
-NETS_BUS = {'CL_P_IN', 'BUS_P', 'BUS_N', 'BUS_R2_OK1', 'BUS_OK1_D1', 'BUS_D1_D2', 'BUS_OK2_C', 'BUS_Q1_B'}
+NETS_BUS = {'CL_P_IN', 'CL_N_IN', 'BUS_P', 'BUS_N', 'BUS_R2_OK1', 'BUS_OK1_D1', 'BUS_OK2_B', 'BUS_Q1_B'}
 
 R0805 = 'Resistor_SMD:R_0805_2012Metric'
 C0805 = 'Capacitor_SMD:C_0805_2012Metric'
@@ -18,7 +18,7 @@ COMPOSANTS = [
     # --- Entrée bus et protections (côté bus)
     dict(ref='J1', lib='Connector:Screw_Terminal_01x02', val='BSB (X86)', fp='TerminalBlock_Phoenix:TerminalBlock_Phoenix_MPT-0,5-2-2.54_1x02_P2.54mm_Horizontal',
          mpn='Phoenix MPT 0,5/2-2,54', sch=(30.48, 63.5), pcb=(103.62, 117.7, 90),
-         pins={'1': 'CL_P_IN', '2': 'BUS_N'}),
+         pins={'1': 'CL_P_IN', '2': 'CL_N_IN'}),
     dict(ref='F1', lib='Device:Polyfuse', val='PTC 0,1 A', fp='Fuse:Fuse_1812_4532Metric', mpn='Bourns MF-MSMF010-2',
          sch=(55.88, 50.8), pcb=(110.5, 104.0, 0), pins={'1': 'CL_P_IN', '2': 'BUS_P'}),
     dict(ref='D3', lib='Device:D_TVS', val='SMAJ18CA', fp='Diode_SMD:D_SMA', mpn='Littelfuse SMAJ18CA',
@@ -27,9 +27,9 @@ COMPOSANTS = [
     dict(ref='R2', lib='Device:R', val='1k5 1206', fp='Resistor_SMD:R_1206_3216Metric', mpn='1,5 kOhm 1 % 1206',
          sch=(99.06, 50.8), pcb=(110.0, 110.0, 90), pins={'1': 'BUS_P', '2': 'BUS_R2_OK1'}),
     dict(ref='D1', lib='Device:LED', val='rouge', fp='LED_SMD:LED_0805_2012Metric', mpn='LED rouge 0805',
-         sch=(114.3, 81.28), pcb=(113.0, 110.5, 90), pins={'1': 'BUS_D1_D2', '2': 'BUS_OK1_D1'}),
+         sch=(114.3, 81.28), pcb=(113.0, 110.5, 90), pins={'1': 'BUS_N', '2': 'BUS_OK1_D1'}),
     dict(ref='D2', lib='Device:D', val='1N4148W', fp='Diode_SMD:D_SOD-123', mpn='1N4148W',
-         sch=(114.3, 96.52), pcb=(116.5, 113.0, 90), pins={'1': 'BUS_N', '2': 'BUS_D1_D2'}),
+         sch=(114.3, 96.52), pcb=(116.5, 113.0, 90), pins={'1': 'CL_N_IN', '2': 'BUS_N'}),
     dict(ref='OK1', lib='Isolator:4N25', val='4N25', fp='Package_DIP:DIP-6_W7.62mm', mpn='Vishay 4N25',
          sch=(144.78, 55.88), pcb=(121.0, 104.5, 0),
          pins={'1': 'BUS_R2_OK1', '2': 'BUS_OK1_D1', '4': 'RX', '5': '+3V3', '6': 'OK1_B'}, nc=['3']),
@@ -49,10 +49,10 @@ COMPOSANTS = [
          sch=(180.34, 152.4), pcb=(131.45, 120.8, 90), pins={'1': 'Q2_C', '2': 'OK2_A'}),
     dict(ref='OK2', lib='Isolator:4N25', val='4N25', fp='Package_DIP:DIP-6_W7.62mm', mpn='Vishay 4N25',
          sch=(144.78, 137.16), pcb=(128.62, 129.08, 180),
-         pins={'1': 'OK2_A', '2': 'GND', '4': 'BUS_Q1_B', '5': 'BUS_OK2_C'}, nc=['3', '6']),
+         pins={'1': 'OK2_A', '2': 'GND', '4': 'BUS_Q1_B', '5': 'BUS_P', '6': 'BUS_OK2_B'}, nc=['3']),
     # --- Émission côté bus
     dict(ref='R1', lib='Device:R', val='330k', fp=R0805, mpn='330 kOhm 1 % 0805',
-         sch=(114.3, 124.46), pcb=(117.0, 121.0, 90), pins={'1': 'BUS_P', '2': 'BUS_OK2_C'}),
+         sch=(114.3, 124.46), pcb=(117.0, 121.0, 90), pins={'1': 'BUS_Q1_B', '2': 'BUS_OK2_B'}),
     dict(ref='R7', lib='Device:R', val='330k', fp=R0805, mpn='330 kOhm 1 % 0805',
          sch=(99.06, 152.4), pcb=(113.0, 126.0, 90), pins={'1': 'BUS_Q1_B', '2': 'BUS_N'}),
     dict(ref='Q1', lib='Transistor_BJT:BC847', val='BC847C', fp='Package_TO_SOT_SMD:SOT-23', mpn='BC847C',
