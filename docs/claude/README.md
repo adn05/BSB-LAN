@@ -17,7 +17,7 @@
 
 ## GATE 1 — synthèse (fin des phases 1, 1 bis et 2)
 
-**Statut : en attente de validation.**
+**Statut : validée le 2026-11-01** (décisions et réponses ci-dessous).
 
 - **Faisabilité : oui, mesurée.** L'amont non modifié compile pour ESP32-C3 (arduino-esp32 3.3.12) : 1 610 749 o de flash (81 % de la partition app) et 65 624 o de RAM statique. Réduction estimée : ≈ 280-300 Ko de flash et ≈ 18 Ko de RAM (05 §3).
 - **Cible** : Atlantic Alféa Extensa Duo A.I. = Siemens **RVS21**, bus **BSB** sur **X86**. Famille et variante probables **211/127** (RVS21.831F/127), à confirmer sur la machine (07 §6.1).
@@ -40,3 +40,25 @@
 - Q6. Lot de SuperMini disponible : LDO ME6211 ou LP5907 ? Version de l'antenne ?
 - Q7. Distance et obstacles entre la PAC (module hydraulique) et le point d'accès WiFi.
 - Q8. Broker MQTT existant (Mosquitto, add-on HA) et version de Home Assistant.
+
+### Décisions de l'utilisateur (GATE 1)
+| # | Décision |
+|---|---|
+| D1 | Carte : **ESP32-C3 SuperMini** retenue (condition RF maintenue avant la GATE 3). |
+| D2 | Outillage : **arduino-cli** comme build de référence, en Docker (PlatformIO non retenu pour l'instant). |
+| D3 | Liste de paramètres : **analyser la liste 211/127 existante, relever les incohérences, puis générer une nouvelle liste** → doc 08a. |
+| D4 | Réduction par **gardes `#if`** dans le code amont (diff minimal). |
+| D5 | **Ajouter le support DHT22** (déjà présent en amont) et prévoir son entrée sur la carte. |
+| D6 | Carte d'interface **à concevoir** (KiCad), optocoupleurs conservés, **alimentation non prélevée sur le bus**. |
+| D7 | `MISSION_ALFEA_EXTENSA.md` supprimé de la racine (copie conservée dans `00_MISSION.md`). |
+
+### Réponses aux questions ouvertes
+| # | Réponse | Conséquence |
+|---|---|---|
+| Q1 | IHM, menu « version logicielle » : **Régulation : RVS21 - 89.006.090** | version applicative Atlantic, différente de la notice R32 (85.002.030). La correspondance avec la version OV (402.6 dans la liste de référence) et avec famille/variante est inconnue : **lecture de 6220-6229 obligatoire à la mise en service** (08a §6) |
+| Q2 | X86 : connecteur **vert 6 broches**, rien de branché, tension non mesurable pour l'instant | cohérent avec l'issue #405 (`B2 M B1 3 2 1`). Mesure obligatoire avant branchement (procédure dans 09 §8) |
+| Q3 | **2 Navilink A59 sans fil**, pas sur X86 | pas d'autre maître sur X86 ; les sondes passent par une liaison radio dont le récepteur n'est pas sur X86 [À VÉRIFIER]. Deux sondes suggèrent deux circuits (CC1 et CC2) : la liste HA inclut CC2 |
+| Q4 | Concevoir notre carte avec KiCad | design dans 09, fichiers KiCad dans `hardware/alfea-esp32c3/` **après la GATE 2** (règle de la mission) |
+| Q5 | Optocoupleurs conservés ; alimentation hors bus ; « alim 5 V de la PAC, sinon chargeur de téléphone » | pas de 5 V documenté sur le RVS21 ; G+ casserait l'isolation. Retenu : **chargeur USB 5 V** par défaut, module rail DIN en option (09 §4) |
+| Q6 | À vérifier (LDO du SuperMini, distance WiFi) | reste ouvert |
+| Q7 | Question non comprise | reformulée dans la synthèse GATE 2 |
