@@ -189,3 +189,9 @@ bool show_unknown = false;
 // Mot de passe de l'AP de secours « BSB-LAN » (WPA2 : au moins 8 caractères), défini dans alfea_secrets.h.
 #define AP_PASSWORD ALFEA_AP_PASSWORD
 static_assert(sizeof(AP_PASSWORD) >= 9, "ALFEA_AP_PASSWORD : au moins 8 caractères (WPA2)");
+
+// Broker Mosquitto local en 1883 : TLS inutile (docs/claude/08 §1.2).
+#define NO_TLS
+// Pas de /QDB : économise la table temporaire de 500 entrées en RAM (/QD reste disponible).
+#undef MAX_HEATINGTBL
+#define MAX_HEATINGTBL 1

@@ -18,6 +18,8 @@
 | E4 | amont (correctif IP de confiance, message AP) | 1 610 807 o | 81 % | 65 624 o | E4 |
 | E4 | alfea + `AP_PASSWORD` | 1 636 573 o | 83 % | 65 680 o | E4 |
 | E4 | alfea-ecriture | 1 636 779 o | 83 % | 65 680 o | E4 |
+| E5 | alfea + `NO_TLS` + `MAX_HEATINGTBL 1` | 1 410 705 o | 71 % | 49 104 o | E5 |
+| E5 | alfea-ecriture | 1 410 911 o | 71 % | 49 104 o | E5 |
 
 ## Décisions et écarts au plan
 
@@ -36,3 +38,4 @@
 | J10 | E4 | correctif du filtre d'IP de confiance **sans garde** (comportement amont modifié) | c'est un bug : avec une seule adresse configurée, personne n'était rejeté (`BSB_LAN/BSB_LAN.ino`, `client_flag`). Table de vérité vérifiée : aucune adresse → accepté ; adresse 1 seule → seul ce client accepté ; deux adresses → l'une ou l'autre. Test HTTP sur carte en E8 |
 | J11 | E4 | le message de débogage de l'AP ne révèle plus le mot de passe configuré | il s'affichait en clair sur la console |
 | J12 | E4 | `static_assert` sur la longueur de `ALFEA_AP_PASSWORD` (≥ 8 caractères) | WPA2 refuse un mot de passe plus court ; l'AP de secours ne démarrerait pas |
+| J13 | E5 | gain mesuré : −225 868 o de flash (−13,8 %) et −16 576 o de RAM | supérieur à l'estimation de 05 §3 (bundle de CA 56 Ko + SSL ≈ 100-120 Ko) : mbedTLS et le client sécurisé partent entièrement ; la RAM correspond à `heating_cmdtbl` (500 × 32 o = 16 000 o) plus les tampons TLS |
