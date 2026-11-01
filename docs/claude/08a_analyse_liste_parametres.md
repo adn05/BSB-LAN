@@ -94,7 +94,7 @@ python3 alfea/tools/analyse_liste.py <liste.h> <dump.txt> BSB_LAN/BSB_LAN_defs.h
 | **I7** | Libellés : 71 libellés partagés, fragments anglais (« Temporarily warmer », « Event message », « Min flow switch consomm »), vocabulaire chaudière (« brûleur », « chaudière ») sur une PAC, coquille « Sous-refrodissement » | cosmétique : le nom d'entité HA contient le numéro de ligne, donc reste unique (04 §2.3) | aucune (diff minimal avec la liste du mainteneur) ; renommage dans HA |
 | **I8** | Mêmes CmdID sous deux numéros : 710/10067, 712/10068, 714/10069, 851/10071, 1610/10070, 7131/10072, 8740/10049 (objets de ligne 0 du dump) | faible : doublerait les lectures si les deux numéros sont journalisés | aucune ; la sélection HA (08 §5) n'en prend qu'un |
 | **I9** | **Provenance** : liste et dump viennent de machines OV 402.6 ; votre IHM affiche « RVS21 - 89.006.090 », valeur qui n'apparaît nulle part dans la liste. BSB-LAN ne retient une entrée que si famille **et** variante correspondent (`BSB_LAN/BSB_LAN.ino:1205`) : si votre régulateur n'est pas 211/127, **les 882 entrées spécifiques seront invisibles** | **bloquante si elle se réalise** | procédure §6 |
-| I10 | [CONSTATÉ par lecture, sans effet ici] `findLine()` parcourt `j < active_cmdtbl_size - 1` (`BSB_LAN/BSB_LAN.ino:1160`) : la **dernière** entrée de la table n'est jamais trouvée. Dans cette liste, c'est 10112 (mode de fonctionnement CC3 en INF, écriture seule) | nulle | à signaler en amont (hors périmètre) |
+| ~~I10~~ | **Retiré après vérification.** J'avais noté que `findLine()` s'arrête à `j < active_cmdtbl_size - 1` (`BSB_LAN/BSB_LAN.ino:1160`) et ne trouverait jamais la dernière entrée. En fait, la table active se termine toujours par la sentinelle `CMD_END` (ligne 65535, `BSB_LAN/BSB_LAN_defs.h:1486`) : la borne est voulue | — | — |
 
 ## 5. Nouvelle liste
 
@@ -127,6 +127,22 @@ Build Docker jetable identique à celui de 05 (arduino-cli, core esp32 3.3.12, `
 - Les 9 ajouts coûtent 592 o.
 - À 86 %, l'image amont avec cette liste **dépasse le seuil de 85 %** fixé en 08 §1.4 : la réduction de la Phase 4 (`NO_TLS`, `NO_LOGGING_FS`…) est donc nécessaire, et non plus seulement souhaitable.
 - Build : image Docker jetable (debian:trixie, arduino-cli, `esp32:esp32@3.3.12`), copie de l'amont hors dépôt, FQBN `esp32:esp32:esp32c3`, `PartitionScheme=min_spiffs,CDCOnBoot=cdc`.
+
+### 5.4 Liste réduite (demande de l'utilisateur après la GATE 2)
+
+**Faut-il garder tous les paramètres du dump ? Non.** BSB-LAN ne peut lire ou écrire que les paramètres présents dans sa table (`cmdtbl`). Ce qui n'y est pas reste inaccessible, mais rien ne casse : le dump `/QD` fonctionne sans la liste. On peut donc ne compiler que ce qui sert.
+
+| Liste | Entrées | Flash (C3) | Écart |
+|---|---|---|---|
+| par défaut de l'amont | 18 | 1 610 749 o (81 %) | référence |
+| complète 211/127 (§5.2) | 912 | 1 697 285 o (86 %) | +85 944 o |
+| **réduite** (`selection_ha.txt`) | **96** | **1 638 533 o (83 %)** | **−58 752 o** par rapport à la complète [MESURÉ] |
+
+- Générée par `gen_custom_defs.py … --selection alfea/params/selection_ha.txt` → `alfea/params/BSB_LAN_custom_defs_ha.h`.
+- Contenu : date/heure (0-3), identification (6220-6229), **programmes horaires** CC1 501-507, CC2 521-527, ECS 561-567, programmes cachés 10020-10033 (à comparer à l'IHM, 08 §5.2), modes et consignes CC1/CC2/ECS, températures, états, compteurs, défauts.
+- Les 28 Ko restants par rapport à la liste par défaut viennent surtout de la table de textes des **codes d'erreur** `E6700_0` (≈ 31 Ko de source, partagée par 6700 et 6701) [ESTIMÉ d'après la taille du source] : elle sert à afficher l'erreur en clair dans HA, je la garde.
+- Les deux listes restent générées : la complète sert au diagnostic (page web, recherche d'un paramètre), la réduite est celle du firmware par défaut. **Ajouter un paramètre = une ligne dans `selection_ha.txt`**, puis régénérer et recompiler.
+- Entrées génériques supprimées par la sélection : 10000-10002, 10018-10019, 10110-10112 (télégrammes INF en écriture seule), ce qui réduit aussi la surface d'écriture.
 
 ## 6. Validation sur votre machine (à la mise en service, en lecture seule)
 
