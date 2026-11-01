@@ -8,3 +8,4 @@
 |---|---|---|---|
 | 00 | [00_MISSION.md](00_MISSION.md) | 0 | copie de la feuille de route |
 | 01 | [01_architecture_bsb-lan.md](01_architecture_bsb-lan.md) | 1 | structure, cycle de vie, cmdtbl, configuration |
+| 02 | [02_protocole_bsb.md](02_protocole_bsb.md) | 1 | couche physique, trames, CRC, BSB/LPB/PPS, Alféa = BSB |
