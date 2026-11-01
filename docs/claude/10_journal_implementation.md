@@ -50,6 +50,7 @@
 | J20 | carte | schéma maître = fichier KiCad retouché par l'utilisateur ; le générateur ne l'écrase plus ; `carte.py` aligné, parité DRC 0. La retouche corrige la commande de Q1 (R1 en série dans le collecteur de OK2 dans ma rev B : niveau bas ≈ 4,6 V à 5 mA de bus) | 09 §2.3 |
 | J21 | carte | routage par **Freerouting 2.1.0** en conteneur, nettoyage des segments en double ou en impasse, plan GND côté ESP32 : DRC 0 toutes sévérités | routage non reproductible au tracé près ; contrôles toujours à 0. À relire avant commande |
 | J23 | carte | **D3 déplacée** entre `BUS_P` et `CL_N_IN`, en amont de D2 (décision de l'utilisateur) ; notes du schéma maître mises à jour. Plaquette : D3 debout au pas de 2,54 mm (D10-E10), Q1, R7, R1, R2 décalés de 2 trous, coupe E9 → E11. ERC 0, DRC 0 toutes sévérités et parité 0 sur les deux cartes | les surtensions positives ne passent plus par D2 (09 §5) |
+| J27 | banc (T2) | **écart 67 / 96 expliqué** : le `/M1!0` de J26 a été lancé alors que la PAC simulée n'était pas identifiée (redémarrage du SuperMini au changement de réseau ; famille 0, n° de série 0). Seules les entrées génériques 255/255 étaient publiées. Après identification : **149 entités**, dont **les 93 lignes distinctes de la liste** (96 entrées, dont 3 doublons 700, 1000 et 1600 en variante 255/255). 56 entités hors liste viennent de paramètres que BSB-LAN ajoute lui-même : 10195-10199 (5, octets d'état génériques), 20000-20006 (7, compteurs internes), 20100 (4, DHT22), 20700-20799 et 20800-20899 (40, valeurs personnalisées non utilisées). Les 67 entités erronées ont été effacées du broker (charge vide retenue). **Correctif `MQTT_DISCOVERY_ON_BOOT`** : discovery publiée une fois par démarrage dès que `my_dev_fam` est connu. Test : discovery entièrement effacée du broker, redémarrage, 149 entités republiées sans action, `CONFORME` | sans le correctif, BSB-LAN ne republie que si le broker a perdu la session persistante (`mqtt_handler.h:464`). Si la PAC ne répond pas au démarrage, la discovery attend l'identification. Filtrage des 45 entités inutiles (10195-10199, 20000-20006, 20700-20899) : proposé, non appliqué |
 | J26 | banc (T2) | **discovery MQTT validée sur le broker de HA** (Mosquitto, HA OS) : après `/M1!0`, 67 entités (66 `sensor`, 1 `binary_sensor`), aucune entité modifiable, `unique_id`, `state_topic` et `availability_topic` présents, statut `online` (`verif_discovery.py --secrets`). Les valeurs du simulateur sont publiées. La discovery n'est pas republiée au démarrage tant que le broker garde la session persistante (`mqtt_handler.h:464`) : `/M1!0` est à lancer une fois, et à relancer après le passage sur la PAC réelle | 67 entités pour 96 entrées de liste : écart non analysé [À VÉRIFIER : sous-entrées d'une même ligne, lignes sans type publiable ?] |
 | J25 | banc (T1) | **boucle pont + simulateur validée** : `QINF` d'identification → `INF` 211/127, `QUR 6224` → `RVS21.831F/127`, `QUR` date et heure → `ANS`. BSB-LAN conclut « device family: 211, device variant: 127 », sans collision, sans aucun `SET`. Panne initiale : les deux fils de signal mettaient IO6 et IO7 du pont à la masse (relevé par `test_broches`) | console : BSB-LAN affiche l'octet 27 de la réponse 6224 à `00` au lieu de `6E`, alors que la trame est acceptée (CRC bon) [À VÉRIFIER : effet d'affichage de la chaîne ?]. SuperMini : GPIO10 à 1 entraîne GPIO7 sous rappel bas, dans un seul sens et sans lien avec le pont [À VÉRIFIER], sans effet sur le bus (GPIO7 en sortie push-pull) |
 | J24 | banc | environnement de flash `alfea/build/venv` (esptool 5.6.0, pyserial 3.5, `alfea/tools/requirements-flash.txt`) et `alfea/tools/flasher.py` ; pont recompilé en 2 Mo (module ESP-C3-32S, 2 Mo mesurés). Pont et SuperMini flashés, images vérifiées par esptool. 1er démarrage : réseau WiFi configuré absent du scan (4 réseaux vus, -69 à -74 dBm), repli sur l'AP `BSB-LAN` 192.168.4.1 | flash hors Docker : USB inaccessible depuis Docker Desktop sans usbipd |
@@ -67,7 +68,7 @@ Principaux postes retirés (d'après `alfea/build/*/taille.txt`) : mbedTLS (`lib
 
 ## Diff sur le code amont
 
-`git diff 41558d24 -- BSB_LAN/` : un seul fichier, `BSB_LAN/BSB_LAN.ino`, **+27 / −4 lignes**.
+`git diff 41558d24 -- BSB_LAN/` : un seul fichier, `BSB_LAN/BSB_LAN.ino`, **+36 / −4 lignes**.
 | Garde ou correctif | Lignes |
 |---|---|
 | `WRITE_WHITELIST` dans `set()` | +11 |
@@ -75,6 +76,7 @@ Principaux postes retirés (d'après `alfea/build/*/taille.txt`) : mbedTLS (`lib
 | `NO_GPIO_URL` (`/G`) | +2 |
 | `AP_PASSWORD` | +3, et 2 lignes remplacées (+2 / −2) |
 | filtre d'IP de confiance | +5 / −2 (commentaire de 2 lignes, condition de 3 lignes au lieu de 2) |
+| `MQTT_DISCOVERY_ON_BOOT` : discovery une fois par démarrage, après identification (J27) | +9 |
 
 Tout le reste est hors de `BSB_LAN/` : `alfea/`, `docker/`, `docs/claude/`.
 

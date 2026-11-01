@@ -190,6 +190,10 @@ bool show_unknown = false;
 #define AP_PASSWORD ALFEA_AP_PASSWORD
 static_assert(sizeof(AP_PASSWORD) >= 9, "ALFEA_AP_PASSWORD : au moins 8 caractères (WPA2)");
 
+// Discovery MQTT republiée à chaque démarrage, dès que la PAC est identifiée (sans cela, BSB-LAN ne la renvoie
+// que si le broker a perdu la session persistante, ou sur /M1!0 ; docs/claude/04 §1.1, journal J27).
+#define MQTT_DISCOVERY_ON_BOOT
+
 // Broker Mosquitto local en 1883 : TLS inutile (docs/claude/08 §1.2).
 #define NO_TLS
 // Pas de /QDB : économise la table temporaire de 500 entrées en RAM (/QD reste disponible).

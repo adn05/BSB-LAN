@@ -7018,6 +7018,15 @@ next_parameter:
 
       mqtt_connect();        //Luposoft, connect to mqtt
       MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
+#ifdef MQTT_DISCOVERY_ON_BOOT
+      // Publish the discovery once per boot, as soon as the heater is identified: mqtt_connect() only does it
+      // when the broker lost the (persistent) session, and a discovery sent before identification is incomplete.
+      static bool boot_discovery_done = false;
+      if (!boot_discovery_done && MQTTPubSubClient->connected() && my_dev_fam != DEV_FAM(DEV_NONE)) {
+        printlnToDebug("Publishing MQTT discovery after boot...");
+        boot_discovery_done = mqtt_send_discovery(true);
+      }
+#endif
 
       if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
         lastMQTTTime = millis();
