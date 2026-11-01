@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "filename": "carte_bsb_c3_tht.kicad_pro",
+    "version": 3
+  },
+  "board": {
+    "design_settings": {
+      "meta": {
+        "version": 2
+      },
+      "defaults": {},
+      "rules": {
+        "min_clearance": 0.3
+      },
+      "rule_severities": {
+        "hole_clearance": "ignore",
+        "copper_edge_clearance": "ignore",
+        "track_dangling": "ignore"
+      }
+    }
+  }
+}
