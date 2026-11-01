@@ -11,3 +11,4 @@
 | 02 | [02_protocole_bsb.md](02_protocole_bsb.md) | 1 | couche physique, trames, CRC, BSB/LPB/PPS, Alféa = BSB |
 | 03 | [03_serveur_web_et_api.md](03_serveur_web_et_api.md) | 1 | routes HTTP, API JSON, sécurité, tri indispensable/supprimable |
 | 04 | [04_integration_home_assistant.md](04_integration_home_assistant.md) | 1 | MQTT, auto-discovery HA, alternatives, recommandation |
+| 06 | [06_carte_interface_bsb.md](06_carte_interface_bsb.md) | 1 bis | adaptateur officiel : étages, calculs, vigilance |
