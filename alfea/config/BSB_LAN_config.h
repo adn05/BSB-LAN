@@ -185,3 +185,7 @@ bool show_unknown = false;
 // pas de pilotage de GPIO par URL (/G).
 #define NO_RAW_TELEGRAMS
 #define NO_GPIO_URL
+
+// Mot de passe de l'AP de secours « BSB-LAN » (WPA2 : au moins 8 caractères), défini dans alfea_secrets.h.
+#define AP_PASSWORD ALFEA_AP_PASSWORD
+static_assert(sizeof(AP_PASSWORD) >= 9, "ALFEA_AP_PASSWORD : au moins 8 caractères (WPA2)");

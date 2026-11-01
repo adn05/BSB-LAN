@@ -15,6 +15,9 @@
 | E3 | amont (gardes inactives : identique à E0) | 1 610 749 o | 81 % | 65 624 o | E3 |
 | E3 | alfea + `NO_RAW_TELEGRAMS`, `NO_GPIO_URL` | 1 636 511 o | 83 % | 65 680 o | E3 |
 | E3 | alfea-ecriture | 1 636 717 o | 83 % | 65 680 o | E3 |
+| E4 | amont (correctif IP de confiance, message AP) | 1 610 807 o | 81 % | 65 624 o | E4 |
+| E4 | alfea + `AP_PASSWORD` | 1 636 573 o | 83 % | 65 680 o | E4 |
+| E4 | alfea-ecriture | 1 636 779 o | 83 % | 65 680 o | E4 |
 
 ## Décisions et écarts au plan
 
@@ -30,3 +33,6 @@
 | J7 | E2 | test fonctionnel de la garde (SET refusé hors liste, accepté dans la liste) reporté au simulateur (E8) | nécessite une carte C3 ; à ce stade, preuve par compilation des deux variantes (+206 o pour la garde) |
 | J8 | E2 | scripts `docker/*.sh` remis en fins de ligne LF | une réécriture sous Windows les avait passés en CRLF (`set: Illegal option -`) ; `docker/.gitattributes` impose LF à l'extraction |
 | J9 | E3 | contrôle dans le binaire : le message « …in order to use /Y command! » est présent dans l'image amont et absent de l'image Alféa | preuve que les routes `/Y` sont retirées ; test HTTP sur carte en E8 |
+| J10 | E4 | correctif du filtre d'IP de confiance **sans garde** (comportement amont modifié) | c'est un bug : avec une seule adresse configurée, personne n'était rejeté (`BSB_LAN/BSB_LAN.ino`, `client_flag`). Table de vérité vérifiée : aucune adresse → accepté ; adresse 1 seule → seul ce client accepté ; deux adresses → l'une ou l'autre. Test HTTP sur carte en E8 |
+| J11 | E4 | le message de débogage de l'AP ne révèle plus le mot de passe configuré | il s'affichait en clair sur la console |
+| J12 | E4 | `static_assert` sur la longueur de `ALFEA_AP_PASSWORD` (≥ 8 caractères) | WPA2 refuse un mot de passe plus court ; l'AP de secours ne démarrerait pas |

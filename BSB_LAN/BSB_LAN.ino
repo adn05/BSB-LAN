@@ -4681,8 +4681,11 @@ void loop() {
 
     IPAddress remoteIP = client.remoteIP();
     // Use the overriden operater for a safe comparison, note, that != is not overriden.
-    if ((trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
-       && (trusted_ip_addr2[0] != 0 && ! (remoteIP == trusted_ip_addr2))) {
+    // Reject if at least one trusted address is set and the client matches none of the set ones
+    // (the former condition let everybody in when only one trusted address was set).
+    if ((trusted_ip_addr[0] != 0 || trusted_ip_addr2[0] != 0)
+       && !(trusted_ip_addr[0] != 0 && remoteIP == trusted_ip_addr)
+       && !(trusted_ip_addr2[0] != 0 && remoteIP == trusted_ip_addr2)) {
           // reject clients from unauthorized IP addresses;
       printFmtToDebug("Rejected access from %d.%d.%d.%d (Trusted 1: %d.%d.%d.%d, Trusted 2: %d.%d.%d.%d.\r\n",
         remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3],
@@ -7679,17 +7682,20 @@ void startLoggingDevice() {
   #endif
 }
 
+#ifndef AP_PASSWORD
+#define AP_PASSWORD "BSB-LPB-PPS-LAN"   // publicly known default, override in BSB_LAN_config.h (at least 8 characters)
+#endif
 void createTemporaryAP () {
 #if defined (ESP32)
   esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
   printlnToDebug("Setting up AP 'BSB-LAN'");
-  WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
+  WiFi.softAP("BSB-LAN", AP_PASSWORD);
   IPAddress t = WiFi.softAPIP();
   localAP = true;
   localAPtimeout = millis();
   esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20
   printFmtToDebug("IP address of BSB-LAN: %d.%d.%d.%d\r\n", t[0], t[1], t[2], t[3]);
-  printlnToDebug("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address.");
+  printlnToDebug("Connect to access point 'BSB-LAN' with the AP password (default 'BSB-LPB-PPS-LAN', see AP_PASSWORD) and open the IP address.");
 #endif
 }
 
