@@ -4844,11 +4844,14 @@ const char S3113P3_0[] PROGMEM = "Energie utilisée rafraîchissement (compteur 
 const char S3113P4_0[] PROGMEM = "Energie utilisée totale (compteur IHM)";
 const char S5057_0[] PROGMEM = "Paramètre ECS 5057 (non documenté, valeur brute)";
 
+// ALFEA : liste blanche d'écriture (alfea/params/ecriture.txt), garde WRITE_WHITELIST de set()
+const float write_whitelist[][2] = {{501, 507.95}, {521, 527.95}, {561, 567.95}, {700, 700.95}, {1000, 1000.95}, {1600, 1600.95}, {710, 710.95}, {712, 712.95}, {1010, 1010.95}, {1012, 1012.95}, {1610, 1610.95}};
+
 PROGMEM_LATE const cmd_t cmdtbl[]={
-{0x053D000B,  VT_DATETIME,        0,     S0,       0,                  NULL,         DEFAULT_FLAG, 255, 255},
-{0x053D000B,  VT_TIME,            1,     S1,       0,                  NULL,         DEFAULT_FLAG, 255, 255},
-{0x053D000B,  VT_DAYMONTH,        2,     S2,       0,                  NULL,         DEFAULT_FLAG, 255, 255},
-{0x053D000B,  VT_YEAR,            3,     S3,       0,                  NULL,         DEFAULT_FLAG, 255, 255},
+{0x053D000B,  VT_DATETIME,        0,     S0,       0,                  NULL,         FL_RONLY, 255, 255},
+{0x053D000B,  VT_TIME,            1,     S1,       0,                  NULL,         FL_RONLY, 255, 255},
+{0x053D000B,  VT_DAYMONTH,        2,     S2,       0,                  NULL,         FL_RONLY, 255, 255},
+{0x053D000B,  VT_YEAR,            3,     S3,       0,                  NULL,         FL_RONLY, 255, 255},
 {0x053D0A8C,  VT_TIMEPROG,        501,   S_WD_1,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0A8D,  VT_TIMEPROG,        502,   S_WD_2,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0A8E,  VT_TIMEPROG,        503,   S_WD_3,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
@@ -4888,16 +4891,16 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D1082,  VT_ENERGY,          3113.4,S3113P4_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
 {0x053D000E,  VT_FP1,             6220,  S6220_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Version du logiciel
 {0x053D1388,  VT_UINT,            6221,  S6221_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Indice de développement
-{0x053D0011,  VT_HOURS,           6222,  S6222_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Heures de fonctionnement
+{0x053D0011,  VT_HOURS,           6222,  S6222_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Heures de fonctionnement
 {0x053D0001,  VT_STRING,          6224,  STR_GI,   0,                  NULL,         FL_RONLY, 255, 255},
 {0x053D0002,  VT_UINT,            6225,  STR_GF,   0,                  NULL,         FL_RONLY, 255, 255},
 {0x053D0003,  VT_UINT,            6226,  STR_GV,   0,                  NULL,         FL_RONLY, 255, 255},
 {0x053D0004,  VT_UINT,            6227,  STR_OV,   0,                  NULL,         FL_RONLY, 255, 255},
-{0x053D0CA0,  VT_UINT10,          6228,  S6228_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Version bootloader
+{0x053D0CA0,  VT_UINT10,          6228,  S6228_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Version bootloader
 {0x053D0092,  VT_FP1,             6229,  S6229_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Version EEPROM
 {0x053D22B1,  VT_ENUM,            6700,  S6700_0,  sizeof(E6700_0),    E6700_0,      FL_RONLY,     211, 127}, // Erreur
 {0x053D22B2,  VT_ENUM,            6701,  S6701_0,  sizeof(E6701_0),    E6701_0,      FL_RONLY,     211, 127}, // Erreur 2
-{0x053D1AC8,  VT_ENUM,            6708,  S6708_0,  sizeof(E6708_0),    E6708_0,      FL_OEM+FL_RONLY, 211, 127}, // Message erreur PAC
+{0x053D1AC8,  VT_ENUM,            6708,  S6708_0,  sizeof(E6708_0),    E6708_0,      FL_RONLY+FL_OEM, 211, 127}, // Message erreur PAC
 {0x053D17C7,  VT_ENUM,            8000,  S8000_0,  sizeof(E8000_0),    E8000_0,      FL_RONLY,     211, 127}, // Etat du circuit de chauffage 1
 {0x053D17C9,  VT_ENUM,            8001,  S8001_0,  sizeof(E8001_0),    E8001_0,      FL_RONLY,     211, 127}, // Etat du circuit de chauffage 2
 {0x053D17CD,  VT_ENUM,            8003,  S8003_0,  sizeof(E8003_0),    E8003_0,      FL_RONLY,     211, 127}, // Etat de l'ECS
@@ -4909,36 +4912,36 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x593D0767,  VT_TEMP,            8411,  S8411_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne pompe à chaleur
 {0x593D052D,  VT_TEMP,            8412,  S8412_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de départ pompe à chaleur
 {0x053D0D2A,  VT_PERCENT_NN,      8413,  S8413_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Modulation compresseur
-{0x593D0897,  VT_HOURS,           8450,  S8450_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Heures de fonctionnement compresseur 1
-{0x593D089B,  VT_DWORD,           8451,  S8451_0,  0,                  NULL,         FL_OEM,       211, 127}, // Compteur de démarrages compresseur 1
+{0x593D0897,  VT_HOURS,           8450,  S8450_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Heures de fonctionnement compresseur 1
+{0x593D089B,  VT_DWORD,           8451,  S8451_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Compteur de démarrages compresseur 1
 {0x053D130F,  VT_LITERPERMIN,     8460,  S8460_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Débit pompe à chaleur
 {0x053D0521,  VT_TEMP,            8700,  S8700_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température extérieure
 {0x2D3D051E,  VT_TEMP,            8740,  S8740_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température ambiante réelle CC1
 {0x2D3D0593,  VT_TEMP,            8741,  S8741_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne température ambiante actuelle CC1
-{0x2D3D05E9,  VT_TEMP,            8742,  S8742_0,  0,                  NULL,         FL_OEM,       211, 127}, // Température modèle d'ambiance CC1
+{0x2D3D05E9,  VT_TEMP,            8742,  S8742_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Température modèle d'ambiance CC1
 {0x213D0518,  VT_TEMP,            8743,  S8743_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de départ circuit de chauffe 1
 {0x213D0667,  VT_TEMP,            8744,  S8744_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne de température de départ résultante CC1
 {0x2E3D051E,  VT_TEMP,            8770,  S8770_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température ambiante actuelle CC 2
 {0x2E3D0593,  VT_TEMP,            8771,  S8771_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne actuelle de température ambiante CC2
-{0x2E3D05E9,  VT_TEMP,            8772,  S8772_0,  0,                  NULL,         FL_OEM,       211, 127}, // Température de modèle d'ambiance CC2
+{0x2E3D05E9,  VT_TEMP,            8772,  S8772_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Température de modèle d'ambiance CC2
 {0x223D0518,  VT_TEMP,            8773,  S8773_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de départ circuit de chauffe 2
 {0x223D0667,  VT_TEMP,            8774,  S8774_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne de température de départ résultante CC2
 {0x053D09AE,  VT_ONOFF,           8821,  S8821_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Etat résistance électrique ECS
 {0x313D052F,  VT_TEMP,            8830,  S8830_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température  mesurée ECS en haut (B3)
 {0x313D074B,  VT_TEMP,            8831,  S8831_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne actuelle de température ECS
 {0x313D0530,  VT_TEMP,            8832,  S8832_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température mesurée d'ECS en bas (B31)
-{0x053D1B4E,  VT_TIMEPROG,        10020, S_WD_1,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B4F,  VT_TIMEPROG,        10021, S_WD_2,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B50,  VT_TIMEPROG,        10022, S_WD_3,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B51,  VT_TIMEPROG,        10023, S_WD_4,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B52,  VT_TIMEPROG,        10024, S_WD_5,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B53,  VT_TIMEPROG,        10025, S_WD_6,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B54,  VT_TIMEPROG,        10026, S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B4E,  VT_TIMEPROG,        10027, S_WD_1,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B4F,  VT_TIMEPROG,        10028, S_WD_2,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B50,  VT_TIMEPROG,        10029, S_WD_3,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B51,  VT_TIMEPROG,        10030, S_WD_4,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B52,  VT_TIMEPROG,        10031, S_WD_5,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B53,  VT_TIMEPROG,        10032, S_WD_6,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B54,  VT_TIMEPROG,        10033, S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
+{0x053D1B4E,  VT_TIMEPROG,        10020, S_WD_1,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B4F,  VT_TIMEPROG,        10021, S_WD_2,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B50,  VT_TIMEPROG,        10022, S_WD_3,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B51,  VT_TIMEPROG,        10023, S_WD_4,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B52,  VT_TIMEPROG,        10024, S_WD_5,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B53,  VT_TIMEPROG,        10025, S_WD_6,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B54,  VT_TIMEPROG,        10026, S_WD_7,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B4E,  VT_TIMEPROG,        10027, S_WD_1,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B4F,  VT_TIMEPROG,        10028, S_WD_2,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B50,  VT_TIMEPROG,        10029, S_WD_3,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B51,  VT_TIMEPROG,        10030, S_WD_4,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B52,  VT_TIMEPROG,        10031, S_WD_5,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B53,  VT_TIMEPROG,        10032, S_WD_6,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B54,  VT_TIMEPROG,        10033, S_WD_7,   0,                  NULL,         FL_RONLY, 211, 127},
 

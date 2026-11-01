@@ -4844,11 +4844,14 @@ const char S3113P3_0[] PROGMEM = "Energie utilisée rafraîchissement (compteur 
 const char S3113P4_0[] PROGMEM = "Energie utilisée totale (compteur IHM)";
 const char S5057_0[] PROGMEM = "Paramètre ECS 5057 (non documenté, valeur brute)";
 
+// ALFEA : liste blanche d'écriture (alfea/params/ecriture.txt), garde WRITE_WHITELIST de set()
+const float write_whitelist[][2] = {{501, 507.95}, {521, 527.95}, {561, 567.95}, {700, 700.95}, {1000, 1000.95}, {1600, 1600.95}, {710, 710.95}, {712, 712.95}, {1010, 1010.95}, {1012, 1012.95}, {1610, 1610.95}};
+
 PROGMEM_LATE const cmd_t cmdtbl[]={
-{0x053D000B,  VT_DATETIME,        0,     S0,       0,                  NULL,         DEFAULT_FLAG, 255, 255},
-{0x053D000B,  VT_TIME,            1,     S1,       0,                  NULL,         DEFAULT_FLAG, 255, 255},
-{0x053D000B,  VT_DAYMONTH,        2,     S2,       0,                  NULL,         DEFAULT_FLAG, 255, 255},
-{0x053D000B,  VT_YEAR,            3,     S3,       0,                  NULL,         DEFAULT_FLAG, 255, 255},
+{0x053D000B,  VT_DATETIME,        0,     S0,       0,                  NULL,         FL_RONLY, 255, 255},
+{0x053D000B,  VT_TIME,            1,     S1,       0,                  NULL,         FL_RONLY, 255, 255},
+{0x053D000B,  VT_DAYMONTH,        2,     S2,       0,                  NULL,         FL_RONLY, 255, 255},
+{0x053D000B,  VT_YEAR,            3,     S3,       0,                  NULL,         FL_RONLY, 255, 255},
 {0x053D0A8C,  VT_TIMEPROG,        501,   S_WD_1,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0A8D,  VT_TIMEPROG,        502,   S_WD_2,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0A8E,  VT_TIMEPROG,        503,   S_WD_3,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
@@ -4856,7 +4859,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0A90,  VT_TIMEPROG,        505,   S_WD_5,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0A91,  VT_TIMEPROG,        506,   S_WD_6,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0A92,  VT_TIMEPROG,        507,   S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D05B2,  VT_YESNO,           516,   S516_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Valeurs par défaut progr. Horaire
+{0x053D05B2,  VT_YESNO,           516,   S516_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Valeurs par défaut progr. Horaire
 {0x063D0A8C,  VT_TIMEPROG,        521,   S_WD_1,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x063D0A8D,  VT_TIMEPROG,        522,   S_WD_2,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x063D0A8E,  VT_TIMEPROG,        523,   S_WD_3,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
@@ -4864,15 +4867,15 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x063D0A90,  VT_TIMEPROG,        525,   S_WD_5,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x063D0A91,  VT_TIMEPROG,        526,   S_WD_6,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x063D0A92,  VT_TIMEPROG,        527,   S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D05B2,  VT_YESNO,           536,   S536_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Valeurs par défaut progr. Horaire
-{0x073D0A8C,  VT_TIMEPROG,        541,   S_WD_1,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D0A8D,  VT_TIMEPROG,        542,   S_WD_2,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D0A8E,  VT_TIMEPROG,        543,   S_WD_3,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D0A8F,  VT_TIMEPROG,        544,   S_WD_4,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D0A90,  VT_TIMEPROG,        545,   S_WD_5,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D0A91,  VT_TIMEPROG,        546,   S_WD_6,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D0A92,  VT_TIMEPROG,        547,   S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D05B2,  VT_YESNO,           556,   S556_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Valeurs par défaut progr. Horaire
+{0x063D05B2,  VT_YESNO,           536,   S536_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Valeurs par défaut progr. Horaire
+{0x073D0A8C,  VT_TIMEPROG,        541,   S_WD_1,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D0A8D,  VT_TIMEPROG,        542,   S_WD_2,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D0A8E,  VT_TIMEPROG,        543,   S_WD_3,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D0A8F,  VT_TIMEPROG,        544,   S_WD_4,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D0A90,  VT_TIMEPROG,        545,   S_WD_5,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D0A91,  VT_TIMEPROG,        546,   S_WD_6,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D0A92,  VT_TIMEPROG,        547,   S_WD_7,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D05B2,  VT_YESNO,           556,   S556_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Valeurs par défaut progr. Horaire
 {0x053D0AA0,  VT_TIMEPROG,        561,   S_WD_1,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0AA1,  VT_TIMEPROG,        562,   S_WD_2,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0AA2,  VT_TIMEPROG,        563,   S_WD_3,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
@@ -4880,456 +4883,456 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0AA4,  VT_TIMEPROG,        565,   S_WD_5,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0AA5,  VT_TIMEPROG,        566,   S_WD_6,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0AA6,  VT_TIMEPROG,        567,   S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D05B3,  VT_YESNO,           576,   S576_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Valeurs par défaut progr. Horaire
-{0x053D0AB4,  VT_TIMEPROG,        601,   S_WD_1,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D0AB5,  VT_TIMEPROG,        602,   S_WD_2,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D0AB6,  VT_TIMEPROG,        603,   S_WD_3,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D0AB7,  VT_TIMEPROG,        604,   S_WD_4,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D0AB8,  VT_TIMEPROG,        605,   S_WD_5,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D0AB9,  VT_TIMEPROG,        606,   S_WD_6,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D0ABA,  VT_TIMEPROG,        607,   S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D082B,  VT_YESNO,           616,   S616_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Valeurs par défaut progr. Horaire
-{0x053D09C4,  VT_VACATIONPROG,    642,   S642_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Début Congé
-{0x053D09C5,  VT_VACATIONPROG,    643,   S_VACEND, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Fin Congé
-{0x2D3D04C2,  VT_ENUM,            648,   S648_0,   sizeof(E648_0),     E648_0,       DEFAULT_FLAG, 211, 127}, // Niveau fonctionnement pendant vacances
-{0x063D09C4,  VT_VACATIONPROG,    652,   S652_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Début Congé
-{0x063D09C5,  VT_VACATIONPROG,    653,   S_VACEND, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Fin Congé
-{0x2E3D04C2,  VT_ENUM,            658,   S658_0,   sizeof(E658_0),     E658_0,       DEFAULT_FLAG, 211, 127}, // Niveau fonctionnement pendant vacances
+{0x053D05B3,  VT_YESNO,           576,   S576_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Valeurs par défaut progr. Horaire
+{0x053D0AB4,  VT_TIMEPROG,        601,   S_WD_1,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D0AB5,  VT_TIMEPROG,        602,   S_WD_2,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D0AB6,  VT_TIMEPROG,        603,   S_WD_3,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D0AB7,  VT_TIMEPROG,        604,   S_WD_4,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D0AB8,  VT_TIMEPROG,        605,   S_WD_5,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D0AB9,  VT_TIMEPROG,        606,   S_WD_6,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D0ABA,  VT_TIMEPROG,        607,   S_WD_7,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D082B,  VT_YESNO,           616,   S616_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Valeurs par défaut progr. Horaire
+{0x053D09C4,  VT_VACATIONPROG,    642,   S642_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Début Congé
+{0x053D09C5,  VT_VACATIONPROG,    643,   S_VACEND, 0,                  NULL,         FL_RONLY, 211, 127}, // Fin Congé
+{0x2D3D04C2,  VT_ENUM,            648,   S648_0,   sizeof(E648_0),     E648_0,       FL_RONLY, 211, 127}, // Niveau fonctionnement pendant vacances
+{0x063D09C4,  VT_VACATIONPROG,    652,   S652_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Début Congé
+{0x063D09C5,  VT_VACATIONPROG,    653,   S_VACEND, 0,                  NULL,         FL_RONLY, 211, 127}, // Fin Congé
+{0x2E3D04C2,  VT_ENUM,            658,   S658_0,   sizeof(E658_0),     E658_0,       FL_RONLY, 211, 127}, // Niveau fonctionnement pendant vacances
 {0x2D3D0574,  VT_ENUM,            700,   S700_0,   sizeof(E700_0),     E700_0,       DEFAULT_FLAG, 211, 127}, // Mode de fonctionnement
 {0x2D3D0574,  VT_ENUM,            700,   S_BA_TEXT,sizeof(E_BA_HK),    E_BA_HK,      DEFAULT_FLAG, 255, 255}, // Mode de fonctionnement
-{0x053D1A83,  VT_ENUM,            701,   S701_0,   sizeof(E701_0),     E701_0,       DEFAULT_FLAG, 211, 127}, // Plus chaud/froid
-{0x053D1A91,  VT_ENUM,            701.1, S701P1_0, sizeof(E701P1_0),   E701P1_0,     DEFAULT_FLAG, 211, 127}, // Temporarily warmer
-{0x053D1A92,  VT_ENUM,            701.2, S701P2_0, sizeof(E701P2_0),   E701P2_0,     DEFAULT_FLAG, 211, 127}, // Temporarily cooler
-{0x053D1AA6,  VT_TEMP,            701.3, S701P3_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // ALFEA #829 : écart de consigne de la dérogation CC1
-{0x053D1AA5,  VT_HOURS_SHORT,     701.4, S701P4_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // ALFEA #829 : durée de la dérogation CC1
+{0x053D1A83,  VT_ENUM,            701,   S701_0,   sizeof(E701_0),     E701_0,       FL_RONLY, 211, 127}, // Plus chaud/froid
+{0x053D1A91,  VT_ENUM,            701.1, S701P1_0, sizeof(E701P1_0),   E701P1_0,     FL_RONLY, 211, 127}, // Temporarily warmer
+{0x053D1A92,  VT_ENUM,            701.2, S701P2_0, sizeof(E701P2_0),   E701P2_0,     FL_RONLY, 211, 127}, // Temporarily cooler
+{0x053D1AA6,  VT_TEMP,            701.3, S701P3_0, 0,                  NULL,         FL_RONLY, 211, 127}, // ALFEA #829 : écart de consigne de la dérogation CC1
+{0x053D1AA5,  VT_HOURS_SHORT,     701.4, S701P4_0, 0,                  NULL,         FL_RONLY, 211, 127}, // ALFEA #829 : durée de la dérogation CC1
 {0x2D3D058E,  VT_TEMP,            710,   S710_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de confort
 {0x2D3D0590,  VT_TEMP,            712,   S712_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne régime REDUIT
-{0x2D3D0592,  VT_TEMP,            714,   S714_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de protection temp. amb. CR1
-{0x2D3D05A5,  VT_TEMP,            716,   S716_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de confort Maximum
-{0x2D3D05F6,  VT_FP02,            720,   S720_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Courbe de chauffe
-{0x2D3D0610,  VT_TEMP,            721,   S721_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Translation de la courbe de chauffe
-{0x2D3D05FD,  VT_TEMP_N,          730,   S730_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Température de commutation été/hiver
-{0x2D3D0640,  VT_TEMP_N,          732,   S732_0,   0,                  NULL,         FL_OEM,       211, 127}, // Limite de chauffe ECO
-{0x053D1214,  VT_YESNO,           733,   S733_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Prolong limite chauff jour
-{0x213D0663,  VT_TEMP,            740,   S740_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Limitation mini de température de départ
-{0x213D0662,  VT_TEMP,            741,   S741_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Limitation maxi de température de départ
-{0x2D3D0603,  VT_PERCENT,         750,   S750_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Influence de la température ambiante
-{0x2D3D0614,  VT_TEMP_N,          760,   S760_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Point de coupure différentiel temp. Ambiante
-{0x2D3D0602,  VT_TEMP_N,          770,   S770_0,   0,                  NULL,         FL_OEM,       211, 127}, // Surélévation consigne d'ambiance
-{0x2D3D05E8,  VT_ENUM,            780,   S780_0,   sizeof(E780_0),     E780_0,       DEFAULT_FLAG, 211, 127}, // Réduction rapide
-{0x2D3D0607,  VT_MINUTES,         790,   S790_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temps de mise en régime maximal
-{0x2D3D0609,  VT_MINUTES,         791,   S791_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Optimisation heure d'arrêt  Anticipation maxi
-{0x2D3D0639,  VT_GRADIENT,        794,   S794_0,   0,                  NULL,         FL_OEM,       211, 127}, // Gradient mise en régime des 2 générateurs
-{0x2D3D059E,  VT_TEMP_N,          800,   S800_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Début relèvement consigne réduite de temp. amb.
-{0x2D3D059D,  VT_TEMP,            801,   S801_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Fin relèvement consigne réduite de temp. amb.
-{0x213D063A,  VT_ONOFF,           810,   S810_0,   sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // Hors-gel installat.pour pompe circuit chauffage
-{0x213D0674,  VT_ONOFF,           820,   S820_0,   sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // Protection contre surchauffe du CC à pompe
-{0x213D065D,  VT_TEMP,            830,   S830_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Surélévation temp. mélangeur circuit de chauffe
-{0x213D065A,  VT_SECONDS_WORD,    834,   S834_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Durée de marche servomoteur circuit de chauffe
-{0x2D3D067B,  VT_ENUM,            850,   S850_0,   sizeof(E850_0),     E850_0,       DEFAULT_FLAG, 211, 127}, // Fonction de séchage dalle
-{0x2D3D068A,  VT_TEMP,            851,   S851_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne manuelle séchage chapes de béton
+{0x2D3D0592,  VT_TEMP,            714,   S714_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Consigne de protection temp. amb. CR1
+{0x2D3D05A5,  VT_TEMP,            716,   S716_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Consigne de confort Maximum
+{0x2D3D05F6,  VT_FP02,            720,   S720_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Courbe de chauffe
+{0x2D3D0610,  VT_TEMP,            721,   S721_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Translation de la courbe de chauffe
+{0x2D3D05FD,  VT_TEMP_N,          730,   S730_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Température de commutation été/hiver
+{0x2D3D0640,  VT_TEMP_N,          732,   S732_0,   0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Limite de chauffe ECO
+{0x053D1214,  VT_YESNO,           733,   S733_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Prolong limite chauff jour
+{0x213D0663,  VT_TEMP,            740,   S740_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Limitation mini de température de départ
+{0x213D0662,  VT_TEMP,            741,   S741_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Limitation maxi de température de départ
+{0x2D3D0603,  VT_PERCENT,         750,   S750_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Influence de la température ambiante
+{0x2D3D0614,  VT_TEMP_N,          760,   S760_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Point de coupure différentiel temp. Ambiante
+{0x2D3D0602,  VT_TEMP_N,          770,   S770_0,   0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Surélévation consigne d'ambiance
+{0x2D3D05E8,  VT_ENUM,            780,   S780_0,   sizeof(E780_0),     E780_0,       FL_RONLY, 211, 127}, // Réduction rapide
+{0x2D3D0607,  VT_MINUTES,         790,   S790_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Temps de mise en régime maximal
+{0x2D3D0609,  VT_MINUTES,         791,   S791_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Optimisation heure d'arrêt  Anticipation maxi
+{0x2D3D0639,  VT_GRADIENT,        794,   S794_0,   0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Gradient mise en régime des 2 générateurs
+{0x2D3D059E,  VT_TEMP_N,          800,   S800_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Début relèvement consigne réduite de temp. amb.
+{0x2D3D059D,  VT_TEMP,            801,   S801_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Fin relèvement consigne réduite de temp. amb.
+{0x213D063A,  VT_ONOFF,           810,   S810_0,   sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // Hors-gel installat.pour pompe circuit chauffage
+{0x213D0674,  VT_ONOFF,           820,   S820_0,   sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // Protection contre surchauffe du CC à pompe
+{0x213D065D,  VT_TEMP,            830,   S830_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Surélévation temp. mélangeur circuit de chauffe
+{0x213D065A,  VT_SECONDS_WORD,    834,   S834_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Durée de marche servomoteur circuit de chauffe
+{0x2D3D067B,  VT_ENUM,            850,   S850_0,   sizeof(E850_0),     E850_0,       FL_RONLY, 211, 127}, // Fonction de séchage dalle
+{0x2D3D068A,  VT_TEMP,            851,   S851_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Consigne manuelle séchage chapes de béton
 {0x2D3D067D,  VT_TEMP,            855,   S855_0,   0,                  NULL,         FL_RONLY,     211, 127}, // Cons. de temp. de départ séchage plancher plâtre
 {0x2D3D0DF2,  VT_BYTE,            856,   S856_0,   0,                  NULL,         FL_RONLY,     211, 127}, // Séchage dalle jour
 {0x213D0B43,  VT_BYTE,            857,   S857_0,   0,                  NULL,         FL_RONLY,     211, 127}, // Jours de séchage accomplis
-{0x053D07BE,  VT_ENUM,            900,   S900_0,   sizeof(E900_0),     E900_0,       DEFAULT_FLAG, 211, 127}, // Commutation de régime
-{0x653D0A26,  VT_ENUM,            901,   S901_0,   sizeof(E901_0),     E901_0,       DEFAULT_FLAG, 211, 127}, // Mode de fonctionnement
-{0x653D0A1A,  VT_TEMP,            902,   S902_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de confort
-{0x653D0A1A,  VT_TEMP,            902.1, S902P1_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne confort temp. ambiante CR1
-{0x653D0A1A,  VT_TEMP,            902.2, S902P2_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne confort temp. ambiante CR1
-{0x653D1943,  VT_TEMP,            903,   S903_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne régime REDUIT
-{0x653D0A80,  VT_TEMP,            904,   S904_0,   0,                  NULL,         FL_OEM,       211, 127}, // Consigne de protection temp. amb. CR1
-{0x653D1944,  VT_TEMP,            905,   S905_0,   0,                  NULL,         FL_OEM,       211, 127}, // Consigne confort minimum
-{0x653D0A20,  VT_TEMP,            908,   S908_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne départ pour temp. ext. 25°C CR1
-{0x653D0A21,  VT_TEMP,            909,   S909_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne départ pour temp. ext. 35°C CR1
-{0x653D0A22,  VT_TEMP_N,          912,   S912_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Limite refroidissement  pour temp. ext. CR 1
-{0x693D0A75,  VT_HOURS_SHORT_N,   913,   S913_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Durée blocage ap chau/rafr
-{0x653D1940,  VT_TEMP_N,          914,   S914_0,   0,                  NULL,         FL_OEM,       211, 127}, // Limite rafraîch journalière
-{0x653D0A25,  VT_TEMP,            918,   S918_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Début compensation d'été pour temp. ext. CR1
-{0x653D0A24,  VT_TEMP,            919,   S919_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Fin compensation d'été pour temp. ext. CR1
-{0x653D0A1B,  VT_TEMP_N,          920,   S920_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Relèvement consigne compens. d'été CR1
-{0x653D0A1E,  VT_TEMP,            923,   S923_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne départ min. pour temp. ext. 25°C CR1
-{0x653D0A1F,  VT_TEMP,            924,   S924_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne départ min. pour temp. ext. 35°C CR1
-{0x653D0A27,  VT_PERCENT,         928,   S928_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Influence de la température ambiante
-{0x653D0A23,  VT_TEMP_N,          932,   S932_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Point de coupure différentiel temp. Ambiante
-{0x653D0B6F,  VT_PERCENT,         933,   S933_0,   0,                  NULL,         FL_OEM,       211, 127}, // Limite froid régulateur circuit refroidissement1
-{0x693D0A70,  VT_ONOFF,           937,   S937_0,   sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // PAG de l'installation pour pompe CR1
-{0x693D0B65,  VT_TEMP,            938,   S938_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Sous-refrodissement vanne mélange CR 1
-{0x693D0A7D,  VT_SECONDS_WORD,    941,   S941_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Durée de marche servomoteur circuit de chauffe
-{0x653D0B69,  VT_YESNO,           963,   S963_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Avec prérégulateur/pompe d'alimentation
-{0x053D0B7A,  VT_ENUM,            969,   S969_0,   sizeof(E969_0),     E969_0,       FL_OEM,       211, 127}, // Commutation de régime
+{0x053D07BE,  VT_ENUM,            900,   S900_0,   sizeof(E900_0),     E900_0,       FL_RONLY, 211, 127}, // Commutation de régime
+{0x653D0A26,  VT_ENUM,            901,   S901_0,   sizeof(E901_0),     E901_0,       FL_RONLY, 211, 127}, // Mode de fonctionnement
+{0x653D0A1A,  VT_TEMP,            902,   S902_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Consigne de confort
+{0x653D0A1A,  VT_TEMP,            902.1, S902P1_0, 0,                  NULL,         FL_RONLY, 211, 127}, // Consigne confort temp. ambiante CR1
+{0x653D0A1A,  VT_TEMP,            902.2, S902P2_0, 0,                  NULL,         FL_RONLY, 211, 127}, // Consigne confort temp. ambiante CR1
+{0x653D1943,  VT_TEMP,            903,   S903_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Consigne régime REDUIT
+{0x653D0A80,  VT_TEMP,            904,   S904_0,   0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Consigne de protection temp. amb. CR1
+{0x653D1944,  VT_TEMP,            905,   S905_0,   0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Consigne confort minimum
+{0x653D0A20,  VT_TEMP,            908,   S908_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Consigne départ pour temp. ext. 25°C CR1
+{0x653D0A21,  VT_TEMP,            909,   S909_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Consigne départ pour temp. ext. 35°C CR1
+{0x653D0A22,  VT_TEMP_N,          912,   S912_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Limite refroidissement  pour temp. ext. CR 1
+{0x693D0A75,  VT_HOURS_SHORT_N,   913,   S913_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Durée blocage ap chau/rafr
+{0x653D1940,  VT_TEMP_N,          914,   S914_0,   0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Limite rafraîch journalière
+{0x653D0A25,  VT_TEMP,            918,   S918_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Début compensation d'été pour temp. ext. CR1
+{0x653D0A24,  VT_TEMP,            919,   S919_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Fin compensation d'été pour temp. ext. CR1
+{0x653D0A1B,  VT_TEMP_N,          920,   S920_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Relèvement consigne compens. d'été CR1
+{0x653D0A1E,  VT_TEMP,            923,   S923_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Consigne départ min. pour temp. ext. 25°C CR1
+{0x653D0A1F,  VT_TEMP,            924,   S924_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Consigne départ min. pour temp. ext. 35°C CR1
+{0x653D0A27,  VT_PERCENT,         928,   S928_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Influence de la température ambiante
+{0x653D0A23,  VT_TEMP_N,          932,   S932_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Point de coupure différentiel temp. Ambiante
+{0x653D0B6F,  VT_PERCENT,         933,   S933_0,   0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Limite froid régulateur circuit refroidissement1
+{0x693D0A70,  VT_ONOFF,           937,   S937_0,   sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // PAG de l'installation pour pompe CR1
+{0x693D0B65,  VT_TEMP,            938,   S938_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Sous-refrodissement vanne mélange CR 1
+{0x693D0A7D,  VT_SECONDS_WORD,    941,   S941_0,   0,                  NULL,         FL_RONLY, 211, 127}, // Durée de marche servomoteur circuit de chauffe
+{0x653D0B69,  VT_YESNO,           963,   S963_0,   sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Avec prérégulateur/pompe d'alimentation
+{0x053D0B7A,  VT_ENUM,            969,   S969_0,   sizeof(E969_0),     E969_0,       FL_RONLY+FL_OEM,       211, 127}, // Commutation de régime
 {0x2E3D0574,  VT_ENUM,            1000,  S1000_0,  sizeof(E1000_0),    E1000_0,      DEFAULT_FLAG, 211, 127}, // Mode de fonctionnement
 {0x2E3D0574,  VT_ENUM,            1000,  S_BA_TEXT,sizeof(E_BA_HK),    E_BA_HK,      DEFAULT_FLAG, 255, 255}, // Mode de fonctionnement
-{0x063D1A83,  VT_ENUM,            1001,  S1001_0,  sizeof(E1001_0),    E1001_0,      DEFAULT_FLAG, 211, 127}, // Plus chaud/froid
-{0x063D1A91,  VT_ENUM,            1001.1,S1001P1_0,sizeof(E1001P1_0),  E1001P1_0,    DEFAULT_FLAG, 211, 127}, // Temporarily warmer
-{0x063D1A92,  VT_ENUM,            1001.2,S1001P2_0,sizeof(E1001P2_0),  E1001P2_0,    DEFAULT_FLAG, 211, 127}, // Temporarily cooler
-{0x063D1AA6,  VT_TEMP,            1001.3,S1001P3_0,0,                  NULL,         DEFAULT_FLAG, 211, 127}, // ALFEA #829 : écart de consigne de la dérogation CC2
-{0x063D1AA5,  VT_HOURS_SHORT,     1001.4,S1001P4_0,0,                  NULL,         DEFAULT_FLAG, 211, 127}, // ALFEA #829 : durée de la dérogation CC2
+{0x063D1A83,  VT_ENUM,            1001,  S1001_0,  sizeof(E1001_0),    E1001_0,      FL_RONLY, 211, 127}, // Plus chaud/froid
+{0x063D1A91,  VT_ENUM,            1001.1,S1001P1_0,sizeof(E1001P1_0),  E1001P1_0,    FL_RONLY, 211, 127}, // Temporarily warmer
+{0x063D1A92,  VT_ENUM,            1001.2,S1001P2_0,sizeof(E1001P2_0),  E1001P2_0,    FL_RONLY, 211, 127}, // Temporarily cooler
+{0x063D1AA6,  VT_TEMP,            1001.3,S1001P3_0,0,                  NULL,         FL_RONLY, 211, 127}, // ALFEA #829 : écart de consigne de la dérogation CC2
+{0x063D1AA5,  VT_HOURS_SHORT,     1001.4,S1001P4_0,0,                  NULL,         FL_RONLY, 211, 127}, // ALFEA #829 : durée de la dérogation CC2
 {0x2E3D058E,  VT_TEMP,            1010,  S1010_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de confort
 {0x2E3D0590,  VT_TEMP,            1012,  S1012_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne régime REDUIT
-{0x2E3D0592,  VT_TEMP,            1014,  S1014_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de protection temp. amb. CR1
-{0x2E3D05A5,  VT_TEMP,            1016,  S1016_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de confort Maximum
-{0x2E3D05F6,  VT_FP02,            1020,  S1020_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Courbe de chauffe
-{0x2E3D0610,  VT_TEMP,            1021,  S1021_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Translation de la courbe de chauffe
-{0x2E3D05FD,  VT_TEMP_N,          1030,  S1030_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Température de commutation été/hiver
-{0x2E3D0640,  VT_TEMP_N,          1032,  S1032_0,  0,                  NULL,         FL_OEM,       211, 127}, // Limite de chauffe ECO
-{0x063D1214,  VT_YESNO,           1033,  S1033_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Prolong limite chauff jour
-{0x223D0663,  VT_TEMP,            1040,  S1040_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Limitation mini de température de départ
-{0x223D0662,  VT_TEMP,            1041,  S1041_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Limitation maxi de température de départ
-{0x2E3D0603,  VT_PERCENT,         1050,  S1050_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Influence de la température ambiante
-{0x2E3D0614,  VT_TEMP_N,          1060,  S1060_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Point de coupure différentiel temp. Ambiante
-{0x2E3D05E8,  VT_ENUM,            1080,  S1080_0,  sizeof(E1080_0),    E1080_0,      DEFAULT_FLAG, 211, 127}, // Réduction rapide
-{0x2E3D0607,  VT_MINUTES,         1090,  S1090_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temps de mise en régime maximal
-{0x2E3D0609,  VT_MINUTES,         1091,  S1091_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Optimisation heure d'arrêt  Anticipation maxi
-{0x2E3D0639,  VT_GRADIENT,        1094,  S1094_0,  0,                  NULL,         FL_OEM,       211, 127}, // Gradient mise en régime des 2 générateurs
-{0x2E3D059E,  VT_TEMP_N,          1100,  S1100_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Début relèvement consigne réduite de temp. amb.
-{0x2E3D059D,  VT_TEMP,            1101,  S1101_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Fin relèvement consigne réduite de temp. amb.
-{0x223D063A,  VT_ONOFF,           1110,  S1110_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // Hors-gel installat.pour pompe circuit chauffage
-{0x223D0674,  VT_ONOFF,           1120,  S1120_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // Protection contre surchauffe du CC à pompe
-{0x223D065D,  VT_TEMP,            1130,  S1130_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Surélévation temp. mélangeur circuit de chauffe
-{0x223D065A,  VT_SECONDS_WORD,    1134,  S1134_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Durée de marche servomoteur circuit de chauffe
-{0x2E3D067B,  VT_ENUM,            1150,  S1150_0,  sizeof(E1150_0),    E1150_0,      DEFAULT_FLAG, 211, 127}, // Fonction de séchage dalle
-{0x2E3D068A,  VT_TEMP,            1151,  S1151_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne manuelle séchage chapes de béton
+{0x2E3D0592,  VT_TEMP,            1014,  S1014_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne de protection temp. amb. CR1
+{0x2E3D05A5,  VT_TEMP,            1016,  S1016_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne de confort Maximum
+{0x2E3D05F6,  VT_FP02,            1020,  S1020_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Courbe de chauffe
+{0x2E3D0610,  VT_TEMP,            1021,  S1021_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Translation de la courbe de chauffe
+{0x2E3D05FD,  VT_TEMP_N,          1030,  S1030_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Température de commutation été/hiver
+{0x2E3D0640,  VT_TEMP_N,          1032,  S1032_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Limite de chauffe ECO
+{0x063D1214,  VT_YESNO,           1033,  S1033_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Prolong limite chauff jour
+{0x223D0663,  VT_TEMP,            1040,  S1040_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Limitation mini de température de départ
+{0x223D0662,  VT_TEMP,            1041,  S1041_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Limitation maxi de température de départ
+{0x2E3D0603,  VT_PERCENT,         1050,  S1050_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Influence de la température ambiante
+{0x2E3D0614,  VT_TEMP_N,          1060,  S1060_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Point de coupure différentiel temp. Ambiante
+{0x2E3D05E8,  VT_ENUM,            1080,  S1080_0,  sizeof(E1080_0),    E1080_0,      FL_RONLY, 211, 127}, // Réduction rapide
+{0x2E3D0607,  VT_MINUTES,         1090,  S1090_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temps de mise en régime maximal
+{0x2E3D0609,  VT_MINUTES,         1091,  S1091_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Optimisation heure d'arrêt  Anticipation maxi
+{0x2E3D0639,  VT_GRADIENT,        1094,  S1094_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Gradient mise en régime des 2 générateurs
+{0x2E3D059E,  VT_TEMP_N,          1100,  S1100_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Début relèvement consigne réduite de temp. amb.
+{0x2E3D059D,  VT_TEMP,            1101,  S1101_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Fin relèvement consigne réduite de temp. amb.
+{0x223D063A,  VT_ONOFF,           1110,  S1110_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // Hors-gel installat.pour pompe circuit chauffage
+{0x223D0674,  VT_ONOFF,           1120,  S1120_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // Protection contre surchauffe du CC à pompe
+{0x223D065D,  VT_TEMP,            1130,  S1130_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Surélévation temp. mélangeur circuit de chauffe
+{0x223D065A,  VT_SECONDS_WORD,    1134,  S1134_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Durée de marche servomoteur circuit de chauffe
+{0x2E3D067B,  VT_ENUM,            1150,  S1150_0,  sizeof(E1150_0),    E1150_0,      FL_RONLY, 211, 127}, // Fonction de séchage dalle
+{0x2E3D068A,  VT_TEMP,            1151,  S1151_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne manuelle séchage chapes de béton
 {0x2E3D0DF2,  VT_BYTE,            1156,  S1156_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Séchage dalle jour
 {0x223D0B43,  VT_BYTE,            1157,  S1157_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Jours de séchage accomplis
-{0x063D07BE,  VT_ENUM,            1200,  S1200_0,  sizeof(E1200_0),    E1200_0,      DEFAULT_FLAG, 211, 127}, // Commutation de régime
-{0x663D0A26,  VT_ENUM,            1201,  S1201_0,  sizeof(E1201_0),    E1201_0,      DEFAULT_FLAG, 211, 127}, // Mode de fonctionnement
-{0x663D0A1A,  VT_TEMP,            1202,  S1202_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de confort
-{0x663D1943,  VT_TEMP,            1203,  S1203_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne régime REDUIT
-{0x663D0A80,  VT_TEMP,            1204,  S1204_0,  0,                  NULL,         FL_OEM,       211, 127}, // Consigne de protection temp. amb. CR1
-{0x663D1944,  VT_TEMP,            1205,  S1205_0,  0,                  NULL,         FL_OEM,       211, 127}, // Consigne confort minimum
-{0x663D0A20,  VT_TEMP,            1208,  S1208_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne départ pour temp. ext. 25°C CR1
-{0x663D0A21,  VT_TEMP,            1209,  S1209_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne départ pour temp. ext. 35°C CR1
-{0x663D0A22,  VT_TEMP_N,          1212,  S1212_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Limite refroidissement  pour temp. ext. CR 1
-{0x6A3D0A75,  VT_HOURS_SHORT_N,   1213,  S1213_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Durée blocage ap chau/rafr
-{0x663D1940,  VT_TEMP_N,          1214,  S1214_0,  0,                  NULL,         FL_OEM,       211, 127}, // Limite rafraîch journalière
-{0x663D0A25,  VT_TEMP,            1218,  S1218_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Début compensation d'été pour temp. ext. CR1
-{0x663D0A24,  VT_TEMP,            1219,  S1219_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Fin compensation d'été pour temp. ext. CR1
-{0x663D0A1B,  VT_TEMP_N,          1220,  S1220_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Relèvement consigne compens. d'été CR1
-{0x663D0A1E,  VT_TEMP,            1223,  S1223_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne départ min. pour temp. ext. 25°C CR1
-{0x663D0A1F,  VT_TEMP,            1224,  S1224_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne départ min. pour temp. ext. 35°C CR1
-{0x663D0A27,  VT_PERCENT,         1228,  S1228_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Influence de la température ambiante
-{0x663D0A23,  VT_TEMP_N,          1232,  S1232_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Point de coupure différentiel temp. Ambiante
-{0x663D0B6F,  VT_PERCENT,         1233,  S1233_0,  0,                  NULL,         FL_OEM,       211, 127}, // Limite froid régulateur circuit refroidissement1
-{0x6A3D0A70,  VT_ONOFF,           1237,  S1237_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // PAG de l'installation pour pompe CR1
-{0x6A3D0B65,  VT_TEMP,            1238,  S1238_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Sous-refrodissement vanne mélange CR 1
-{0x6A3D0A7D,  VT_SECONDS_WORD,    1241,  S1241_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Durée de marche servomoteur circuit de chauffe
-{0x663D0B69,  VT_YESNO,           1263,  S1263_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Avec prérégulateur/pompe d'alimentation
-{0x063D0B7A,  VT_ENUM,            1269,  S1269_0,  sizeof(E1269_0),    E1269_0,      FL_OEM,       211, 127}, // Commutation de régime
-{0x2F3D0574,  VT_ENUM,            1300,  S_BA_TEXT,sizeof(E_BA_HK),    E_BA_HK,      DEFAULT_FLAG, 255, 255}, // Mode de fonctionnement
-{0x073D1A83,  VT_ENUM,            1301,  S1301_0,  sizeof(E1301_0),    E1301_0,      DEFAULT_FLAG, 211, 127}, // Plus chaud/froid
-{0x073D1A91,  VT_ENUM,            1301.1,S1301P1_0,sizeof(E1301P1_0),  E1301P1_0,    DEFAULT_FLAG, 211, 127}, // Temporarily warmer
-{0x073D1A92,  VT_ENUM,            1301.2,S1301P2_0,sizeof(E1301P2_0),  E1301P2_0,    DEFAULT_FLAG, 211, 127}, // Temporarily cooler
+{0x063D07BE,  VT_ENUM,            1200,  S1200_0,  sizeof(E1200_0),    E1200_0,      FL_RONLY, 211, 127}, // Commutation de régime
+{0x663D0A26,  VT_ENUM,            1201,  S1201_0,  sizeof(E1201_0),    E1201_0,      FL_RONLY, 211, 127}, // Mode de fonctionnement
+{0x663D0A1A,  VT_TEMP,            1202,  S1202_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne de confort
+{0x663D1943,  VT_TEMP,            1203,  S1203_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne régime REDUIT
+{0x663D0A80,  VT_TEMP,            1204,  S1204_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Consigne de protection temp. amb. CR1
+{0x663D1944,  VT_TEMP,            1205,  S1205_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Consigne confort minimum
+{0x663D0A20,  VT_TEMP,            1208,  S1208_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne départ pour temp. ext. 25°C CR1
+{0x663D0A21,  VT_TEMP,            1209,  S1209_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne départ pour temp. ext. 35°C CR1
+{0x663D0A22,  VT_TEMP_N,          1212,  S1212_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Limite refroidissement  pour temp. ext. CR 1
+{0x6A3D0A75,  VT_HOURS_SHORT_N,   1213,  S1213_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Durée blocage ap chau/rafr
+{0x663D1940,  VT_TEMP_N,          1214,  S1214_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Limite rafraîch journalière
+{0x663D0A25,  VT_TEMP,            1218,  S1218_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Début compensation d'été pour temp. ext. CR1
+{0x663D0A24,  VT_TEMP,            1219,  S1219_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Fin compensation d'été pour temp. ext. CR1
+{0x663D0A1B,  VT_TEMP_N,          1220,  S1220_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Relèvement consigne compens. d'été CR1
+{0x663D0A1E,  VT_TEMP,            1223,  S1223_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne départ min. pour temp. ext. 25°C CR1
+{0x663D0A1F,  VT_TEMP,            1224,  S1224_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne départ min. pour temp. ext. 35°C CR1
+{0x663D0A27,  VT_PERCENT,         1228,  S1228_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Influence de la température ambiante
+{0x663D0A23,  VT_TEMP_N,          1232,  S1232_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Point de coupure différentiel temp. Ambiante
+{0x663D0B6F,  VT_PERCENT,         1233,  S1233_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Limite froid régulateur circuit refroidissement1
+{0x6A3D0A70,  VT_ONOFF,           1237,  S1237_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // PAG de l'installation pour pompe CR1
+{0x6A3D0B65,  VT_TEMP,            1238,  S1238_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Sous-refrodissement vanne mélange CR 1
+{0x6A3D0A7D,  VT_SECONDS_WORD,    1241,  S1241_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Durée de marche servomoteur circuit de chauffe
+{0x663D0B69,  VT_YESNO,           1263,  S1263_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Avec prérégulateur/pompe d'alimentation
+{0x063D0B7A,  VT_ENUM,            1269,  S1269_0,  sizeof(E1269_0),    E1269_0,      FL_RONLY+FL_OEM,       211, 127}, // Commutation de régime
+{0x2F3D0574,  VT_ENUM,            1300,  S_BA_TEXT,sizeof(E_BA_HK),    E_BA_HK,      FL_RONLY, 255, 255}, // Mode de fonctionnement
+{0x073D1A83,  VT_ENUM,            1301,  S1301_0,  sizeof(E1301_0),    E1301_0,      FL_RONLY, 211, 127}, // Plus chaud/froid
+{0x073D1A91,  VT_ENUM,            1301.1,S1301P1_0,sizeof(E1301P1_0),  E1301P1_0,    FL_RONLY, 211, 127}, // Temporarily warmer
+{0x073D1A92,  VT_ENUM,            1301.2,S1301P2_0,sizeof(E1301P2_0),  E1301P2_0,    FL_RONLY, 211, 127}, // Temporarily cooler
 {0x313D0571,  VT_ENUM,            1600,  S1600_0,  sizeof(E1600_0),    E1600_0,      DEFAULT_FLAG, 211, 127}, // Mode de fonctionnement
 {0x313D0571,  VT_ENUM,            1600,  S_BA_TEXT,sizeof(E_BA_TW),    E_BA_TW,      DEFAULT_FLAG, 255, 255}, // Mode de fonctionnement
-{0x253D1158,  VT_ENUM,            1601,  S1601_0,  sizeof(E1601_0),    E1601_0,      FL_OEM,       211, 127}, // Sélection régime Eco
+{0x253D1158,  VT_ENUM,            1601,  S1601_0,  sizeof(E1601_0),    E1601_0,      FL_RONLY+FL_OEM,       211, 127}, // Sélection régime Eco
 {0x313D06B9,  VT_TEMP,            1610,  S1610_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne nominale de température ECS
-{0x313D06BA,  VT_TEMP,            1612,  S1612_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne réduite de température ECS
-{0x313D06B8,  VT_TEMP,            1614,  S1614_0,  0,                  NULL,         FL_OEM,       211, 127}, // Consigne nominale  max. température ECS
-{0x253D0722,  VT_ENUM,            1620,  S1620_0,  sizeof(E1620_0),    E1620_0,      DEFAULT_FLAG, 211, 127}, // Libération ECS
-{0x313D0721,  VT_ENUM,            1630,  S1630_0,  sizeof(E1630_0),    E1630_0,      FL_OEM,       211, 127}, // Priorité de charge ECS
-{0x313D0759,  VT_ENUM,            1640,  S1640_0,  sizeof(E1640_0),    E1640_0,      DEFAULT_FLAG, 211, 127}, // Fonction antilégionnelle
-{0x313D0738,  VT_BYTE,            1641,  S1641_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Périodicité de la fonction anti-légionelles
-{0x313D075E,  VT_ENUM,            1642,  S1642_0,  sizeof(E1642_0),    E1642_0,      DEFAULT_FLAG, 211, 127}, // Fonction anti-légionelles Jour
-{0x313D075A,  VT_HOUR_MINUTES_N,  1644,  S1644_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Heure de la fonction anti-légionnelles
-{0x313D06BC,  VT_TEMP,            1645,  S1645_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne fonction anti-légionnelle
-{0x313D0496,  VT_MINUTES_WORD_N,  1646,  S1646_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Durée séjour sur consigne fonction légionelle
-{0x313D08AB,  VT_ONOFF,           1647,  S1647_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   DEFAULT_FLAG, 211, 127}, // Fonction. pompe circul .pendant fonction légion.
-{0x313D1294,  VT_TEMP_N,          1648,  S1648_0,  0,                  NULL,         FL_OEM,       211, 127}, // Fonct légionel selon delta T
-{0x253D072E,  VT_ENUM,            1660,  S1660_0,  sizeof(E1660_0),    E1660_0,      DEFAULT_FLAG, 211, 127}, // Libération de la pompe de circulation ECS
-{0x253D0689,  VT_ONOFF,           1661,  S1661_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // Fonct. cyclique pompe de circulation ECS
-{0x253D077E,  VT_TEMP,            1663,  S1663_0,  0,                  NULL,         FL_OEM,       211, 127}, // Consigne circulation ECS
-{0x053D0E84,  VT_ENUM,            1680,  S1680_0,  sizeof(E1680_0),    E1680_0,      FL_OEM,       211, 127}, // Commutation de régime
-{0x293D17BE,  VT_ENUM,            1952,  S1952_0,  sizeof(E1952_0),    E1952_0,      FL_OEM,       211, 127}, // Libération générateur chaud
-{0x2B3D17B0,  VT_ONOFF,           1954,  S1954_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // Req efficacité énergétique
-{0x2B3D0656,  VT_TEMP,            1959,  S1959_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // T° consigne départ
-{0x2B3D0641,  VT_ONOFF,           1960,  S1960_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   DEFAULT_FLAG, 211, 127}, // Protect hors-gel ppe piscine
-{0x2B3D17AF,  VT_YESNO,           1973,  S1973_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Dernière priorité de charge
-{0x2B3D08E5,  VT_YESNO,           1974,  S1974_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Priorité charge ECS
-{0x2B3D08CA,  VT_ONOFF,           1975,  S1975_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // Diminution surtempérature CC 1
-{0x2B3D07C6,  VT_YESNO,           1978,  S1978_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Avec ballon tampon
-{0x2B3D07C7,  VT_YESNO,           1980,  S1980_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Avec prérégulateur/pompe d'alimentation
-{0x493D0555,  VT_TEMP,            2055,  S2055_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne chauffage solaire piscine
-{0x053D0AEA,  VT_TEMP,            2056,  S2056_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne chauffage générateur piscine
-{0x293D17BD,  VT_TEMP,            2057,  S2057_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Delta chauffage générateur
-{0x053D12FD,  VT_ENUM,            2065,  S2065_0,  sizeof(E2065_0),    E2065_0,      DEFAULT_FLAG, 211, 127}, // Priorité charge piscine solaire
-{0x053D0AEB,  VT_TEMP,            2070,  S2070_0,  0,                  NULL,         FL_OEM,       211, 127}, // Température piscine maximum
-{0x053D0828,  VT_YESNO,           2080,  S2080_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Ballon d'accumulation avec intégration solaire
-{0x593D1AB2,  VT_PERCENT,         2776,  S2776_0,  0,                  NULL,         FL_OEM,       211, 127}, // Vitesse de rotation min ECS
-{0x593D1AB3,  VT_PERCENT,         2777,  S2777_0,  0,                  NULL,         FL_OEM,       211, 127}, // Vitesse de rotation max ECS
-{0x593D1AB4,  VT_PERCENT,         2778,  S2778_0,  0,                  NULL,         FL_OEM,       211, 127}, // Vitesse rot. min refroid.
-{0x593D1AB5,  VT_PERCENT,         2779,  S2779_0,  0,                  NULL,         FL_OEM,       211, 127}, // Vitesse rot. max rég. refr
-{0x593D1675,  VT_PERCENT_NN,      2792,  S2792_0,  0,                  NULL,         FL_OEM,       211, 127}, // Vitesse min. de la pompe CC1
-{0x593D1674,  VT_PERCENT_NN,      2793,  S2793_0,  0,                  NULL,         FL_OEM,       211, 127}, // Vitesse max. de la pompe CC1
-{0x593D05CC,  VT_ONOFF,           2800,  S2800_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // Protection hors-gel pompe condenseur
-{0x593D18A0,  VT_SECONDS_WORD,    2802,  S2802_0,  0,                  NULL,         FL_OEM,       211, 127}, // Temps préparation pompe condenseur
-{0x593D18A1,  VT_SECONDS_WORD,    2803,  S2803_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Retard à l'arrêt pompe condenseur
-{0x593D04F1,  VT_MINUTES_SHORT,   2842,  S2842_0,  0,                  NULL,         FL_OEM,       211, 127}, // Temps de marche minimum du compresseur
-{0x593D04F2,  VT_MINUTES_SHORT,   2843,  S2843_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temps d'arrêt minimum du compresseur
-{0x593D05CF,  VT_TEMP,            2844,  S2844_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Température de coupure max. pompe à chaleur
-{0x593D0495,  VT_MINUTES_SHORT,   2862,  S2862_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temps de blocage étage 2
-{0x593D0493,  VT_CELMIN,          2863,  S2863_0,  0,                  NULL,         FL_OEM,       211, 127}, // Intégrale libération étage 2
-{0x593D0494,  VT_CELMIN,          2864,  S2864_0,  0,                  NULL,         FL_OEM,       211, 127}, // Intégrale remise à zéro étage 2
-{0x593D0BA2,  VT_PERCENT_NN,      2870,  S2870_0,  0,                  NULL,         FL_OEM,       211, 127}, // Modulation max compresseur
-{0x593D0BA3,  VT_PERCENT_NN,      2871,  S2871_0,  0,                  NULL,         FL_OEM,       211, 127}, // Modulation min compresseur
-{0x593D14B4,  VT_SECONDS_WORD,    2873,  S2873_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temps de marche modulation compresseur
-{0x053D0D00,  VT_ENUM,            2880,  S2880_0,  sizeof(E2880_0),    E2880_0,      FL_OEM,       211, 127}, // Utilisation résistance électrique départ
-{0x053D0D01,  VT_MINUTES_SHORT,   2881,  S2881_0,  0,                  NULL,         FL_OEM,       211, 127}, // Tps de blocage résistance électrique  départ
-{0x053D0D02,  VT_CELMIN,          2882,  S2882_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Intégrale libération résistance élec départ
-{0x053D0D03,  VT_CELMIN,          2883,  S2883_0,  0,                  NULL,         FL_OEM,       211, 127}, // Intégrale remise à zéro résistance électrique
-{0x593D0D2E,  VT_TEMP_N,          2884,  S2884_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Libération Résist Electr Départ en dessous T°Ext
-{0x593D0D1B,  VT_SECONDS_SHORT,   2895,  S2895_0,  0,                  NULL,         FL_OEM,       211, 127}, // Tempo contrôleur de débit
-{0x593D0D1C,  VT_ENUM,            2896,  S2896_0,  sizeof(E2896_0),    E2896_0,      FL_OEM,       211, 127}, // Surveillance débit évapo active
-{0x053D19ED,  VT_LITERPERHOUR_N,  2899,  S2899_0,  0,                  NULL,         FL_OEM,       211, 127}, // Min flow switch consomm
-{0x593D19B0,  VT_ENUM,            2903,  S2903_0,  sizeof(E2903_0),    E2903_0,      FL_OEM,       211, 127}, // Stratégie libération
-{0x593D19B1,  VT_BYTE10_N,        2904,  S2904_0,  0,                  NULL,         FL_OEM,       211, 127}, // Libération COP
-{0x593D15B3,  VT_ENUM,            2908,  S2908_0,  sizeof(E2908_0),    E2908_0,      FL_OEM,       211, 127}, // Limite T° ext. ac charge ECS
-{0x593D15AF,  VT_TEMP_N,          2909,  S2909_0,  0,                  NULL,         FL_OEM,       211, 127}, // Libération chaud. fioul/gaz en dessous temp.ext.
-{0x593D0CEA,  VT_TEMP_N,          2910,  S2910_0,  0,                  NULL,         FL_OEM,       211, 127}, // Libération  PAC au dessus de TA
-{0x593D0DEE,  VT_MINUTES_SHORT_N, 2915,  S2915_0,  0,                  NULL,         FL_OEM,       211, 127}, // Limitation temps de charge ECS
-{0x593D12F3,  VT_TEMP_N,          2916,  S2916_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temp maxi charge ECS PAC
-{0x253D0DF1,  VT_TEMP,            2917,  S2917_0,  0,                  NULL,         FL_OEM,       211, 127}, // Température coupure charge ECS
-{0x253D0DF0,  VT_PERCENT,         2918,  S2918_0,  0,                  NULL,         FL_OEM,       211, 127}, // Quotient coupure de charge ECS
-{0x253D0F42,  VT_TEMP_N,          2919,  S2919_0,  0,                  NULL,         FL_OEM,       211, 127}, // Diff max interup charg ECS
-{0x593D0DF3,  VT_ENUM,            2920,  S2920_0,  sizeof(E2920_0),    E2920_0,      DEFAULT_FLAG, 211, 127}, // Si verrouillage résistance électrique
-{0x053D1088,  VT_ENUM,            3090,  S3090_0,  sizeof(E3090_0),    E3090_0,      FL_OEM,       211, 127}, // Mesure impulsions chaleur
-{0x053D1089,  VT_ENUM,            3092,  S3092_0,  sizeof(E3092_0),    E3092_0,      FL_OEM,       211, 127}, // Val. impuls. chaleur
-{0x053D108A,  VT_UINT,            3093,  S3093_0,  0,                  NULL,         FL_OEM,       211, 127}, // Val. impuls. chaleur numérat.
-{0x053D108B,  VT_UINT,            3094,  S3094_0,  0,                  NULL,         FL_OEM,       211, 127}, // Val. impuls. chaleur dénom
-{0x053D12B7,  VT_ENUM,            3095,  S3095_0,  sizeof(E3095_0),    E3095_0,      DEFAULT_FLAG, 211, 127}, // Mesure débit calorifique
-{0x053D108C,  VT_LITERPERHOUR_N,  3097,  S3097_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Débit chauffage
-{0x053D108D,  VT_LITERPERHOUR_N,  3098,  S3098_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Débit ECS
-{0x053D108E,  VT_ENUM,            3100,  S3100_0,  sizeof(E3100_0),    E3100_0,      DEFAULT_FLAG, 211, 127}, // Mesure impulsions énergie
-{0x053D108F,  VT_ENUM,            3102,  S3102_0,  sizeof(E3102_0),    E3102_0,      DEFAULT_FLAG, 211, 127}, // Val. impuls mesure énergie
-{0x053D1090,  VT_UINT,            3103,  S3103_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Val. impuls. énerg.numérateur
-{0x053D1091,  VT_UINT,            3104,  S3104_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Val. impuls. énerg. dénominat.
-{0x053D1092,  VT_ENERGY_CONTENT,  3106,  S3106_0,  0,                  NULL,         FL_OEM,       211, 127}, // Gaz : teneur moy. énergie
-{0x053D1093,  VT_POWER_WORD100_N, 3108,  S3108_0,  0,                  NULL,         FL_OEM,       211, 127}, // Puissance él. évaporateur
-{0x053D12B8,  VT_ENUM,            3109,  S3109_0,  sizeof(E3109_0),    E3109_0,      DEFAULT_FLAG, 211, 127}, // Compteur résist élect chauf
+{0x313D06BA,  VT_TEMP,            1612,  S1612_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne réduite de température ECS
+{0x313D06B8,  VT_TEMP,            1614,  S1614_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Consigne nominale  max. température ECS
+{0x253D0722,  VT_ENUM,            1620,  S1620_0,  sizeof(E1620_0),    E1620_0,      FL_RONLY, 211, 127}, // Libération ECS
+{0x313D0721,  VT_ENUM,            1630,  S1630_0,  sizeof(E1630_0),    E1630_0,      FL_RONLY+FL_OEM,       211, 127}, // Priorité de charge ECS
+{0x313D0759,  VT_ENUM,            1640,  S1640_0,  sizeof(E1640_0),    E1640_0,      FL_RONLY, 211, 127}, // Fonction antilégionnelle
+{0x313D0738,  VT_BYTE,            1641,  S1641_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Périodicité de la fonction anti-légionelles
+{0x313D075E,  VT_ENUM,            1642,  S1642_0,  sizeof(E1642_0),    E1642_0,      FL_RONLY, 211, 127}, // Fonction anti-légionelles Jour
+{0x313D075A,  VT_HOUR_MINUTES_N,  1644,  S1644_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Heure de la fonction anti-légionnelles
+{0x313D06BC,  VT_TEMP,            1645,  S1645_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne fonction anti-légionnelle
+{0x313D0496,  VT_MINUTES_WORD_N,  1646,  S1646_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Durée séjour sur consigne fonction légionelle
+{0x313D08AB,  VT_ONOFF,           1647,  S1647_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY, 211, 127}, // Fonction. pompe circul .pendant fonction légion.
+{0x313D1294,  VT_TEMP_N,          1648,  S1648_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Fonct légionel selon delta T
+{0x253D072E,  VT_ENUM,            1660,  S1660_0,  sizeof(E1660_0),    E1660_0,      FL_RONLY, 211, 127}, // Libération de la pompe de circulation ECS
+{0x253D0689,  VT_ONOFF,           1661,  S1661_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // Fonct. cyclique pompe de circulation ECS
+{0x253D077E,  VT_TEMP,            1663,  S1663_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Consigne circulation ECS
+{0x053D0E84,  VT_ENUM,            1680,  S1680_0,  sizeof(E1680_0),    E1680_0,      FL_RONLY+FL_OEM,       211, 127}, // Commutation de régime
+{0x293D17BE,  VT_ENUM,            1952,  S1952_0,  sizeof(E1952_0),    E1952_0,      FL_RONLY+FL_OEM,       211, 127}, // Libération générateur chaud
+{0x2B3D17B0,  VT_ONOFF,           1954,  S1954_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // Req efficacité énergétique
+{0x2B3D0656,  VT_TEMP,            1959,  S1959_0,  0,                  NULL,         FL_RONLY, 211, 127}, // T° consigne départ
+{0x2B3D0641,  VT_ONOFF,           1960,  S1960_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY, 211, 127}, // Protect hors-gel ppe piscine
+{0x2B3D17AF,  VT_YESNO,           1973,  S1973_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Dernière priorité de charge
+{0x2B3D08E5,  VT_YESNO,           1974,  S1974_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Priorité charge ECS
+{0x2B3D08CA,  VT_ONOFF,           1975,  S1975_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // Diminution surtempérature CC 1
+{0x2B3D07C6,  VT_YESNO,           1978,  S1978_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Avec ballon tampon
+{0x2B3D07C7,  VT_YESNO,           1980,  S1980_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Avec prérégulateur/pompe d'alimentation
+{0x493D0555,  VT_TEMP,            2055,  S2055_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne chauffage solaire piscine
+{0x053D0AEA,  VT_TEMP,            2056,  S2056_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne chauffage générateur piscine
+{0x293D17BD,  VT_TEMP,            2057,  S2057_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Delta chauffage générateur
+{0x053D12FD,  VT_ENUM,            2065,  S2065_0,  sizeof(E2065_0),    E2065_0,      FL_RONLY, 211, 127}, // Priorité charge piscine solaire
+{0x053D0AEB,  VT_TEMP,            2070,  S2070_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Température piscine maximum
+{0x053D0828,  VT_YESNO,           2080,  S2080_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Ballon d'accumulation avec intégration solaire
+{0x593D1AB2,  VT_PERCENT,         2776,  S2776_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Vitesse de rotation min ECS
+{0x593D1AB3,  VT_PERCENT,         2777,  S2777_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Vitesse de rotation max ECS
+{0x593D1AB4,  VT_PERCENT,         2778,  S2778_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Vitesse rot. min refroid.
+{0x593D1AB5,  VT_PERCENT,         2779,  S2779_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Vitesse rot. max rég. refr
+{0x593D1675,  VT_PERCENT_NN,      2792,  S2792_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Vitesse min. de la pompe CC1
+{0x593D1674,  VT_PERCENT_NN,      2793,  S2793_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Vitesse max. de la pompe CC1
+{0x593D05CC,  VT_ONOFF,           2800,  S2800_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // Protection hors-gel pompe condenseur
+{0x593D18A0,  VT_SECONDS_WORD,    2802,  S2802_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Temps préparation pompe condenseur
+{0x593D18A1,  VT_SECONDS_WORD,    2803,  S2803_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Retard à l'arrêt pompe condenseur
+{0x593D04F1,  VT_MINUTES_SHORT,   2842,  S2842_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Temps de marche minimum du compresseur
+{0x593D04F2,  VT_MINUTES_SHORT,   2843,  S2843_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temps d'arrêt minimum du compresseur
+{0x593D05CF,  VT_TEMP,            2844,  S2844_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Température de coupure max. pompe à chaleur
+{0x593D0495,  VT_MINUTES_SHORT,   2862,  S2862_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temps de blocage étage 2
+{0x593D0493,  VT_CELMIN,          2863,  S2863_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Intégrale libération étage 2
+{0x593D0494,  VT_CELMIN,          2864,  S2864_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Intégrale remise à zéro étage 2
+{0x593D0BA2,  VT_PERCENT_NN,      2870,  S2870_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Modulation max compresseur
+{0x593D0BA3,  VT_PERCENT_NN,      2871,  S2871_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Modulation min compresseur
+{0x593D14B4,  VT_SECONDS_WORD,    2873,  S2873_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temps de marche modulation compresseur
+{0x053D0D00,  VT_ENUM,            2880,  S2880_0,  sizeof(E2880_0),    E2880_0,      FL_RONLY+FL_OEM,       211, 127}, // Utilisation résistance électrique départ
+{0x053D0D01,  VT_MINUTES_SHORT,   2881,  S2881_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Tps de blocage résistance électrique  départ
+{0x053D0D02,  VT_CELMIN,          2882,  S2882_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Intégrale libération résistance élec départ
+{0x053D0D03,  VT_CELMIN,          2883,  S2883_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Intégrale remise à zéro résistance électrique
+{0x593D0D2E,  VT_TEMP_N,          2884,  S2884_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Libération Résist Electr Départ en dessous T°Ext
+{0x593D0D1B,  VT_SECONDS_SHORT,   2895,  S2895_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Tempo contrôleur de débit
+{0x593D0D1C,  VT_ENUM,            2896,  S2896_0,  sizeof(E2896_0),    E2896_0,      FL_RONLY+FL_OEM,       211, 127}, // Surveillance débit évapo active
+{0x053D19ED,  VT_LITERPERHOUR_N,  2899,  S2899_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Min flow switch consomm
+{0x593D19B0,  VT_ENUM,            2903,  S2903_0,  sizeof(E2903_0),    E2903_0,      FL_RONLY+FL_OEM,       211, 127}, // Stratégie libération
+{0x593D19B1,  VT_BYTE10_N,        2904,  S2904_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Libération COP
+{0x593D15B3,  VT_ENUM,            2908,  S2908_0,  sizeof(E2908_0),    E2908_0,      FL_RONLY+FL_OEM,       211, 127}, // Limite T° ext. ac charge ECS
+{0x593D15AF,  VT_TEMP_N,          2909,  S2909_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Libération chaud. fioul/gaz en dessous temp.ext.
+{0x593D0CEA,  VT_TEMP_N,          2910,  S2910_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Libération  PAC au dessus de TA
+{0x593D0DEE,  VT_MINUTES_SHORT_N, 2915,  S2915_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Limitation temps de charge ECS
+{0x593D12F3,  VT_TEMP_N,          2916,  S2916_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temp maxi charge ECS PAC
+{0x253D0DF1,  VT_TEMP,            2917,  S2917_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Température coupure charge ECS
+{0x253D0DF0,  VT_PERCENT,         2918,  S2918_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Quotient coupure de charge ECS
+{0x253D0F42,  VT_TEMP_N,          2919,  S2919_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Diff max interup charg ECS
+{0x593D0DF3,  VT_ENUM,            2920,  S2920_0,  sizeof(E2920_0),    E2920_0,      FL_RONLY, 211, 127}, // Si verrouillage résistance électrique
+{0x053D1088,  VT_ENUM,            3090,  S3090_0,  sizeof(E3090_0),    E3090_0,      FL_RONLY+FL_OEM,       211, 127}, // Mesure impulsions chaleur
+{0x053D1089,  VT_ENUM,            3092,  S3092_0,  sizeof(E3092_0),    E3092_0,      FL_RONLY+FL_OEM,       211, 127}, // Val. impuls. chaleur
+{0x053D108A,  VT_UINT,            3093,  S3093_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Val. impuls. chaleur numérat.
+{0x053D108B,  VT_UINT,            3094,  S3094_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Val. impuls. chaleur dénom
+{0x053D12B7,  VT_ENUM,            3095,  S3095_0,  sizeof(E3095_0),    E3095_0,      FL_RONLY, 211, 127}, // Mesure débit calorifique
+{0x053D108C,  VT_LITERPERHOUR_N,  3097,  S3097_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Débit chauffage
+{0x053D108D,  VT_LITERPERHOUR_N,  3098,  S3098_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Débit ECS
+{0x053D108E,  VT_ENUM,            3100,  S3100_0,  sizeof(E3100_0),    E3100_0,      FL_RONLY, 211, 127}, // Mesure impulsions énergie
+{0x053D108F,  VT_ENUM,            3102,  S3102_0,  sizeof(E3102_0),    E3102_0,      FL_RONLY, 211, 127}, // Val. impuls mesure énergie
+{0x053D1090,  VT_UINT,            3103,  S3103_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Val. impuls. énerg.numérateur
+{0x053D1091,  VT_UINT,            3104,  S3104_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Val. impuls. énerg. dénominat.
+{0x053D1092,  VT_ENERGY_CONTENT,  3106,  S3106_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Gaz : teneur moy. énergie
+{0x053D1093,  VT_POWER_WORD100_N, 3108,  S3108_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Puissance él. évaporateur
+{0x053D12B8,  VT_ENUM,            3109,  S3109_0,  sizeof(E3109_0),    E3109_0,      FL_RONLY, 211, 127}, // Compteur résist élect chauf
 {0x053D10B3,  VT_STRING,          3110,  S3110_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie
-{0x053D196C,  VT_STRING,          3112,  S3112_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Chaleur absorbée par évap.
+{0x053D196C,  VT_STRING,          3112,  S3112_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Chaleur absorbée par évap.
 {0x053D10B4,  VT_STRING,          3113,  S3113_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée
 {0x053D1094,  VT_ENERGY,          3113.1,S3113P1_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
 {0x053D1095,  VT_ENERGY,          3113.2,S3113P2_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
 {0x053D1B7E,  VT_ENERGY,          3113.3,S3113P3_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
 {0x053D1082,  VT_ENERGY,          3113.4,S3113P4_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
-{0x053D1083,  VT_UINT100_WORD,    3116,  S3116_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // COP
-{0x053D1080,  VT_DATETIME,        3119,  S3119_0,  0,                  NULL,         FL_OEM,       211, 127}, // Jour relève fact. Perf. ann
-{0x053D16B3,  VT_UINT100_WORD_N,  3120,  S3120_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // COP annuel 1
-{0x053D170D,  VT_STRING,          3120.1,S3120P1_0,0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Jour relève 1
+{0x053D1083,  VT_UINT100_WORD,    3116,  S3116_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP
+{0x053D1080,  VT_DATETIME,        3119,  S3119_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Jour relève fact. Perf. ann
+{0x053D16B3,  VT_UINT100_WORD_N,  3120,  S3120_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP annuel 1
+{0x053D170D,  VT_STRING,          3120.1,S3120P1_0,0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Jour relève 1
 {0x053D1721,  VT_STRING,          3121,  S3121_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, chauffag1
 {0x053D172B,  VT_STRING,          3122,  S3122_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, ECS1
 {0x053D1983,  VT_STRING,          3123,  S3123_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Refroidissement fourni 1
 {0x053D1735,  VT_STRING,          3124,  S3124_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée chauffage1
 {0x053D173F,  VT_STRING,          3125,  S3125_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée ECS1
 {0x053D198D,  VT_STRING,          3126,  S3126_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée rafraîch. 1
-{0x053D16B4,  VT_UINT100_WORD_N,  3127,  S3127_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // COP annuel 2
-{0x053D170E,  VT_STRING,          3127.1,S3127P1_0,0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Jour relève 2
+{0x053D16B4,  VT_UINT100_WORD_N,  3127,  S3127_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP annuel 2
+{0x053D170E,  VT_STRING,          3127.1,S3127P1_0,0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Jour relève 2
 {0x053D1722,  VT_STRING,          3128,  S3128_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, chauffage2
 {0x053D172C,  VT_STRING,          3129,  S3129_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, ECS2
 {0x053D1984,  VT_STRING,          3130,  S3130_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Refroidissement fourni 2
 {0x053D1736,  VT_STRING,          3131,  S3131_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée chauffage2
 {0x053D1740,  VT_STRING,          3132,  S3132_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée ECS2
 {0x053D198E,  VT_STRING,          3133,  S3133_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée rafraîch. 2
-{0x053D16B5,  VT_UINT100_WORD_N,  3134,  S3134_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // COP annuel 3
-{0x053D170F,  VT_STRING,          3134.1,S3134P1_0,0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Jour relève 3
+{0x053D16B5,  VT_UINT100_WORD_N,  3134,  S3134_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP annuel 3
+{0x053D170F,  VT_STRING,          3134.1,S3134P1_0,0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Jour relève 3
 {0x053D1723,  VT_STRING,          3135,  S3135_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, chauffage3
 {0x053D172D,  VT_STRING,          3136,  S3136_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, ECS3
 {0x053D1985,  VT_STRING,          3137,  S3137_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Refroidissement fourni 3
 {0x053D1737,  VT_STRING,          3138,  S3138_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée chauffage3
 {0x053D1741,  VT_STRING,          3139,  S3139_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée ECS3
 {0x053D198F,  VT_STRING,          3140,  S3140_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée rafraîch. 3
-{0x053D16B6,  VT_UINT100_WORD_N,  3141,  S3141_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // COP annuel 4
-{0x053D1710,  VT_STRING,          3141.1,S3141P1_0,0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Jour relève 4
+{0x053D16B6,  VT_UINT100_WORD_N,  3141,  S3141_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP annuel 4
+{0x053D1710,  VT_STRING,          3141.1,S3141P1_0,0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Jour relève 4
 {0x053D1724,  VT_STRING,          3142,  S3142_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, chauffage4
 {0x053D172E,  VT_STRING,          3143,  S3143_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, ECS4
 {0x053D1986,  VT_STRING,          3144,  S3144_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Refroidissement fourni 4
 {0x053D1738,  VT_STRING,          3145,  S3145_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée chauffage4
 {0x053D1742,  VT_STRING,          3146,  S3146_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée ECS4
 {0x053D1990,  VT_STRING,          3147,  S3147_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée rafraîch. 4
-{0x053D16B7,  VT_UINT100_WORD_N,  3148,  S3148_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // COP annuel 5
-{0x053D1711,  VT_STRING,          3148.1,S3148P1_0,0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Jour relève 5
+{0x053D16B7,  VT_UINT100_WORD_N,  3148,  S3148_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP annuel 5
+{0x053D1711,  VT_STRING,          3148.1,S3148P1_0,0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Jour relève 5
 {0x053D1725,  VT_STRING,          3149,  S3149_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, chauffage5
 {0x053D172F,  VT_STRING,          3150,  S3150_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, ECS5
 {0x053D1987,  VT_STRING,          3151,  S3151_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Refroidissement fourni 5
 {0x053D1739,  VT_STRING,          3152,  S3152_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée chauffage5
 {0x053D1743,  VT_STRING,          3153,  S3153_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée ECS5
 {0x053D1991,  VT_STRING,          3154,  S3154_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée rafraîch. 5
-{0x053D16B8,  VT_UINT100_WORD_N,  3155,  S3155_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // COP annuel 6
-{0x053D1712,  VT_STRING,          3155.1,S3155P1_0,0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Jour relève 6
+{0x053D16B8,  VT_UINT100_WORD_N,  3155,  S3155_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP annuel 6
+{0x053D1712,  VT_STRING,          3155.1,S3155P1_0,0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Jour relève 6
 {0x053D1726,  VT_STRING,          3156,  S3156_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, chauffage6
 {0x053D1730,  VT_STRING,          3157,  S3157_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, ECS6
 {0x053D1988,  VT_STRING,          3158,  S3158_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Refroidissement fourni 6
 {0x053D173A,  VT_STRING,          3159,  S3159_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée chauffage6
 {0x053D1744,  VT_STRING,          3160,  S3160_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée ECS6
 {0x053D1992,  VT_STRING,          3161,  S3161_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée rafraîch. 6
-{0x053D16B9,  VT_UINT100_WORD_N,  3162,  S3162_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // COP annuel 7
-{0x053D1713,  VT_STRING,          3162.1,S3162P1_0,0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Jour relève 7
+{0x053D16B9,  VT_UINT100_WORD_N,  3162,  S3162_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP annuel 7
+{0x053D1713,  VT_STRING,          3162.1,S3162P1_0,0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Jour relève 7
 {0x053D1727,  VT_STRING,          3163,  S3163_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, chauffage7
 {0x053D1731,  VT_STRING,          3164,  S3164_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, ECS7
 {0x053D1989,  VT_STRING,          3165,  S3165_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Refroidissement fourni 7
 {0x053D173B,  VT_STRING,          3166,  S3166_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée chauffage7
 {0x053D1745,  VT_STRING,          3167,  S3167_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée ECS7
 {0x053D1993,  VT_STRING,          3168,  S3168_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée rafraîch. 7
-{0x053D16BA,  VT_UINT100_WORD_N,  3169,  S3169_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // COP annuel 8
-{0x053D1714,  VT_STRING,          3169.1,S3169P1_0,0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Jour relève 8
+{0x053D16BA,  VT_UINT100_WORD_N,  3169,  S3169_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP annuel 8
+{0x053D1714,  VT_STRING,          3169.1,S3169P1_0,0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Jour relève 8
 {0x053D1728,  VT_STRING,          3170,  S3170_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, chauffage8
 {0x053D1732,  VT_STRING,          3171,  S3171_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, ECS8
 {0x053D198A,  VT_STRING,          3172,  S3172_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Refroidissement fourni 8
 {0x053D173C,  VT_STRING,          3173,  S3173_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée chauffage8
 {0x053D1746,  VT_STRING,          3174,  S3174_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée ECS8
 {0x053D1994,  VT_STRING,          3175,  S3175_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée rafraîch. 8
-{0x053D16BB,  VT_UINT100_WORD_N,  3176,  S3176_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // COP annuel 9
-{0x053D1715,  VT_STRING,          3176.1,S3176P1_0,0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Jour relève 9
+{0x053D16BB,  VT_UINT100_WORD_N,  3176,  S3176_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP annuel 9
+{0x053D1715,  VT_STRING,          3176.1,S3176P1_0,0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Jour relève 9
 {0x053D1729,  VT_STRING,          3177,  S3177_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, chauffage9
 {0x053D1733,  VT_STRING,          3178,  S3178_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, ECS9
 {0x053D198B,  VT_STRING,          3179,  S3179_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Refroidissement fourni 9
 {0x053D173D,  VT_STRING,          3180,  S3180_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée chauffage9
 {0x053D1747,  VT_STRING,          3181,  S3181_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée ECS9
 {0x053D1995,  VT_STRING,          3182,  S3182_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée rafraîch. 9
-{0x053D16BC,  VT_UINT100_WORD_N,  3183,  S3183_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // COP annuel 10
-{0x053D1716,  VT_STRING,          3183.1,S3183P1_0,0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Jour relève 10
+{0x053D16BC,  VT_UINT100_WORD_N,  3183,  S3183_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP annuel 10
+{0x053D1716,  VT_STRING,          3183.1,S3183P1_0,0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Jour relève 10
 {0x053D172A,  VT_STRING,          3184,  S3184_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, chauffag10
 {0x053D1734,  VT_STRING,          3185,  S3185_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie, ECS10
 {0x053D198C,  VT_STRING,          3186,  S3186_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Refroidissement fourni 10
 {0x053D173E,  VT_STRING,          3187,  S3187_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée chauffage10
 {0x053D1748,  VT_STRING,          3188,  S3188_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée ECS10
 {0x053D1996,  VT_STRING,          3189,  S3189_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée rafraîch. 10
-{0x053D1087,  VT_YESNO,           3190,  S3190_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // RAZ mémoire jour rélève
-{0x053D12C0,  VT_ENUM,            3192,  S3192_0,  sizeof(E3192_0),    E3192_0,      FL_OEM,       211, 127}, // Compteur résist élect ECS
-{0x053D12BF,  VT_ENUM,            3193,  S3193_0,  sizeof(E3193_0),    E3193_0,      FL_OEM,       211, 127}, // Compteur résist élect ballon
-{0x053D12C1,  VT_POWER_WORD100,   3195,  S3195_0,  0,                  NULL,         FL_OEM,       211, 127}, // Puissance élect ppe chauff
-{0x053D12C2,  VT_POWER_WORD100,   3196,  S3196_0,  0,                  NULL,         FL_OEM,       211, 127}, // Puissance élect ppe ECS
-{0x053D1B6F,  VT_POWER_WORD100_N, 3197,  S3197_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Puissance elect compresseur
-{0x053D19BA,  VT_UINT_N,          3264,  S3264_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Tarif heures pleines
-{0x053D19BB,  VT_UINT_N,          3265,  S3265_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Tarif hrs creuses/SG dem
-{0x053D19BC,  VT_UINT_N,          3266,  S3266_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Tarif SG imposé
-{0x053D19BD,  VT_UINT_N,          3267,  S3267_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Tarif gaz/fioul
-{0x153D0843,  VT_PERCENT_NN,      3511,  S3511_0,  0,                  NULL,         FL_OEM,       211, 127}, // Bande de puissance, limite inférieure (Pmin)
-{0x153D0844,  VT_PERCENT_NN,      3512,  S3512_0,  0,                  NULL,         FL_OEM,       211, 127}, // Bande de puissance, limite supérieure (Pmax)
-{0x0D3D0942,  VT_CELMIN,          3530,  S3530_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Intégrale libération séquence générateurs
-{0x0D3D0943,  VT_CELMIN,          3531,  S3531_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Intégrale remise à zéro séquence générateurs
-{0x053D0831,  VT_MINUTES_SHORT,   3533,  S3533_0,  0,                  NULL,         FL_OEM,       211, 127}, // Temporisation raccordement générateur séquentiel
-{0x053D0833,  VT_HOURS_WORD_N,    3540,  S3540_0,  0,                  NULL,         FL_OEM,       211, 127}, // Délai avant commutation cascade gén auto
-{0x053D1300,  VT_TEMP,            3690,  S3690_0,  0,                  NULL,         FL_OEM,       211, 127}, // Régl consign chaud principale
-{0x053D11D4,  VT_PERCENT,         3691,  S3691_0,  0,                  NULL,         FL_OEM,       211, 127}, // Limite puiss chaud princip.
-{0x053D11D3,  VT_ENUM,            3692,  S3692_0,  sizeof(E3692_0),    E3692_0,      DEFAULT_FLAG, 211, 127}, // Avec charge ECS
-{0x053D0E66,  VT_ENUM,            3694,  S3694_0,  sizeof(E3694_0),    E3694_0,      FL_OEM,       211, 127}, // Limite T° ext. ac charge ECS
-{0x053D0B5C,  VT_TEMP_N,          3700,  S3700_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Libération chaud. fioul/gaz en dessous temp.ext.
-{0x053D0B5B,  VT_TEMP_N,          3701,  S3701_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Libération  PAC au dessus de TA
-{0x053D0D70,  VT_MINUTES_SHORT,   3705,  S3705_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Tempo arrêt générateur supplémentaire
-{0x053D19C4,  VT_CELMIN_N,        3718,  S3718_0,  0,                  NULL,         FL_OEM,       211, 127}, // Intégrale libération
-{0x053D19C5,  VT_CELMIN_N,        3719,  S3719_0,  0,                  NULL,         FL_OEM,       211, 127}, // Intégrale RAZ
-{0x053D0D6A,  VT_CELMIN_N,        3720,  S3720_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Intégrale enclenchement générateur supplément
-{0x053D11E8,  VT_TEMP_N,          3721,  S3721_0,  0,                  NULL,         FL_OEM,       211, 127}, // Différentiel EN
-{0x053D0D6B,  VT_TEMP,            3722,  S3722_0,  0,                  NULL,         FL_OEM,       211, 127}, // Différentiel arrêt générateur suppl
-{0x053D0D6C,  VT_MINUTES_SHORT_N, 3723,  S3723_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temps blocage générateur supplémentaire
-{0x493D085D,  VT_TEMP,            3810,  S3810_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Différence de température Marche solaire
-{0x493D085C,  VT_TEMP,            3811,  S3811_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Différence de température Arrêt solaire
-{0x493D085A,  VT_TEMP_N,          3812,  S3812_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Température de charge minimale  ballon ECS
-{0x493D0AE7,  VT_TEMP_N,          3818,  S3818_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Température de charge minimale piscine
-{0x493D0AE0,  VT_MINUTES_SHORT_N, 3825,  S3825_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temps de charge priorité relative
-{0x493D0AE1,  VT_MINUTES_SHORT,   3826,  S3826_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temps d'attente priorité relative
-{0x493D0716,  VT_MINUTES_SHORT_N, 3830,  S3830_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Fonction démarrage du collecteur
-{0x493D0719,  VT_SECONDS_SHORT,   3831,  S3831_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temps de marche minimal de la pompe collecteur
-{0x493D0AE4,  VT_HOUR_MINUTES,    3832,  S3832_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Fonction démarrage collecteur EN
-{0x493D0AE5,  VT_HOUR_MINUTES,    3833,  S3833_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Fonction démarrage collecteur Hors
-{0x493D0B12,  VT_GRADIENT_SHORT,  3834,  S3834_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Gradient fonction démarrage collecteur
-{0x493D0860,  VT_TEMP_N,          3840,  S3840_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Température anti-gel capteur solaire
-{0x493D0865,  VT_TEMP_N,          3850,  S3850_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temp. protection contre surchauffe collecteur
-{0x493D0864,  VT_TEMP,            3851,  S3851_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Différentiel temp. prot.  surchauffe collecteur
-{0x493D0551,  VT_TEMP_N,          3860,  S3860_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Température d'évaporation caloporteur
-{0x493D0552,  VT_TEMP,            3861,  S3861_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Différentiel temp. d'évaporation caloporteur
-{0x493D04B1,  VT_PERCENT_NN,      3870,  S3870_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Vitesse min. de la pompe CC1
-{0x493D04B0,  VT_PERCENT_NN,      3871,  S3871_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Vitesse max. de la pompe CC1
-{0x053D0B2F,  VT_TEMP,            4709,  S4709_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne Chauf min charge forcée ballon
-{0x053D0B2E,  VT_TEMP,            4710,  S4710_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne charge forcée accumul chauffage max
-{0x053D05B7,  VT_HOUR_MINUTES_N,  4711,  S4711_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Heure charge forcée ballon tampon
-{0x2D3D05B8,  VT_HOURS_SHORT,     4712,  S4712_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Durée max. charge forcée du ballon tampon
-{0x053D0455,  VT_ENUM,            4720,  S4720_0,  sizeof(E4720_0),    E4720_0,      FL_OEM,       211, 127}, // Blocage automatique des chaudières
-{0x053D0858,  VT_TEMP,            4721,  S4721_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Différentiel blocage automatique du générateur
-{0x053D0857,  VT_TEMP,            4722,  S4722_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Diff.  temp. Tampon/CC jusqu'à libér. Producteur
-{0x053D0A10,  VT_TEMP_N,          4724,  S4724_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temp. min. accumulateur en mode chauffage
-{0x053D1998,  VT_ENUM,            4761,  S4761_0,  sizeof(E4761_0),    E4761_0,      DEFAULT_FLAG, 211, 127}, // Charge forcée par rés élec
-{0x253D072F,  VT_ONOFF,           5012,  S5012_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // Charge forcée ECS
-{0x253D0720,  VT_TEMP,            5020,  S5020_0,  0,                  NULL,         FL_OEM,       211, 127}, // Surélévation consigne de départ ECS
-{0x313D071D,  VT_TEMP,            5024,  S5024_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Différentiel ECS
-{0x253D0731,  VT_MINUTES_WORD_N,  5030,  S5030_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Limitation du temps de charge ECS
-{0x253D08BD,  VT_TEMP,            5055,  S5055_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Temp. refroidissement adiabatique ballon ECS
+{0x053D1087,  VT_YESNO,           3190,  S3190_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // RAZ mémoire jour rélève
+{0x053D12C0,  VT_ENUM,            3192,  S3192_0,  sizeof(E3192_0),    E3192_0,      FL_RONLY+FL_OEM,       211, 127}, // Compteur résist élect ECS
+{0x053D12BF,  VT_ENUM,            3193,  S3193_0,  sizeof(E3193_0),    E3193_0,      FL_RONLY+FL_OEM,       211, 127}, // Compteur résist élect ballon
+{0x053D12C1,  VT_POWER_WORD100,   3195,  S3195_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Puissance élect ppe chauff
+{0x053D12C2,  VT_POWER_WORD100,   3196,  S3196_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Puissance élect ppe ECS
+{0x053D1B6F,  VT_POWER_WORD100_N, 3197,  S3197_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Puissance elect compresseur
+{0x053D19BA,  VT_UINT_N,          3264,  S3264_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Tarif heures pleines
+{0x053D19BB,  VT_UINT_N,          3265,  S3265_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Tarif hrs creuses/SG dem
+{0x053D19BC,  VT_UINT_N,          3266,  S3266_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Tarif SG imposé
+{0x053D19BD,  VT_UINT_N,          3267,  S3267_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Tarif gaz/fioul
+{0x153D0843,  VT_PERCENT_NN,      3511,  S3511_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Bande de puissance, limite inférieure (Pmin)
+{0x153D0844,  VT_PERCENT_NN,      3512,  S3512_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Bande de puissance, limite supérieure (Pmax)
+{0x0D3D0942,  VT_CELMIN,          3530,  S3530_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Intégrale libération séquence générateurs
+{0x0D3D0943,  VT_CELMIN,          3531,  S3531_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Intégrale remise à zéro séquence générateurs
+{0x053D0831,  VT_MINUTES_SHORT,   3533,  S3533_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Temporisation raccordement générateur séquentiel
+{0x053D0833,  VT_HOURS_WORD_N,    3540,  S3540_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Délai avant commutation cascade gén auto
+{0x053D1300,  VT_TEMP,            3690,  S3690_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Régl consign chaud principale
+{0x053D11D4,  VT_PERCENT,         3691,  S3691_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Limite puiss chaud princip.
+{0x053D11D3,  VT_ENUM,            3692,  S3692_0,  sizeof(E3692_0),    E3692_0,      FL_RONLY, 211, 127}, // Avec charge ECS
+{0x053D0E66,  VT_ENUM,            3694,  S3694_0,  sizeof(E3694_0),    E3694_0,      FL_RONLY+FL_OEM,       211, 127}, // Limite T° ext. ac charge ECS
+{0x053D0B5C,  VT_TEMP_N,          3700,  S3700_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Libération chaud. fioul/gaz en dessous temp.ext.
+{0x053D0B5B,  VT_TEMP_N,          3701,  S3701_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Libération  PAC au dessus de TA
+{0x053D0D70,  VT_MINUTES_SHORT,   3705,  S3705_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Tempo arrêt générateur supplémentaire
+{0x053D19C4,  VT_CELMIN_N,        3718,  S3718_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Intégrale libération
+{0x053D19C5,  VT_CELMIN_N,        3719,  S3719_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Intégrale RAZ
+{0x053D0D6A,  VT_CELMIN_N,        3720,  S3720_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Intégrale enclenchement générateur supplément
+{0x053D11E8,  VT_TEMP_N,          3721,  S3721_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Différentiel EN
+{0x053D0D6B,  VT_TEMP,            3722,  S3722_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Différentiel arrêt générateur suppl
+{0x053D0D6C,  VT_MINUTES_SHORT_N, 3723,  S3723_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temps blocage générateur supplémentaire
+{0x493D085D,  VT_TEMP,            3810,  S3810_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Différence de température Marche solaire
+{0x493D085C,  VT_TEMP,            3811,  S3811_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Différence de température Arrêt solaire
+{0x493D085A,  VT_TEMP_N,          3812,  S3812_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Température de charge minimale  ballon ECS
+{0x493D0AE7,  VT_TEMP_N,          3818,  S3818_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Température de charge minimale piscine
+{0x493D0AE0,  VT_MINUTES_SHORT_N, 3825,  S3825_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temps de charge priorité relative
+{0x493D0AE1,  VT_MINUTES_SHORT,   3826,  S3826_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temps d'attente priorité relative
+{0x493D0716,  VT_MINUTES_SHORT_N, 3830,  S3830_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Fonction démarrage du collecteur
+{0x493D0719,  VT_SECONDS_SHORT,   3831,  S3831_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temps de marche minimal de la pompe collecteur
+{0x493D0AE4,  VT_HOUR_MINUTES,    3832,  S3832_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Fonction démarrage collecteur EN
+{0x493D0AE5,  VT_HOUR_MINUTES,    3833,  S3833_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Fonction démarrage collecteur Hors
+{0x493D0B12,  VT_GRADIENT_SHORT,  3834,  S3834_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Gradient fonction démarrage collecteur
+{0x493D0860,  VT_TEMP_N,          3840,  S3840_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Température anti-gel capteur solaire
+{0x493D0865,  VT_TEMP_N,          3850,  S3850_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temp. protection contre surchauffe collecteur
+{0x493D0864,  VT_TEMP,            3851,  S3851_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Différentiel temp. prot.  surchauffe collecteur
+{0x493D0551,  VT_TEMP_N,          3860,  S3860_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Température d'évaporation caloporteur
+{0x493D0552,  VT_TEMP,            3861,  S3861_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Différentiel temp. d'évaporation caloporteur
+{0x493D04B1,  VT_PERCENT_NN,      3870,  S3870_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Vitesse min. de la pompe CC1
+{0x493D04B0,  VT_PERCENT_NN,      3871,  S3871_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Vitesse max. de la pompe CC1
+{0x053D0B2F,  VT_TEMP,            4709,  S4709_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne Chauf min charge forcée ballon
+{0x053D0B2E,  VT_TEMP,            4710,  S4710_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne charge forcée accumul chauffage max
+{0x053D05B7,  VT_HOUR_MINUTES_N,  4711,  S4711_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Heure charge forcée ballon tampon
+{0x2D3D05B8,  VT_HOURS_SHORT,     4712,  S4712_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Durée max. charge forcée du ballon tampon
+{0x053D0455,  VT_ENUM,            4720,  S4720_0,  sizeof(E4720_0),    E4720_0,      FL_RONLY+FL_OEM,       211, 127}, // Blocage automatique des chaudières
+{0x053D0858,  VT_TEMP,            4721,  S4721_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Différentiel blocage automatique du générateur
+{0x053D0857,  VT_TEMP,            4722,  S4722_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Diff.  temp. Tampon/CC jusqu'à libér. Producteur
+{0x053D0A10,  VT_TEMP_N,          4724,  S4724_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temp. min. accumulateur en mode chauffage
+{0x053D1998,  VT_ENUM,            4761,  S4761_0,  sizeof(E4761_0),    E4761_0,      FL_RONLY, 211, 127}, // Charge forcée par rés élec
+{0x253D072F,  VT_ONOFF,           5012,  S5012_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // Charge forcée ECS
+{0x253D0720,  VT_TEMP,            5020,  S5020_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Surélévation consigne de départ ECS
+{0x313D071D,  VT_TEMP,            5024,  S5024_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Différentiel ECS
+{0x253D0731,  VT_MINUTES_WORD_N,  5030,  S5030_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Limitation du temps de charge ECS
+{0x253D08BD,  VT_TEMP,            5055,  S5055_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temp. refroidissement adiabatique ballon ECS
 {0x313D0714,  VT_BYTE,            5057,  S5057_0,  0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA : objet du dump absent de la liste
-{0x253D0688,  VT_ENUM,            5061,  S5061_0,  sizeof(E5061_0),    E5061_0,      DEFAULT_FLAG, 211, 127}, // Libération résistance électrique ECS
-{0x313D08AA,  VT_ONOFF,           5070,  S5070_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM,       211, 127}, // Push automatique ECS
-{0x313D0573,  VT_ENUM,            5072,  S5072_0,  sizeof(E5072_0),    E5072_0,      DEFAULT_FLAG, 211, 127}, // Forçage ECS
-{0x253D0A11,  VT_YESNO,           5093,  S5093_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Ballon d'accumulation avec intégration solaire
-{0x053D0712,  VT_BYTE,            5700,  S5700_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Schéma d'installation Préréglage
+{0x253D0688,  VT_ENUM,            5061,  S5061_0,  sizeof(E5061_0),    E5061_0,      FL_RONLY, 211, 127}, // Libération résistance électrique ECS
+{0x313D08AA,  VT_ONOFF,           5070,  S5070_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // Push automatique ECS
+{0x313D0573,  VT_ENUM,            5072,  S5072_0,  sizeof(E5072_0),    E5072_0,      FL_RONLY, 211, 127}, // Forçage ECS
+{0x253D0A11,  VT_YESNO,           5093,  S5093_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Ballon d'accumulation avec intégration solaire
+{0x053D0712,  VT_BYTE,            5700,  S5700_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Schéma d'installation Préréglage
 {0x053D0B11,  VT_BINARY_ENUM,     5700.1,S5700P1_0,sizeof(E5700P1_0),  E5700P1_0,    FL_RONLY,     211, 127}, // Internal state of parameterization 5700
-{0x053D04C0,  VT_ONOFF,           5710,  S5710_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   DEFAULT_FLAG, 211, 127}, // Circuit de chauffage 1
-{0x053D0A73,  VT_ENUM,            5711,  S5711_0,  sizeof(E5711_0),    E5711_0,      DEFAULT_FLAG, 211, 127}, // Circuit de refroidissement 1
-{0x063D04C0,  VT_ONOFF,           5715,  S5715_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   DEFAULT_FLAG, 211, 127}, // Circuit de chauffage 2
-{0x063D0A73,  VT_ENUM,            5716,  S5716_0,  sizeof(E5716_0),    E5716_0,      DEFAULT_FLAG, 211, 127}, // Circuit rafraîchissement 2
-{0x253D071C,  VT_ENUM,            5731,  S5731_0,  sizeof(E5731_0),    E5731_0,      DEFAULT_FLAG, 211, 127}, // Organe de réglage d'ECS Q3
-{0x053D12BC,  VT_POWER_WORD,      5740,  S5740_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Sortie résist élec eau K6
-{0x053D10D4,  VT_ENUM,            5750,  S5750_0,  sizeof(E5750_0),    E5750_0,      FL_OEM,       211, 127}, // Circuit consommateurs 1
-{0x053D10D5,  VT_ENUM,            5751,  S5751_0,  sizeof(E5751_0),    E5751_0,      FL_OEM,       211, 127}, // Circuit consommateurs 2
-{0x053D1119,  VT_ENUM,            5806,  S5806_0,  sizeof(E5806_0),    E5806_0,      DEFAULT_FLAG, 211, 127}, // Type résist élec départ
-{0x053D12B9,  VT_POWER_WORD,      5811,  S5811_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Sortie résist élec eau K25
-{0x053D12BA,  VT_POWER_WORD,      5813,  S5813_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Sortie résist élec eau K26
-{0x053D0D91,  VT_ENUM,            5950,  S5950_0,  sizeof(E5950_0),    E5950_0,      DEFAULT_FLAG, 211, 127}, // Entrée H1 sélection de fonction
-{0x053D1128,  VT_FP1,             5953,  S5953_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur entrée 1 H1
-{0x053D0B7D,  VT_FP1,             5954,  S5954_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur fonction 1 H1
-{0x053D1129,  VT_FP1,             5955,  S5955_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur entrée 2 H1
-{0x053D0B83,  VT_FP1,             5956,  S5956_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur fonction 2 H1
-{0x053D0D95,  VT_ENUM,            5960,  S5960_0,  sizeof(E5960_0),    E5960_0,      DEFAULT_FLAG, 211, 127}, // Sélection de la fonction de l'entrée H3
-{0x053D113C,  VT_FP1,             5963,  S5963_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur entrée 1 H3
-{0x053D113E,  VT_FP1,             5964,  S5964_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur fonction 1 H3
-{0x053D113D,  VT_FP1,             5965,  S5965_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur entrée 2 H3
-{0x053D113F,  VT_FP1,             5966,  S5966_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur fonction 2 H3
-{0x053D09FD,  VT_ENUM,            5980,  S5980_0,  sizeof(E5980_0),    E5980_0,      DEFAULT_FLAG, 211, 127}, // Fonction entrée EX1
-{0x053D09FE,  VT_ENUM,            5981,  S5981_0,  sizeof(E5981_0),    E5981_0,      DEFAULT_FLAG, 211, 127}, // Sens d'action entrée EX1
-{0x053D07CE,  VT_ENUM,            5982,  S5982_0,  sizeof(E5982_0),    E5982_0,      DEFAULT_FLAG, 211, 127}, // Fonction Entrée EX2
-{0x053D07D1,  VT_ENUM,            5983,  S5983_0,  sizeof(E5983_0),    E5983_0,      DEFAULT_FLAG, 211, 127}, // Sens d'action entrée EX2
-{0x053D0B7E,  VT_ENUM,            5985,  S5985_0,  sizeof(E5985_0),    E5985_0,      DEFAULT_FLAG, 211, 127}, // Sens d'action entrée  EX3
-{0x053D08B6,  VT_TEMP,            6098,  S6098_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Correction mesure sonde capteur solaire 1 (B6)
-{0x053D05F1,  VT_TEMP,            6100,  S6100_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Correction mesure sonde température extérieure
-{0x053D0600,  VT_HOURS_SHORT,     6110,  S6110_0,  0,                  NULL,         FL_OEM,       211, 127}, // Constante de temps du bâtiment
-{0x053D0855,  VT_TEMP_N,          6117,  S6117_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // (Compensation centrale consigne)
-{0x053D05FE,  VT_ONOFF,           6120,  S6120_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   DEFAULT_FLAG, 211, 127}, // Hors-gel de l'installation
-{0x053D05D8,  VT_PRESSURE,        6140,  S6140_0,  0,                  NULL,         FL_OEM,       211, 127}, // Pression d'eau maximum
-{0x053D05D9,  VT_PRESSURE,        6141,  S6141_0,  0,                  NULL,         FL_OEM,       211, 127}, // Pression d'eau minimum
-{0x053D05DA,  VT_PRESSURE,        6142,  S6142_0,  0,                  NULL,         FL_OEM,       211, 127}, // Pression d'eau critique minimale
-{0x053D12E5,  VT_ENUM,            6148,  S6148_0,  sizeof(E6148_0),    E6148_0,      FL_OEM,       211, 127}, // Surveill pression statiq 1
-{0x053D06AB,  VT_YESNO,           6200,  S6200_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Enregistrer les sondes
-{0x053D0BBF,  VT_YESNO,           6201,  S6201_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Effacer sonde
-{0x053D05D4,  VT_YESNO,           6204,  S6204_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Enregistrer paramètres
-{0x053D05D5,  VT_YESNO,           6205,  S6205_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Réinitialiser paramètres
-{0x053D0BD0,  VT_DWORD,           6212,  S6212_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Numéro de contrôle générateur 1
-{0x053D0BD1,  VT_DWORD,           6213,  S6213_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Numéro de contrôle générateur 2
-{0x053D0BD2,  VT_DWORD,           6215,  S6215_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Numéro de contrôle accumulateur
-{0x053D0BD3,  VT_DWORD,           6217,  S6217_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Numéro de contrôle circuits de chauffage
+{0x053D04C0,  VT_ONOFF,           5710,  S5710_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY, 211, 127}, // Circuit de chauffage 1
+{0x053D0A73,  VT_ENUM,            5711,  S5711_0,  sizeof(E5711_0),    E5711_0,      FL_RONLY, 211, 127}, // Circuit de refroidissement 1
+{0x063D04C0,  VT_ONOFF,           5715,  S5715_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY, 211, 127}, // Circuit de chauffage 2
+{0x063D0A73,  VT_ENUM,            5716,  S5716_0,  sizeof(E5716_0),    E5716_0,      FL_RONLY, 211, 127}, // Circuit rafraîchissement 2
+{0x253D071C,  VT_ENUM,            5731,  S5731_0,  sizeof(E5731_0),    E5731_0,      FL_RONLY, 211, 127}, // Organe de réglage d'ECS Q3
+{0x053D12BC,  VT_POWER_WORD,      5740,  S5740_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Sortie résist élec eau K6
+{0x053D10D4,  VT_ENUM,            5750,  S5750_0,  sizeof(E5750_0),    E5750_0,      FL_RONLY+FL_OEM,       211, 127}, // Circuit consommateurs 1
+{0x053D10D5,  VT_ENUM,            5751,  S5751_0,  sizeof(E5751_0),    E5751_0,      FL_RONLY+FL_OEM,       211, 127}, // Circuit consommateurs 2
+{0x053D1119,  VT_ENUM,            5806,  S5806_0,  sizeof(E5806_0),    E5806_0,      FL_RONLY, 211, 127}, // Type résist élec départ
+{0x053D12B9,  VT_POWER_WORD,      5811,  S5811_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Sortie résist élec eau K25
+{0x053D12BA,  VT_POWER_WORD,      5813,  S5813_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Sortie résist élec eau K26
+{0x053D0D91,  VT_ENUM,            5950,  S5950_0,  sizeof(E5950_0),    E5950_0,      FL_RONLY, 211, 127}, // Entrée H1 sélection de fonction
+{0x053D1128,  VT_FP1,             5953,  S5953_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur entrée 1 H1
+{0x053D0B7D,  VT_FP1,             5954,  S5954_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur fonction 1 H1
+{0x053D1129,  VT_FP1,             5955,  S5955_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur entrée 2 H1
+{0x053D0B83,  VT_FP1,             5956,  S5956_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur fonction 2 H1
+{0x053D0D95,  VT_ENUM,            5960,  S5960_0,  sizeof(E5960_0),    E5960_0,      FL_RONLY, 211, 127}, // Sélection de la fonction de l'entrée H3
+{0x053D113C,  VT_FP1,             5963,  S5963_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur entrée 1 H3
+{0x053D113E,  VT_FP1,             5964,  S5964_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur fonction 1 H3
+{0x053D113D,  VT_FP1,             5965,  S5965_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur entrée 2 H3
+{0x053D113F,  VT_FP1,             5966,  S5966_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur fonction 2 H3
+{0x053D09FD,  VT_ENUM,            5980,  S5980_0,  sizeof(E5980_0),    E5980_0,      FL_RONLY, 211, 127}, // Fonction entrée EX1
+{0x053D09FE,  VT_ENUM,            5981,  S5981_0,  sizeof(E5981_0),    E5981_0,      FL_RONLY, 211, 127}, // Sens d'action entrée EX1
+{0x053D07CE,  VT_ENUM,            5982,  S5982_0,  sizeof(E5982_0),    E5982_0,      FL_RONLY, 211, 127}, // Fonction Entrée EX2
+{0x053D07D1,  VT_ENUM,            5983,  S5983_0,  sizeof(E5983_0),    E5983_0,      FL_RONLY, 211, 127}, // Sens d'action entrée EX2
+{0x053D0B7E,  VT_ENUM,            5985,  S5985_0,  sizeof(E5985_0),    E5985_0,      FL_RONLY, 211, 127}, // Sens d'action entrée  EX3
+{0x053D08B6,  VT_TEMP,            6098,  S6098_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Correction mesure sonde capteur solaire 1 (B6)
+{0x053D05F1,  VT_TEMP,            6100,  S6100_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Correction mesure sonde température extérieure
+{0x053D0600,  VT_HOURS_SHORT,     6110,  S6110_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Constante de temps du bâtiment
+{0x053D0855,  VT_TEMP_N,          6117,  S6117_0,  0,                  NULL,         FL_RONLY, 211, 127}, // (Compensation centrale consigne)
+{0x053D05FE,  VT_ONOFF,           6120,  S6120_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY, 211, 127}, // Hors-gel de l'installation
+{0x053D05D8,  VT_PRESSURE,        6140,  S6140_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Pression d'eau maximum
+{0x053D05D9,  VT_PRESSURE,        6141,  S6141_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Pression d'eau minimum
+{0x053D05DA,  VT_PRESSURE,        6142,  S6142_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Pression d'eau critique minimale
+{0x053D12E5,  VT_ENUM,            6148,  S6148_0,  sizeof(E6148_0),    E6148_0,      FL_RONLY+FL_OEM,       211, 127}, // Surveill pression statiq 1
+{0x053D06AB,  VT_YESNO,           6200,  S6200_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Enregistrer les sondes
+{0x053D0BBF,  VT_YESNO,           6201,  S6201_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Effacer sonde
+{0x053D05D4,  VT_YESNO,           6204,  S6204_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Enregistrer paramètres
+{0x053D05D5,  VT_YESNO,           6205,  S6205_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Réinitialiser paramètres
+{0x053D0BD0,  VT_DWORD,           6212,  S6212_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Numéro de contrôle générateur 1
+{0x053D0BD1,  VT_DWORD,           6213,  S6213_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Numéro de contrôle générateur 2
+{0x053D0BD2,  VT_DWORD,           6215,  S6215_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Numéro de contrôle accumulateur
+{0x053D0BD3,  VT_DWORD,           6217,  S6217_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Numéro de contrôle circuits de chauffage
 {0x053D000E,  VT_FP1,             6220,  S6220_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Version du logiciel
 {0x053D1388,  VT_UINT,            6221,  S6221_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Indice de développement
-{0x053D0011,  VT_HOURS,           6222,  S6222_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Heures de fonctionnement
+{0x053D0011,  VT_HOURS,           6222,  S6222_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Heures de fonctionnement
 {0x053D0001,  VT_STRING,          6224,  STR_GI,   0,                  NULL,         FL_RONLY, 255, 255},
 {0x053D0002,  VT_UINT,            6225,  STR_GF,   0,                  NULL,         FL_RONLY, 255, 255},
 {0x053D0003,  VT_UINT,            6226,  STR_GV,   0,                  NULL,         FL_RONLY, 255, 255},
 {0x053D0004,  VT_UINT,            6227,  STR_OV,   0,                  NULL,         FL_RONLY, 255, 255},
-{0x053D0CA0,  VT_UINT10,          6228,  S6228_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Version bootloader
+{0x053D0CA0,  VT_UINT10,          6228,  S6228_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Version bootloader
 {0x053D0092,  VT_FP1,             6229,  S6229_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Version EEPROM
 {0x053D1193,  VT_UINT,            6300,  S6300_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Info 1 OEM
 {0x053D1195,  VT_UINT,            6301,  S6301_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Info 2 OEM
-{0x053D1224,  VT_ENUM,            6375,  S6375_0,  sizeof(E6375_0),    E6375_0,      DEFAULT_FLAG, 211, 127}, // Sortie relais QX35
-{0x053D1262,  VT_ENUM,            6400,  S6400_0,  sizeof(E6400_0),    E6400_0,      DEFAULT_FLAG, 211, 127}, // Fonction entrée H31
-{0x053D12CA,  VT_FP1,             6403,  S6403_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur entrée 1 H31
-{0x053D1246,  VT_FP1,             6404,  S6404_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur fonction 1 H31
-{0x053D12CB,  VT_FP1,             6405,  S6405_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur entrée 2 H31
-{0x053D1247,  VT_FP1,             6406,  S6406_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur fonction 2 H31
-{0x053D1263,  VT_ENUM,            6410,  S6410_0,  sizeof(E6410_0),    E6410_0,      DEFAULT_FLAG, 211, 127}, // Fonction entrée H32
-{0x053D12CC,  VT_FP1,             6413,  S6413_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur entrée 1 H32
-{0x053D1248,  VT_FP1,             6414,  S6414_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur fonction 1 H32
-{0x053D12CD,  VT_FP1,             6415,  S6415_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur entrée 2 H32
-{0x053D1249,  VT_FP1,             6416,  S6416_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Valeur fonction 2 H32
-{0x053D1264,  VT_ENUM,            6420,  S6420_0,  sizeof(E6420_0),    E6420_0,      DEFAULT_FLAG, 211, 127}, // Fonction entrée H33
-{0x053D1277,  VT_ENUM,            6421,  S6421_0,  sizeof(E6421_0),    E6421_0,      DEFAULT_FLAG, 211, 127}, // Sens action contact H33
-{0x053D07CF,  VT_ENUM,            6455,  S6455_0,  sizeof(E6455_0),    E6455_0,      FL_OEM,       211, 127}, // Fonct. groupe mélang31
+{0x053D1224,  VT_ENUM,            6375,  S6375_0,  sizeof(E6375_0),    E6375_0,      FL_RONLY, 211, 127}, // Sortie relais QX35
+{0x053D1262,  VT_ENUM,            6400,  S6400_0,  sizeof(E6400_0),    E6400_0,      FL_RONLY, 211, 127}, // Fonction entrée H31
+{0x053D12CA,  VT_FP1,             6403,  S6403_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur entrée 1 H31
+{0x053D1246,  VT_FP1,             6404,  S6404_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur fonction 1 H31
+{0x053D12CB,  VT_FP1,             6405,  S6405_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur entrée 2 H31
+{0x053D1247,  VT_FP1,             6406,  S6406_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur fonction 2 H31
+{0x053D1263,  VT_ENUM,            6410,  S6410_0,  sizeof(E6410_0),    E6410_0,      FL_RONLY, 211, 127}, // Fonction entrée H32
+{0x053D12CC,  VT_FP1,             6413,  S6413_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur entrée 1 H32
+{0x053D1248,  VT_FP1,             6414,  S6414_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur fonction 1 H32
+{0x053D12CD,  VT_FP1,             6415,  S6415_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur entrée 2 H32
+{0x053D1249,  VT_FP1,             6416,  S6416_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Valeur fonction 2 H32
+{0x053D1264,  VT_ENUM,            6420,  S6420_0,  sizeof(E6420_0),    E6420_0,      FL_RONLY, 211, 127}, // Fonction entrée H33
+{0x053D1277,  VT_ENUM,            6421,  S6421_0,  sizeof(E6421_0),    E6421_0,      FL_RONLY, 211, 127}, // Sens action contact H33
+{0x053D07CF,  VT_ENUM,            6455,  S6455_0,  sizeof(E6455_0),    E6455_0,      FL_RONLY+FL_OEM,       211, 127}, // Fonct. groupe mélang31
 {0x213D061E,  VT_BYTE,            6570,  S6570_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Schéma partiel CC 1
 {0x693D0A7A,  VT_BYTE,            6571,  S6571_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Schéma partiel CR1
 {0x223D061E,  VT_BYTE,            6572,  S6572_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Schéma partiel CC2
@@ -5354,43 +5357,43 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D061F,  VT_BYTE,            6592,  S6592_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Schéma partiel Accumulateur
 {0x253D0620,  VT_BYTE,            6593,  S6593_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Schéma partiel ballon ECS
 {0x313D0B14,  VT_BYTE,            6594,  S6594_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Schéma partiel chauffe-eau instantané ECS
-{0x053D00C9,  VT_BYTE,            6600,  S6600_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Adresse de l'appareil
-{0x053D00CA,  VT_BYTE,            6601,  S6601_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Adresse de segment
-{0x053D0071,  VT_ENUM,            6604,  S6604_0,  sizeof(E6604_0),    E6604_0,      FL_OEM,       211, 127}, // Sélection fonction Alimentation Bus
-{0x053D0072,  VT_ONOFF,           6605,  S6605_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Etat de l'alimentation Bus
-{0x053D006A,  VT_YESNO,           6610,  S6610_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Affichage des messages système
-{0x053D08D2,  VT_MINUTES_SHORT_N, 6612,  S6612_0,  0,                  NULL,         FL_OEM,       211, 127}, // Temporisation d'alarme
-{0x053D0839,  VT_BINARY_ENUM,     6620,  S6620_0,  sizeof(E6620_0),    E6620_0,      FL_OEM,       211, 127}, // Plage active des commutations centrales
-{0x2D3D0611,  VT_BINARY_ENUM,     6621,  S6621_0,  sizeof(E6621_0),    E6621_0,      FL_OEM,       211, 127}, // Commutation automatique été/hiver
-{0x053D0B34,  VT_ENUM,            6623,  S6623_0,  sizeof(E6623_0),    E6623_0,      FL_OEM,       211, 127}, // Commutation de régime
-{0x253D074A,  VT_ENUM,            6625,  S6625_0,  sizeof(E6625_0),    E6625_0,      FL_OEM,       211, 127}, // Affectation ECS
-{0x053D0D04,  VT_ENUM,            6627,  S6627_0,  sizeof(E6627_0),    E6627_0,      FL_OEM,       211, 127}, // Demande de froid
-{0x053D0ABB,  VT_ENUM,            6630,  S6630_0,  sizeof(E6630_0),    E6630_0,      FL_OEM,       211, 127}, // Maître de cascade
-{0x053D0D6F,  VT_YESNO,           6632,  S6632_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Tenir compte de la limite de T°Ext des gén ext
-{0x053D006D,  VT_ENUM,            6640,  S6640_0,  sizeof(E6640_0),    E6640_0,      FL_OEM,       211, 127}, // Source de l'heure
-{0x053D009F,  VT_LPBADDR,         6650,  S6650_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Source de température extérieure
-{0x053D1109,  VT_BYTE_N,          6651,  S6651_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Adresse esclave
-{0x053D110B,  VT_ENUM,            6652,  S6652_0,  sizeof(E6652_0),    E6652_0,      DEFAULT_FLAG, 211, 127}, // Vitesse en bauds
-{0x053D110A,  VT_ENUM,            6653,  S6653_0,  sizeof(E6653_0),    E6653_0,      DEFAULT_FLAG, 211, 127}, // Parité
-{0x053D1F3D,  VT_BYTE,            6654,  S6654_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Bit d'arrêt
-{0x053D1F9A,  VT_BYTE_N,          6660,  S6660_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Adresse esclave port 1
-{0x053D1FAF,  VT_ENUM,            6667,  S6667_0,  sizeof(E6667_0),    E6667_0,      DEFAULT_FLAG, 211, 127}, // Fonction port 2
-{0x053D1FB0,  VT_ENUM,            6672,  S6672_0,  sizeof(E6672_0),    E6672_0,      DEFAULT_FLAG, 211, 127}, // Fonction port 3
-{0x053D1FB1,  VT_ENUM,            6677,  S6677_0,  sizeof(E6677_0),    E6677_0,      DEFAULT_FLAG, 211, 127}, // Fonction port 4
-{0x053D1FB2,  VT_ENUM,            6682,  S6682_0,  sizeof(E6682_0),    E6682_0,      DEFAULT_FLAG, 211, 127}, // Fonction port 5
-{0x053D1FB3,  VT_ENUM,            6687,  S6687_0,  sizeof(E6687_0),    E6687_0,      DEFAULT_FLAG, 211, 127}, // Fonction port 6
-{0x053D1FB4,  VT_ENUM,            6692,  S6692_0,  sizeof(E6692_0),    E6692_0,      DEFAULT_FLAG, 211, 127}, // Fonction port 7
-{0x053D1FB5,  VT_ENUM,            6697,  S6697_0,  sizeof(E6697_0),    E6697_0,      DEFAULT_FLAG, 211, 127}, // Fonction port 8
+{0x053D00C9,  VT_BYTE,            6600,  S6600_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Adresse de l'appareil
+{0x053D00CA,  VT_BYTE,            6601,  S6601_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Adresse de segment
+{0x053D0071,  VT_ENUM,            6604,  S6604_0,  sizeof(E6604_0),    E6604_0,      FL_RONLY+FL_OEM,       211, 127}, // Sélection fonction Alimentation Bus
+{0x053D0072,  VT_ONOFF,           6605,  S6605_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Etat de l'alimentation Bus
+{0x053D006A,  VT_YESNO,           6610,  S6610_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Affichage des messages système
+{0x053D08D2,  VT_MINUTES_SHORT_N, 6612,  S6612_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Temporisation d'alarme
+{0x053D0839,  VT_BINARY_ENUM,     6620,  S6620_0,  sizeof(E6620_0),    E6620_0,      FL_RONLY+FL_OEM,       211, 127}, // Plage active des commutations centrales
+{0x2D3D0611,  VT_BINARY_ENUM,     6621,  S6621_0,  sizeof(E6621_0),    E6621_0,      FL_RONLY+FL_OEM,       211, 127}, // Commutation automatique été/hiver
+{0x053D0B34,  VT_ENUM,            6623,  S6623_0,  sizeof(E6623_0),    E6623_0,      FL_RONLY+FL_OEM,       211, 127}, // Commutation de régime
+{0x253D074A,  VT_ENUM,            6625,  S6625_0,  sizeof(E6625_0),    E6625_0,      FL_RONLY+FL_OEM,       211, 127}, // Affectation ECS
+{0x053D0D04,  VT_ENUM,            6627,  S6627_0,  sizeof(E6627_0),    E6627_0,      FL_RONLY+FL_OEM,       211, 127}, // Demande de froid
+{0x053D0ABB,  VT_ENUM,            6630,  S6630_0,  sizeof(E6630_0),    E6630_0,      FL_RONLY+FL_OEM,       211, 127}, // Maître de cascade
+{0x053D0D6F,  VT_YESNO,           6632,  S6632_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Tenir compte de la limite de T°Ext des gén ext
+{0x053D006D,  VT_ENUM,            6640,  S6640_0,  sizeof(E6640_0),    E6640_0,      FL_RONLY+FL_OEM,       211, 127}, // Source de l'heure
+{0x053D009F,  VT_LPBADDR,         6650,  S6650_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Source de température extérieure
+{0x053D1109,  VT_BYTE_N,          6651,  S6651_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Adresse esclave
+{0x053D110B,  VT_ENUM,            6652,  S6652_0,  sizeof(E6652_0),    E6652_0,      FL_RONLY, 211, 127}, // Vitesse en bauds
+{0x053D110A,  VT_ENUM,            6653,  S6653_0,  sizeof(E6653_0),    E6653_0,      FL_RONLY, 211, 127}, // Parité
+{0x053D1F3D,  VT_BYTE,            6654,  S6654_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Bit d'arrêt
+{0x053D1F9A,  VT_BYTE_N,          6660,  S6660_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Adresse esclave port 1
+{0x053D1FAF,  VT_ENUM,            6667,  S6667_0,  sizeof(E6667_0),    E6667_0,      FL_RONLY, 211, 127}, // Fonction port 2
+{0x053D1FB0,  VT_ENUM,            6672,  S6672_0,  sizeof(E6672_0),    E6672_0,      FL_RONLY, 211, 127}, // Fonction port 3
+{0x053D1FB1,  VT_ENUM,            6677,  S6677_0,  sizeof(E6677_0),    E6677_0,      FL_RONLY, 211, 127}, // Fonction port 4
+{0x053D1FB2,  VT_ENUM,            6682,  S6682_0,  sizeof(E6682_0),    E6682_0,      FL_RONLY, 211, 127}, // Fonction port 5
+{0x053D1FB3,  VT_ENUM,            6687,  S6687_0,  sizeof(E6687_0),    E6687_0,      FL_RONLY, 211, 127}, // Fonction port 6
+{0x053D1FB4,  VT_ENUM,            6692,  S6692_0,  sizeof(E6692_0),    E6692_0,      FL_RONLY, 211, 127}, // Fonction port 7
+{0x053D1FB5,  VT_ENUM,            6697,  S6697_0,  sizeof(E6697_0),    E6697_0,      FL_RONLY, 211, 127}, // Fonction port 8
 {0x053D22B1,  VT_ENUM,            6700,  S6700_0,  sizeof(E6700_0),    E6700_0,      FL_RONLY,     211, 127}, // Erreur
 {0x053D22B2,  VT_ENUM,            6701,  S6701_0,  sizeof(E6701_0),    E6701_0,      FL_RONLY,     211, 127}, // Erreur 2
-{0x053D1AC8,  VT_ENUM,            6708,  S6708_0,  sizeof(E6708_0),    E6708_0,      FL_OEM+FL_RONLY, 211, 127}, // Message erreur PAC
-{0x053D05D6,  VT_YESNO,           6710,  S6710_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Réinitialisation du relais d'alarme
-{0x593D06AC,  VT_YESNO,           6711,  S6711_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Réinitialisation de la pompe à chaleur
-{0x213D069D,  VT_MINUTES_SHORT_N, 6740,  S6740_0,  0,                  NULL,         FL_OEM,       211, 127}, // Heure alarme temp. de départ CC1
-{0x223D069D,  VT_MINUTES_SHORT_N, 6741,  S6741_0,  0,                  NULL,         FL_OEM,       211, 127}, // Heure alarme temp. de départ CC2
-{0x253D0B10,  VT_HOURS_SHORT_N,   6745,  S6745_0,  0,                  NULL,         FL_OEM,       211, 127}, // Temps alarme charge ECS
-{0x693D0B67,  VT_MINUTES_SHORT_N, 6746,  S6746_0,  0,                  NULL,         FL_OEM,       211, 127}, // Délai  alarme temp départ circuit froid 1
-{0x6A3D0B67,  VT_MINUTES_SHORT_N, 6747,  S6747_0,  0,                  NULL,         FL_OEM,       211, 127}, // Alarme T° départ rafraîch2
+{0x053D1AC8,  VT_ENUM,            6708,  S6708_0,  sizeof(E6708_0),    E6708_0,      FL_RONLY+FL_OEM, 211, 127}, // Message erreur PAC
+{0x053D05D6,  VT_YESNO,           6710,  S6710_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Réinitialisation du relais d'alarme
+{0x593D06AC,  VT_YESNO,           6711,  S6711_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Réinitialisation de la pompe à chaleur
+{0x213D069D,  VT_MINUTES_SHORT_N, 6740,  S6740_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Heure alarme temp. de départ CC1
+{0x223D069D,  VT_MINUTES_SHORT_N, 6741,  S6741_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Heure alarme temp. de départ CC2
+{0x253D0B10,  VT_HOURS_SHORT_N,   6745,  S6745_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Temps alarme charge ECS
+{0x693D0B67,  VT_MINUTES_SHORT_N, 6746,  S6746_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Délai  alarme temp départ circuit froid 1
+{0x6A3D0B67,  VT_MINUTES_SHORT_N, 6747,  S6747_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Alarme T° départ rafraîch2
 {0x053D06D3,  VT_DATETIME,        6800,  S6800_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Horodatage Historique défaut Entrée 1
 {0x053D0814,  VT_ENUM,            6801,  S6801_0,  sizeof(E6801_0),    E6801_0,      FL_RONLY,     211, 127}, // Code de défaut Historique Entrée 1
 {0x053D06D4,  VT_DATETIME,        6802,  S6802_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Horodatage Historique de défaut Entrée 2
@@ -5411,56 +5414,56 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D081C,  VT_ENUM,            6817,  S6817_0,  sizeof(E6817_0),    E6817_0,      FL_RONLY,     211, 127}, // Code de défaut Historique Entrée 9
 {0x053D06DC,  VT_DATETIME,        6818,  S6818_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Horodatage Historique de défaut Entrée 10
 {0x053D081D,  VT_ENUM,            6819,  S6819_0,  sizeof(E6819_0),    E6819_0,      FL_RONLY,     211, 127}, // Code de défaut Historique Entrée 10
-{0x053D06E7,  VT_YESNO,           6820,  S6820_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Réinitialisation historique de défaut
-{0x053D05E1,  VT_MONTHS_N,        7070,  S7070_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Intervalle de maintenance durée pompe à chaleur
-{0x053D05E2,  VT_MONTHS,          7071,  S7071_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Pompe à chaleur durée depuis maintenance
-{0x593D06B2,  VT_UINT10,          7072,  S7072_0,  0,                  NULL,         FL_OEM,       211, 127}, // Démarrages max. compresseur 1 par heure fonct.
-{0x593D06B3,  VT_FP1,             7073,  S7073_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Démarrages actuels compres.1 par heure fonct.
-{0x053D058D,  VT_ENUM,            7131,  S7131_0,  sizeof(E7131_0),    E7131_0,      DEFAULT_FLAG, 211, 127}, // Fonction ramonage puissance brûleur
-{0x053D1B73,  VT_ENUM,            7131.1,S7131P1_0,sizeof(E7131P1_0),  E7131P1_0,    DEFAULT_FLAG, 211, 127}, // Fonction ramonage puissance brûleur
-{0x053D1B74,  VT_ENUM,            7131.2,S7131P2_0,sizeof(E7131P2_0),  E7131P2_0,    DEFAULT_FLAG, 211, 127}, // Fonction ramonage puissance brûleur
-{0x053D06AD,  VT_ONOFF,           7141,  S7141_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   DEFAULT_FLAG, 211, 127}, // Fonctionnement de secours
-{0x053D06AE,  VT_ENUM,            7142,  S7142_0,  sizeof(E7142_0),    E7142_0,      DEFAULT_FLAG, 211, 127}, // Fonct. de secours Type de fonction
-{0x053D0528,  VT_TEMP_N,          7150,  S7150_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Simulation de température extérieure
-{0x053D0073,  VT_ENUM,            7700,  S7700_0,  sizeof(E7700_0),    E7700_0,      DEFAULT_FLAG, 211, 127}, // Test des relais
-{0x053D040E,  VT_PERCENT,         7710,  S7710_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Test sortie UX1
-{0x053D1701,  VT_UINT10,          7711,  S7711_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Signal sortie UX1
-{0x053D1708,  VT_ENUM,            7711.1,S7711P1_0,sizeof(E7711P1_0),  E7711P1_0,    FL_OEM+FL_RONLY, 211, 127}, // Internal state of parameterization 7711
-{0x063D040E,  VT_PERCENT,         7716,  S7716_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Test sortie UX2
-{0x063D1701,  VT_UINT10,          7717,  S7717_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Signal sortie UX2
-{0x063D1708,  VT_ENUM,            7717.1,S7717P1_0,sizeof(E7717P1_0),  E7717P1_0,    FL_OEM+FL_RONLY, 211, 127}, // Internal state of parameterization 7717
-{0x053D0D81,  VT_ONOFF,           7721,  S7721_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Régime chauffage D1
+{0x053D06E7,  VT_YESNO,           6820,  S6820_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Réinitialisation historique de défaut
+{0x053D05E1,  VT_MONTHS_N,        7070,  S7070_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Intervalle de maintenance durée pompe à chaleur
+{0x053D05E2,  VT_MONTHS,          7071,  S7071_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Pompe à chaleur durée depuis maintenance
+{0x593D06B2,  VT_UINT10,          7072,  S7072_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Démarrages max. compresseur 1 par heure fonct.
+{0x593D06B3,  VT_FP1,             7073,  S7073_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Démarrages actuels compres.1 par heure fonct.
+{0x053D058D,  VT_ENUM,            7131,  S7131_0,  sizeof(E7131_0),    E7131_0,      FL_RONLY, 211, 127}, // Fonction ramonage puissance brûleur
+{0x053D1B73,  VT_ENUM,            7131.1,S7131P1_0,sizeof(E7131P1_0),  E7131P1_0,    FL_RONLY, 211, 127}, // Fonction ramonage puissance brûleur
+{0x053D1B74,  VT_ENUM,            7131.2,S7131P2_0,sizeof(E7131P2_0),  E7131P2_0,    FL_RONLY, 211, 127}, // Fonction ramonage puissance brûleur
+{0x053D06AD,  VT_ONOFF,           7141,  S7141_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY, 211, 127}, // Fonctionnement de secours
+{0x053D06AE,  VT_ENUM,            7142,  S7142_0,  sizeof(E7142_0),    E7142_0,      FL_RONLY, 211, 127}, // Fonct. de secours Type de fonction
+{0x053D0528,  VT_TEMP_N,          7150,  S7150_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Simulation de température extérieure
+{0x053D0073,  VT_ENUM,            7700,  S7700_0,  sizeof(E7700_0),    E7700_0,      FL_RONLY, 211, 127}, // Test des relais
+{0x053D040E,  VT_PERCENT,         7710,  S7710_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Test sortie UX1
+{0x053D1701,  VT_UINT10,          7711,  S7711_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Signal sortie UX1
+{0x053D1708,  VT_ENUM,            7711.1,S7711P1_0,sizeof(E7711P1_0),  E7711P1_0,    FL_RONLY+FL_OEM, 211, 127}, // Internal state of parameterization 7711
+{0x063D040E,  VT_PERCENT,         7716,  S7716_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Test sortie UX2
+{0x063D1701,  VT_UINT10,          7717,  S7717_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Signal sortie UX2
+{0x063D1708,  VT_ENUM,            7717.1,S7717P1_0,sizeof(E7717P1_0),  E7717P1_0,    FL_RONLY+FL_OEM, 211, 127}, // Internal state of parameterization 7717
+{0x053D0D81,  VT_ONOFF,           7721,  S7721_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Régime chauffage D1
 {0x053D0D82,  VT_ONOFF,           7722,  S7722_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Régime refroidissement D2
 {0x053D127B,  VT_ONOFF,           7723,  S7723_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Pomp à chaleur D3
-{0x073D040E,  VT_PERCENT,         7724,  S7724_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Test sortie UX3
+{0x073D040E,  VT_PERCENT,         7724,  S7724_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Test sortie UX3
 {0x073D1701,  VT_UINT10,          7725,  S7725_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Signal sortie UX3
 {0x073D1708,  VT_ENUM,            7725.1,S7725P1_0,sizeof(E7725P1_0),  E7725P1_0,    FL_RONLY,     211, 127}, // Internal state of parameterization 7725
-{0x053D03F5,  VT_ONOFF,           7728,  S7728_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Dégivrage DI6
-{0x053D03F6,  VT_ONOFF,           7729,  S7729_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Message erreur/alarme DI7
-{0x053D15F6,  VT_PERCENT,         7780,  S7780_0,  0,                  NULL,         FL_OEM,       211, 127}, // Test sortie UX21 module 1
-{0x053D1702,  VT_UINT10,          7781,  S7781_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Signal sortie UX21 module 1
-{0x053D1709,  VT_ENUM,            7781.1,S7781P1_0,sizeof(E7781P1_0),  E7781P1_0,    FL_OEM+FL_RONLY, 211, 127}, // Internal state of parameterization 7781
-{0x053D15F9,  VT_PERCENT,         7782,  S7782_0,  0,                  NULL,         FL_OEM,       211, 127}, // Test sortie UX22 module 1
-{0x053D1705,  VT_UINT10,          7783,  S7783_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Signal sortie UX22 module 1
-{0x053D170C,  VT_ENUM,            7783.1,S7783P1_0,sizeof(E7783P1_0),  E7783P1_0,    FL_OEM+FL_RONLY, 211, 127}, // Internal state of parameterization 7783
-{0x053D15F7,  VT_PERCENT,         7784,  S7784_0,  0,                  NULL,         FL_OEM,       211, 127}, // Test sortie UX21 module 2
-{0x053D1703,  VT_UINT10,          7785,  S7785_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // SIgnal sortie UX21 module 2
-{0x053D170A,  VT_ENUM,            7785.1,S7785P1_0,sizeof(E7785P1_0),  E7785P1_0,    FL_OEM+FL_RONLY, 211, 127}, // Internal state of parameterization 7785
-{0x053D15FA,  VT_PERCENT,         7786,  S7786_0,  0,                  NULL,         FL_OEM,       211, 127}, // Test sortie UX22 module 2
-{0x053D1706,  VT_UINT10,          7787,  S7787_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Signal sortie UX22 module 2
-{0x053D1717,  VT_ENUM,            7787.1,S7787P1_0,sizeof(E7787P1_0),  E7787P1_0,    FL_OEM+FL_RONLY, 211, 127}, // Internal state of parameterization 7787
-{0x053D15F8,  VT_PERCENT,         7788,  S7788_0,  0,                  NULL,         FL_OEM,       211, 127}, // Test sortie UX21 module 3
-{0x053D1704,  VT_UINT10,          7789,  S7789_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Signal sortie UX21 module 3
-{0x053D170B,  VT_ENUM,            7789.1,S7789P1_0,sizeof(E7789P1_0),  E7789P1_0,    FL_OEM+FL_RONLY, 211, 127}, // Internal state of parameterization 7789
-{0x053D15FB,  VT_PERCENT,         7790,  S7790_0,  0,                  NULL,         FL_OEM,       211, 127}, // Test sortie UX22 module 3
-{0x053D1707,  VT_UINT10,          7791,  S7791_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Signal sortie UX22 module 3
-{0x053D1718,  VT_ENUM,            7791.1,S7791P1_0,sizeof(E7791P1_0),  E7791P1_0,    FL_OEM+FL_RONLY, 211, 127}, // Internal state of parameterization 7791
-{0x053D1719,  VT_PERCENT,         7796,  S7796_0,  0,                  NULL,         FL_OEM,       211, 127}, // Test sortie WX21 module 1
-{0x053D16A3,  VT_UINT,            7797,  S7797_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Pos. mot. à pas WX21 mod 1
-{0x053D171A,  VT_PERCENT,         7798,  S7798_0,  0,                  NULL,         FL_OEM,       211, 127}, // Test sortie WX21 module 2
-{0x053D16A4,  VT_UINT,            7799,  S7799_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Pos. mot. à pas WX21 mod 2
-{0x053D171B,  VT_PERCENT,         7800,  S7800_0,  0,                  NULL,         FL_OEM,       211, 127}, // Test sortie WX21 module 3
-{0x053D16A5,  VT_UINT,            7801,  S7801_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Pos. mot. à pas WX21 mod 3
+{0x053D03F5,  VT_ONOFF,           7728,  S7728_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Dégivrage DI6
+{0x053D03F6,  VT_ONOFF,           7729,  S7729_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Message erreur/alarme DI7
+{0x053D15F6,  VT_PERCENT,         7780,  S7780_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Test sortie UX21 module 1
+{0x053D1702,  VT_UINT10,          7781,  S7781_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Signal sortie UX21 module 1
+{0x053D1709,  VT_ENUM,            7781.1,S7781P1_0,sizeof(E7781P1_0),  E7781P1_0,    FL_RONLY+FL_OEM, 211, 127}, // Internal state of parameterization 7781
+{0x053D15F9,  VT_PERCENT,         7782,  S7782_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Test sortie UX22 module 1
+{0x053D1705,  VT_UINT10,          7783,  S7783_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Signal sortie UX22 module 1
+{0x053D170C,  VT_ENUM,            7783.1,S7783P1_0,sizeof(E7783P1_0),  E7783P1_0,    FL_RONLY+FL_OEM, 211, 127}, // Internal state of parameterization 7783
+{0x053D15F7,  VT_PERCENT,         7784,  S7784_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Test sortie UX21 module 2
+{0x053D1703,  VT_UINT10,          7785,  S7785_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // SIgnal sortie UX21 module 2
+{0x053D170A,  VT_ENUM,            7785.1,S7785P1_0,sizeof(E7785P1_0),  E7785P1_0,    FL_RONLY+FL_OEM, 211, 127}, // Internal state of parameterization 7785
+{0x053D15FA,  VT_PERCENT,         7786,  S7786_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Test sortie UX22 module 2
+{0x053D1706,  VT_UINT10,          7787,  S7787_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Signal sortie UX22 module 2
+{0x053D1717,  VT_ENUM,            7787.1,S7787P1_0,sizeof(E7787P1_0),  E7787P1_0,    FL_RONLY+FL_OEM, 211, 127}, // Internal state of parameterization 7787
+{0x053D15F8,  VT_PERCENT,         7788,  S7788_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Test sortie UX21 module 3
+{0x053D1704,  VT_UINT10,          7789,  S7789_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Signal sortie UX21 module 3
+{0x053D170B,  VT_ENUM,            7789.1,S7789P1_0,sizeof(E7789P1_0),  E7789P1_0,    FL_RONLY+FL_OEM, 211, 127}, // Internal state of parameterization 7789
+{0x053D15FB,  VT_PERCENT,         7790,  S7790_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Test sortie UX22 module 3
+{0x053D1707,  VT_UINT10,          7791,  S7791_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Signal sortie UX22 module 3
+{0x053D1718,  VT_ENUM,            7791.1,S7791P1_0,sizeof(E7791P1_0),  E7791P1_0,    FL_RONLY+FL_OEM, 211, 127}, // Internal state of parameterization 7791
+{0x053D1719,  VT_PERCENT,         7796,  S7796_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Test sortie WX21 module 1
+{0x053D16A3,  VT_UINT,            7797,  S7797_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Pos. mot. à pas WX21 mod 1
+{0x053D171A,  VT_PERCENT,         7798,  S7798_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Test sortie WX21 module 2
+{0x053D16A4,  VT_UINT,            7799,  S7799_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Pos. mot. à pas WX21 mod 2
+{0x053D171B,  VT_PERCENT,         7800,  S7800_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Test sortie WX21 module 3
+{0x053D16A5,  VT_UINT,            7801,  S7801_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Pos. mot. à pas WX21 mod 3
 {0x053D056B,  VT_TEMP,            7804,  S7804_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de sonde BX1
 {0x053D056C,  VT_TEMP,            7805,  S7805_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de sonde BX2
 {0x053D0791,  VT_TEMP,            7806,  S7806_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de sonde BX3
@@ -5469,10 +5472,10 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0799,  VT_TEMP,            7831,  S7831_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de sonde BX22 Module 1
 {0x053D079A,  VT_TEMP,            7832,  S7832_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de sonde BX21 Module 2
 {0x053D079B,  VT_TEMP,            7833,  S7833_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de sonde BX22 Module 2
-{0x053D0E42,  VT_TEMP,            7834,  S7834_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // T° sonde BX21 module 3
-{0x053D0E43,  VT_TEMP,            7835,  S7835_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // T° sonde BX22 module 3
-{0x053D171C,  VT_DWORD10,         7844,  S7844_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Signal d'entrée H1
-{0x053D1752,  VT_ENUM,            7844.1,S7844P1_0,sizeof(E7844P1_0),  E7844P1_0,    FL_OEM+FL_RONLY, 211, 127}, // Internal state of parameterization 7844
+{0x053D0E42,  VT_TEMP,            7834,  S7834_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // T° sonde BX21 module 3
+{0x053D0E43,  VT_TEMP,            7835,  S7835_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // T° sonde BX22 module 3
+{0x053D171C,  VT_DWORD10,         7844,  S7844_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Signal d'entrée H1
+{0x053D1752,  VT_ENUM,            7844.1,S7844P1_0,sizeof(E7844P1_0),  E7844P1_0,    FL_RONLY+FL_OEM, 211, 127}, // Internal state of parameterization 7844
 {0x053D171D,  VT_DWORD10,         7845,  S7845_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Signal d'entrée H2 module 1
 {0x053D1753,  VT_ENUM,            7845.1,S7845P1_0,sizeof(E7845P1_0),  E7845P1_0,    FL_RONLY,     211, 127}, // Internal state of parameterization 7845
 {0x053D1720,  VT_DWORD10,         7845.2,S7845P2_0,0,                  NULL,         FL_RONLY,     211, 127}, // Signal entrée H21 module 1
@@ -5496,19 +5499,19 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D03F8,  VT_VOLTAGEONOFF,    7911,  S7911_0,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     211, 127}, // Signal entrée EX1
 {0x053D03F9,  VT_VOLTAGEONOFF,    7912,  S7912_0,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     211, 127}, // Entrée signal EX2
 {0x053D03FA,  VT_VOLTAGEONOFF,    7913,  S7913_0,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     211, 127}, // Entrée signal EX3
-{0x053D1078,  VT_VOLTAGEONOFF,    7950,  S7950_0,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_OEM+FL_RONLY, 211, 127}, // Entrée EX21 module 1
-{0x053D1079,  VT_VOLTAGEONOFF,    7951,  S7951_0,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_OEM+FL_RONLY, 211, 127}, // Entrée EX21 module 2
-{0x053D107A,  VT_VOLTAGEONOFF,    7952,  S7952_0,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_OEM+FL_RONLY, 211, 127}, // Entrée EX21 module 3
-{0x053D165F,  VT_PERCENT,         7965,  S7965_0,  0,                  NULL,         FL_OEM,       211, 127}, // Test sortie WX31
-{0x053D1661,  VT_SINT_NN,         7966,  S7966_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Pos. moteur pas à pas WX31
+{0x053D1078,  VT_VOLTAGEONOFF,    7950,  S7950_0,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY+FL_OEM, 211, 127}, // Entrée EX21 module 1
+{0x053D1079,  VT_VOLTAGEONOFF,    7951,  S7951_0,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY+FL_OEM, 211, 127}, // Entrée EX21 module 2
+{0x053D107A,  VT_VOLTAGEONOFF,    7952,  S7952_0,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY+FL_OEM, 211, 127}, // Entrée EX21 module 3
+{0x053D165F,  VT_PERCENT,         7965,  S7965_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Test sortie WX31
+{0x053D1661,  VT_SINT_NN,         7966,  S7966_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Pos. moteur pas à pas WX31
 {0x053D08C5,  VT_TEMP,            7973,  S7973_0,  0,                  NULL,         FL_RONLY,     211, 127}, // T° sonde BX31
 {0x053D1219,  VT_TEMP,            7974,  S7974_0,  0,                  NULL,         FL_RONLY,     211, 127}, // T° sonde BX32
 {0x053D121A,  VT_TEMP,            7975,  S7975_0,  0,                  NULL,         FL_RONLY,     211, 127}, // T° sonde BX33
 {0x053D121B,  VT_TEMP,            7976,  S7976_0,  0,                  NULL,         FL_RONLY,     211, 127}, // T° sonde BX34
-{0x053D174F,  VT_DWORD10,         7989,  S7989_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Signal d'entrée H31
-{0x053D175D,  VT_ENUM,            7989.1,S7989P1_0,sizeof(E7989P1_0),  E7989P1_0,    FL_OEM+FL_RONLY, 211, 127}, // Internal state of parameterization 7989
-{0x053D1750,  VT_DWORD10,         7994,  S7994_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Signal d'entrée  H32
-{0x053D175E,  VT_ENUM,            7994.1,S7994P1_0,sizeof(E7994P1_0),  E7994P1_0,    FL_OEM+FL_RONLY, 211, 127}, // Internal state of parameterization 7994
+{0x053D174F,  VT_DWORD10,         7989,  S7989_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Signal d'entrée H31
+{0x053D175D,  VT_ENUM,            7989.1,S7989P1_0,sizeof(E7989P1_0),  E7989P1_0,    FL_RONLY+FL_OEM, 211, 127}, // Internal state of parameterization 7989
+{0x053D1750,  VT_DWORD10,         7994,  S7994_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Signal d'entrée  H32
+{0x053D175E,  VT_ENUM,            7994.1,S7994P1_0,sizeof(E7994P1_0),  E7994P1_0,    FL_RONLY+FL_OEM, 211, 127}, // Internal state of parameterization 7994
 {0x053D1751,  VT_DWORD10,         7999,  S7999_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Signal d'entrée H33
 {0x053D175F,  VT_ENUM,            7999.1,S7999P1_0,sizeof(E7999P1_0),  E7999P1_0,    FL_RONLY,     211, 127}, // Internal state of parameterization 7999
 {0x053D17C7,  VT_ENUM,            8000,  S8000_0,  sizeof(E8000_0),    E8000_0,      FL_RONLY,     211, 127}, // Etat du circuit de chauffage 1
@@ -5517,32 +5520,32 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D17CF,  VT_ENUM,            8004,  S8004_0,  sizeof(E8004_0),    E8004_0,      FL_RONLY,     211, 127}, // Etat circuit de refroidissement 1
 {0x053D17DC,  VT_ENUM,            8006,  S8006_0,  sizeof(E8006_0),    E8006_0,      FL_RONLY,     211, 127}, // Etat pompe à chaleur
 {0x053D17DE,  VT_ENUM,            8007,  S8007_0,  sizeof(E8007_0),    E8007_0,      FL_RONLY,     211, 127}, // Etat équipement solaire
-{0x053D17E0,  VT_ENUM,            8008,  S8008_0,  sizeof(E8008_0),    E8008_0,      FL_OEM+FL_RONLY, 211, 127}, // Etat chaudière à combustible solide
+{0x053D17E0,  VT_ENUM,            8008,  S8008_0,  sizeof(E8008_0),    E8008_0,      FL_RONLY+FL_OEM, 211, 127}, // Etat chaudière à combustible solide
 {0x053D17E2,  VT_ENUM,            8010,  S8010_0,  sizeof(E8010_0),    E8010_0,      FL_RONLY,     211, 127}, // Etat du ballon tampon
 {0x053D17E4,  VT_ENUM,            8011,  S8011_0,  sizeof(E8011_0),    E8011_0,      FL_RONLY,     211, 127}, // Etat piscine
 {0x053D17E6,  VT_ENUM,            8022,  S8022_0,  sizeof(E8022_0),    E8022_0,      FL_RONLY,     211, 127}, // Etat générateur supplémentaire
 {0x053D17D1,  VT_ENUM,            8025,  S8025_0,  sizeof(E8025_0),    E8025_0,      FL_RONLY,     211, 127}, // Etat circuit rafraîchiss. 2
-{0x053D06FD,  VT_DATETIME,        8050,  S8050_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Horodatage Historique d'état Entrée 1
-{0x053D17EA,  VT_ENUM,            8051,  S8051_0,  sizeof(E8051_0),    E8051_0,      FL_OEM+FL_RONLY, 211, 127}, // Code d'état  Historique Entrée 1
-{0x053D06FE,  VT_DATETIME,        8052,  S8052_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Horodatage Historique d'état Entrée 2
-{0x053D17EB,  VT_ENUM,            8053,  S8053_0,  sizeof(E8053_0),    E8053_0,      FL_OEM+FL_RONLY, 211, 127}, // Code d'état Historique Entrée 2
-{0x053D06FF,  VT_DATETIME,        8054,  S8054_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Horodatage Historique d'état Entrée 3
-{0x053D17EC,  VT_ENUM,            8055,  S8055_0,  sizeof(E8055_0),    E8055_0,      FL_OEM+FL_RONLY, 211, 127}, // Code d'état Historique Entrée 3
-{0x053D0700,  VT_DATETIME,        8056,  S8056_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Horodatage Historique d'état Entrée 4
-{0x053D17ED,  VT_ENUM,            8057,  S8057_0,  sizeof(E8057_0),    E8057_0,      FL_OEM+FL_RONLY, 211, 127}, // Code d'état Historique Entrée 4
-{0x053D0701,  VT_DATETIME,        8058,  S8058_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Horodatage Historique d'état Entrée 5
-{0x053D17EE,  VT_ENUM,            8059,  S8059_0,  sizeof(E8059_0),    E8059_0,      FL_OEM+FL_RONLY, 211, 127}, // Code d'état Historique Entrée 5
-{0x053D0702,  VT_DATETIME,        8060,  S8060_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Horodatage Historique d'état Entrée 6
-{0x053D17EF,  VT_ENUM,            8061,  S8061_0,  sizeof(E8061_0),    E8061_0,      FL_OEM+FL_RONLY, 211, 127}, // Code d'état Historique Entrée 6
-{0x053D0703,  VT_DATETIME,        8062,  S8062_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Horodatage Historique d'état Entrée 7
-{0x053D17F0,  VT_ENUM,            8063,  S8063_0,  sizeof(E8063_0),    E8063_0,      FL_OEM+FL_RONLY, 211, 127}, // Code d'état Historique Entrée 7
-{0x053D0704,  VT_DATETIME,        8064,  S8064_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Horodatage Historique d'état Entrée 8
-{0x053D17F1,  VT_ENUM,            8065,  S8065_0,  sizeof(E8065_0),    E8065_0,      FL_OEM+FL_RONLY, 211, 127}, // Code d'état Historique Entrée 8
-{0x053D0705,  VT_DATETIME,        8066,  S8066_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Horodatage Historique d'état Entrée 9
-{0x053D17F2,  VT_ENUM,            8067,  S8067_0,  sizeof(E8067_0),    E8067_0,      FL_OEM+FL_RONLY, 211, 127}, // Code d'état Historique Entrée 9
-{0x053D0706,  VT_DATETIME,        8068,  S8068_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Horodatage Historique d'état Entrée 10
-{0x053D17F3,  VT_ENUM,            8069,  S8069_0,  sizeof(E8069_0),    E8069_0,      FL_OEM+FL_RONLY, 211, 127}, // Code d'état Historique Entrée 10
-{0x053D06B6,  VT_YESNO,           8070,  S8070_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_OEM,       211, 127}, // Réinitialisation  historique d'état
+{0x053D06FD,  VT_DATETIME,        8050,  S8050_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Horodatage Historique d'état Entrée 1
+{0x053D17EA,  VT_ENUM,            8051,  S8051_0,  sizeof(E8051_0),    E8051_0,      FL_RONLY+FL_OEM, 211, 127}, // Code d'état  Historique Entrée 1
+{0x053D06FE,  VT_DATETIME,        8052,  S8052_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Horodatage Historique d'état Entrée 2
+{0x053D17EB,  VT_ENUM,            8053,  S8053_0,  sizeof(E8053_0),    E8053_0,      FL_RONLY+FL_OEM, 211, 127}, // Code d'état Historique Entrée 2
+{0x053D06FF,  VT_DATETIME,        8054,  S8054_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Horodatage Historique d'état Entrée 3
+{0x053D17EC,  VT_ENUM,            8055,  S8055_0,  sizeof(E8055_0),    E8055_0,      FL_RONLY+FL_OEM, 211, 127}, // Code d'état Historique Entrée 3
+{0x053D0700,  VT_DATETIME,        8056,  S8056_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Horodatage Historique d'état Entrée 4
+{0x053D17ED,  VT_ENUM,            8057,  S8057_0,  sizeof(E8057_0),    E8057_0,      FL_RONLY+FL_OEM, 211, 127}, // Code d'état Historique Entrée 4
+{0x053D0701,  VT_DATETIME,        8058,  S8058_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Horodatage Historique d'état Entrée 5
+{0x053D17EE,  VT_ENUM,            8059,  S8059_0,  sizeof(E8059_0),    E8059_0,      FL_RONLY+FL_OEM, 211, 127}, // Code d'état Historique Entrée 5
+{0x053D0702,  VT_DATETIME,        8060,  S8060_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Horodatage Historique d'état Entrée 6
+{0x053D17EF,  VT_ENUM,            8061,  S8061_0,  sizeof(E8061_0),    E8061_0,      FL_RONLY+FL_OEM, 211, 127}, // Code d'état Historique Entrée 6
+{0x053D0703,  VT_DATETIME,        8062,  S8062_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Horodatage Historique d'état Entrée 7
+{0x053D17F0,  VT_ENUM,            8063,  S8063_0,  sizeof(E8063_0),    E8063_0,      FL_RONLY+FL_OEM, 211, 127}, // Code d'état Historique Entrée 7
+{0x053D0704,  VT_DATETIME,        8064,  S8064_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Horodatage Historique d'état Entrée 8
+{0x053D17F1,  VT_ENUM,            8065,  S8065_0,  sizeof(E8065_0),    E8065_0,      FL_RONLY+FL_OEM, 211, 127}, // Code d'état Historique Entrée 8
+{0x053D0705,  VT_DATETIME,        8066,  S8066_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Horodatage Historique d'état Entrée 9
+{0x053D17F2,  VT_ENUM,            8067,  S8067_0,  sizeof(E8067_0),    E8067_0,      FL_RONLY+FL_OEM, 211, 127}, // Code d'état Historique Entrée 9
+{0x053D0706,  VT_DATETIME,        8068,  S8068_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Horodatage Historique d'état Entrée 10
+{0x053D17F3,  VT_ENUM,            8069,  S8069_0,  sizeof(E8069_0),    E8069_0,      FL_RONLY+FL_OEM, 211, 127}, // Code d'état Historique Entrée 10
+{0x053D06B6,  VT_YESNO,           8070,  S8070_0,  sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY+FL_OEM,       211, 127}, // Réinitialisation  historique d'état
 {0x153D0B90,  VT_BYTE,            8100,  S8100_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Priorité générateur 1
 {0x153D0BA4,  VT_ENUM,            8101,  S8101_0,  sizeof(E8101_0),    E8101_0,      FL_RONLY,     211, 127}, // Internal state of parameterization 8100
 {0x153D0B91,  VT_BYTE,            8102,  S8102_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Priorité générateur 2
@@ -5591,56 +5594,56 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0D2A,  VT_PERCENT_NN,      8413,  S8413_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Modulation compresseur
 {0x053D12F4,  VT_PERCENT_NN,      8414,  S8414_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Modulation résist électrique
 {0x593D05C3,  VT_TEMP,            8425,  S8425_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Plage de températures condensateur
-{0x593D0897,  VT_HOURS,           8450,  S8450_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Heures de fonctionnement compresseur 1
-{0x593D089B,  VT_DWORD,           8451,  S8451_0,  0,                  NULL,         FL_OEM,       211, 127}, // Compteur de démarrages compresseur 1
-{0x593D06C6,  VT_HOURS,           8454,  S8454_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Durée de blocage pompe à chaleur
-{0x593D06C1,  VT_DWORD,           8455,  S8455_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Compteur du nombre de blocages PAC
-{0x593D06C5,  VT_HOURS,           8456,  S8456_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Heures fonct. résistance électrique départ
-{0x593D06C0,  VT_DWORD,           8457,  S8457_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Compteur démarrages résist. électrique départ
+{0x593D0897,  VT_HOURS,           8450,  S8450_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Heures de fonctionnement compresseur 1
+{0x593D089B,  VT_DWORD,           8451,  S8451_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Compteur de démarrages compresseur 1
+{0x593D06C6,  VT_HOURS,           8454,  S8454_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Durée de blocage pompe à chaleur
+{0x593D06C1,  VT_DWORD,           8455,  S8455_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Compteur du nombre de blocages PAC
+{0x593D06C5,  VT_HOURS,           8456,  S8456_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Heures fonct. résistance électrique départ
+{0x593D06C0,  VT_DWORD,           8457,  S8457_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Compteur démarrages résist. électrique départ
 {0x053D196E,  VT_ENUM,            8458,  S8458_0,  sizeof(E8458_0),    E8458_0,      FL_RONLY,     211, 127}, // Etat smart grid
 {0x053D130F,  VT_LITERPERMIN,     8460,  S8460_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Débit pompe à chaleur
 {0x053D09AB,  VT_ONOFF,           8499,  S8499_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Etat pompe collecteur 1 (Q5)
 {0x493D04CE,  VT_PERCENT_NN,      8505,  S8505_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Vitesse pompe collecteur 1
 {0x493D052A,  VT_TEMP,            8510,  S8510_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température mesurée capteur solaire 1 (B6)
-{0x493D053F,  VT_TEMP,            8511,  S8511_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // température max mesurée capteur solaire 1 (B6)
-{0x493D0718,  VT_TEMP,            8512,  S8512_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Température mesurée min. du collecteur 1(B6)
+{0x493D053F,  VT_TEMP,            8511,  S8511_0,  0,                  NULL,         FL_RONLY, 211, 127}, // température max mesurée capteur solaire 1 (B6)
+{0x493D0718,  VT_TEMP,            8512,  S8512_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Température mesurée min. du collecteur 1(B6)
 {0x493D053B,  VT_TEMP,            8513,  S8513_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Diff. température collecteur 1/ ballonECS
 {0x493D042E,  VT_TEMP,            8515,  S8515_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Diff. de température collecteur 1/piscine
 {0x053D0521,  VT_TEMP,            8700,  S8700_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température extérieure
-{0x053D056F,  VT_TEMP,            8701,  S8701_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Température extérieure minimum
-{0x053D056E,  VT_TEMP,            8702,  S8702_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Température extérieure maximum
-{0x053D05F0,  VT_TEMP,            8703,  S8703_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Température extérieure résultante
+{0x053D056F,  VT_TEMP,            8701,  S8701_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Température extérieure minimum
+{0x053D056E,  VT_TEMP,            8702,  S8702_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Température extérieure maximum
+{0x053D05F0,  VT_TEMP,            8703,  S8703_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Température extérieure résultante
 {0x053D05F2,  VT_TEMP,            8704,  S8704_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température extérieure mélangée
 {0x053D09A5,  VT_ONOFF,           8730,  S8730_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Etat pompe circuit chauffage 1
 {0x053D09A6,  VT_ONOFF,           8731,  S8731_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Etat vanne mélange CC 1 ouvert
 {0x053D09A7,  VT_ONOFF,           8732,  S8732_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Etat vanne mélange CC 1 fermé
-{0x213D04A7,  VT_PERCENT_NN,      8735,  S8735_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Vitesse pompe circuit de chauffe CC1
+{0x213D04A7,  VT_PERCENT_NN,      8735,  S8735_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Vitesse pompe circuit de chauffe CC1
 {0x2D3D051E,  VT_TEMP,            8740,  S8740_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température ambiante réelle CC1
 {0x2D3D0593,  VT_TEMP,            8741,  S8741_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne température ambiante actuelle CC1
-{0x2D3D05E9,  VT_TEMP,            8742,  S8742_0,  0,                  NULL,         FL_OEM,       211, 127}, // Température modèle d'ambiance CC1
+{0x2D3D05E9,  VT_TEMP,            8742,  S8742_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Température modèle d'ambiance CC1
 {0x213D0518,  VT_TEMP,            8743,  S8743_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de départ circuit de chauffe 1
 {0x213D0667,  VT_TEMP,            8744,  S8744_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne de température de départ résultante CC1
 {0x053D0C7D,  VT_ENUM,            8749,  S8749_0,  sizeof(E8749_0),    E8749_0,      FL_RONLY,     211, 127}, // Thermostat d'ambiance CC1
-{0x053D0A81,  VT_ONOFF,           8751,  S8751_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Etat pompe du circuit de refroidissement 1
-{0x053D0A82,  VT_ONOFF,           8752,  S8752_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Etat vanne mélangeuse du CR 1 Ouvert
-{0x053D0A83,  VT_ONOFF,           8753,  S8753_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Etat vanne mélangeuse CR 1 fermé
-{0x053D0A01,  VT_ONOFF,           8754,  S8754_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Etat vanne dérivation refroidissement
+{0x053D0A81,  VT_ONOFF,           8751,  S8751_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Etat pompe du circuit de refroidissement 1
+{0x053D0A82,  VT_ONOFF,           8752,  S8752_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Etat vanne mélangeuse du CR 1 Ouvert
+{0x053D0A83,  VT_ONOFF,           8753,  S8753_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Etat vanne mélangeuse CR 1 fermé
+{0x053D0A01,  VT_ONOFF,           8754,  S8754_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Etat vanne dérivation refroidissement
 {0x693D0A79,  VT_TEMP,            8756,  S8756_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Valeur actuelle de temp. de départ CR1
 {0x693D0A1D,  VT_TEMP,            8757,  S8757_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne de temp. de départ résultante CR1
 {0x053D09A8,  VT_ONOFF,           8760,  S8760_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Etat pompe de chauffage 2
-{0x053D09A9,  VT_ONOFF,           8761,  S8761_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Etat Vanne mélange chauffage 2 ouvert
-{0x053D09AA,  VT_ONOFF,           8762,  S8762_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Etat vanne mélange chauffage 2 fermé
-{0x223D04A7,  VT_PERCENT_NN,      8765,  S8765_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Vitesse pompe de circuit de chauffe CC2
+{0x053D09A9,  VT_ONOFF,           8761,  S8761_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Etat Vanne mélange chauffage 2 ouvert
+{0x053D09AA,  VT_ONOFF,           8762,  S8762_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Etat vanne mélange chauffage 2 fermé
+{0x223D04A7,  VT_PERCENT_NN,      8765,  S8765_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Vitesse pompe de circuit de chauffe CC2
 {0x2E3D051E,  VT_TEMP,            8770,  S8770_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température ambiante actuelle CC 2
 {0x2E3D0593,  VT_TEMP,            8771,  S8771_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne actuelle de température ambiante CC2
-{0x2E3D05E9,  VT_TEMP,            8772,  S8772_0,  0,                  NULL,         FL_OEM,       211, 127}, // Température de modèle d'ambiance CC2
+{0x2E3D05E9,  VT_TEMP,            8772,  S8772_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Température de modèle d'ambiance CC2
 {0x223D0518,  VT_TEMP,            8773,  S8773_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de départ circuit de chauffe 2
 {0x223D0667,  VT_TEMP,            8774,  S8774_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne de température de départ résultante CC2
 {0x063D0C7D,  VT_ENUM,            8779,  S8779_0,  sizeof(E8779_0),    E8779_0,      FL_RONLY,     211, 127}, // Thermostat d'ambiance CC2
-{0x053D15AB,  VT_ONOFF,           8781,  S8781_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Pompe circuit rafraîch. 2
-{0x053D1615,  VT_ONOFF,           8782,  S8782_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Vne mél.circ rafr. 2 ouverte
-{0x053D1616,  VT_ONOFF,           8783,  S8783_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Vne mél.circ rafr. 2 fermée
-{0x053D1619,  VT_ONOFF,           8784,  S8784_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Vanne direction. rafraîch 2
+{0x053D15AB,  VT_ONOFF,           8781,  S8781_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Pompe circuit rafraîch. 2
+{0x053D1615,  VT_ONOFF,           8782,  S8782_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Vne mél.circ rafr. 2 ouverte
+{0x053D1616,  VT_ONOFF,           8783,  S8783_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Vne mél.circ rafr. 2 fermée
+{0x053D1619,  VT_ONOFF,           8784,  S8784_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Vanne direction. rafraîch 2
 {0x6A3D0A79,  VT_TEMP,            8786,  S8786_0,  0,                  NULL,         FL_RONLY,     211, 127}, // T° départ rafraichiss.2
 {0x6A3D0A1D,  VT_TEMP,            8787,  S8787_0,  0,                  NULL,         FL_RONLY,     211, 127}, // T° consigne dprt rafraîch 2
 {0x2F3D0593,  VT_TEMP,            8801,  S8801_0,  0,                  NULL,         FL_RONLY,     211, 127}, // T°consigne d'ambiance 3
@@ -5650,16 +5653,16 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x313D052F,  VT_TEMP,            8830,  S8830_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température  mesurée ECS en haut (B3)
 {0x313D074B,  VT_TEMP,            8831,  S8831_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne actuelle de température ECS
 {0x313D0530,  VT_TEMP,            8832,  S8832_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température mesurée d'ECS en bas (B31)
-{0x253D06C2,  VT_HOURS,           8840,  S8840_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Heures de fonctionnement pompe ECS
-{0x253D06BD,  VT_DWORD,           8841,  S8841_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Compteur de démarrages pompe ECS
-{0x253D06C3,  VT_HOURS,           8842,  S8842_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Heures fonct. résistance électrique ECS
-{0x253D06BE,  VT_DWORD,           8843,  S8843_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Compteur démarrages résist. électrique ECS
+{0x253D06C2,  VT_HOURS,           8840,  S8840_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Heures de fonctionnement pompe ECS
+{0x253D06BD,  VT_DWORD,           8841,  S8841_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Compteur de démarrages pompe ECS
+{0x253D06C3,  VT_HOURS,           8842,  S8842_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Heures fonct. résistance électrique ECS
+{0x253D06BE,  VT_DWORD,           8843,  S8843_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Compteur démarrages résist. électrique ECS
 {0x313D0B24,  VT_TEMP,            8852,  S8852_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température chauffe-eau instantané ECS
 {0x073D080C,  VT_TEMP,            8895,  S8895_0,  0,                  NULL,         FL_RONLY,     211, 127}, // T° consigne départ piscine
 {0x053D0AF9,  VT_TEMP,            8900,  S8900_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température réelle piscine (B13)
 {0x053D0AF2,  VT_TEMP,            8901,  S8901_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de consigne piscine
-{0x053D08C7,  VT_TEMP,            8930,  S8930_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Température mesurée prérégulateur
-{0x053D08C8,  VT_TEMP,            8931,  S8931_0,  0,                  NULL,         FL_OEM+FL_RONLY, 211, 127}, // Consigne de température prérégulateur
+{0x053D08C7,  VT_TEMP,            8930,  S8930_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Température mesurée prérégulateur
+{0x053D08C8,  VT_TEMP,            8931,  S8931_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Consigne de température prérégulateur
 {0x053D1952,  VT_ENUM,            8937,  S8937_0,  sizeof(E8937_0),    E8937_0,      FL_RONLY,     211, 127}, // Vitesse ventilation 1
 {0x063D1952,  VT_ENUM,            8942,  S8942_0,  sizeof(E8942_0),    E8942_0,      FL_RONLY,     211, 127}, // Vitesse ventilation 2
 {0x073D1952,  VT_ENUM,            8947,  S8947_0,  sizeof(E8947_0),    E8947_0,      FL_RONLY,     211, 127}, // Vitesse ventilation 3
@@ -5667,7 +5670,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0783,  VT_TEMP,            8951,  S8951_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne température de départ bus
 {0x053D0D28,  VT_TEMP,            8957,  S8957_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne froid départ de ligne
 {0x053D0534,  VT_TEMP,            8980,  S8980_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Températ. accumlateur mesurée partie haute (B4)
-{0x053D06B7,  VT_TEMP,            8981,  S8981_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne ballon tampon
+{0x053D06B7,  VT_TEMP,            8981,  S8981_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne ballon tampon
 {0x053D0805,  VT_PRESSURE_WORD_NN,9005,  S9005_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Pression hydraulique 1
 {0x063D0805,  VT_PRESSURE_WORD_NN,9006,  S9006_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Pression hydraulique 2
 {0x073D0805,  VT_PRESSURE_WORD_NN,9009,  S9009_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Pression hydraulique 3
@@ -5684,43 +5687,43 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D09F9,  VT_ONOFF,           9053,  S9053_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Etat du Relais multifonctions (QX21 Module 2)
 {0x053D09FA,  VT_ONOFF,           9054,  S9054_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Etat du Relais multifonctions (QX22 Module 2)
 {0x053D09FB,  VT_ONOFF,           9055,  S9055_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Etat du Relais multifonctions (QX23 Module 2)
-{0x053D0E4D,  VT_ONOFF,           9056,  S9056_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Sortie relais QX21 module 3
-{0x053D0E4E,  VT_ONOFF,           9057,  S9057_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Sortie relais QX22 module 3
-{0x053D0E4F,  VT_ONOFF,           9058,  S9058_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_OEM+FL_RONLY, 211, 127}, // Sortie relais QX23 module 3
+{0x053D0E4D,  VT_ONOFF,           9056,  S9056_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Sortie relais QX21 module 3
+{0x053D0E4E,  VT_ONOFF,           9057,  S9057_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Sortie relais QX22 module 3
+{0x053D0E4F,  VT_ONOFF,           9058,  S9058_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM, 211, 127}, // Sortie relais QX23 module 3
 {0x053D1225,  VT_ONOFF,           9071,  S9071_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Sortie relais QX31
 {0x053D1226,  VT_ONOFF,           9072,  S9072_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Sortie relais QX32
 {0x053D1227,  VT_ONOFF,           9073,  S9073_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Sortie relais QX33
 {0x053D1228,  VT_ONOFF,           9074,  S9074_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Sortie relais QX34
 {0x053D1229,  VT_ONOFF,           9075,  S9075_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Sortie relais QX35
-{0x2D3D0215,  VT_TEMP,            10000, S10000,   0,                  NULL,         DEFAULT_FLAG+FL_WONLY, 255, 255},
-{0x2D3D021C,  VT_TEMP,            10000, S10000,   0,                  NULL,         DEFAULT_FLAG+FL_WONLY, 59, 255},
-{0x2E3E0215,  VT_TEMP,            10001, S10001,   0,                  NULL,         DEFAULT_FLAG+FL_WONLY, 255, 255},
-{0x2F3F0215,  VT_TEMP,            10002, S10002,   0,                  NULL,         DEFAULT_FLAG+FL_WONLY, 255, 255},
+{0x2D3D0215,  VT_TEMP,            10000, S10000,   0,                  NULL,         FL_RONLY, 255, 255},
+{0x2D3D021C,  VT_TEMP,            10000, S10000,   0,                  NULL,         FL_RONLY, 59, 255},
+{0x2E3E0215,  VT_TEMP,            10001, S10001,   0,                  NULL,         FL_RONLY, 255, 255},
+{0x2F3F0215,  VT_TEMP,            10002, S10002,   0,                  NULL,         FL_RONLY, 255, 255},
 {0x31000212,  VT_BIT,             10018, S10018,   sizeof(ENUM_TWW),   ENUM_TWW,     FL_RONLY, 255, 255},
-{0x313D0573,  VT_ONOFF,           10019, S10019,   sizeof(ENUM_ONOFF), ENUM_ONOFF,   DEFAULT_FLAG+FL_WONLY, 255, 255},
-{0x053D1B4E,  VT_TIMEPROG,        10020, S_WD_1,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B4F,  VT_TIMEPROG,        10021, S_WD_2,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B50,  VT_TIMEPROG,        10022, S_WD_3,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B51,  VT_TIMEPROG,        10023, S_WD_4,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B52,  VT_TIMEPROG,        10024, S_WD_5,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B53,  VT_TIMEPROG,        10025, S_WD_6,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x053D1B54,  VT_TIMEPROG,        10026, S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B4E,  VT_TIMEPROG,        10027, S_WD_1,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B4F,  VT_TIMEPROG,        10028, S_WD_2,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B50,  VT_TIMEPROG,        10029, S_WD_3,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B51,  VT_TIMEPROG,        10030, S_WD_4,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B52,  VT_TIMEPROG,        10031, S_WD_5,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B53,  VT_TIMEPROG,        10032, S_WD_6,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x063D1B54,  VT_TIMEPROG,        10033, S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D1B4E,  VT_TIMEPROG,        10034, S_WD_1,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D1B4F,  VT_TIMEPROG,        10035, S_WD_2,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D1B50,  VT_TIMEPROG,        10036, S_WD_3,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D1B51,  VT_TIMEPROG,        10037, S_WD_4,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D1B52,  VT_TIMEPROG,        10038, S_WD_5,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D1B53,  VT_TIMEPROG,        10039, S_WD_6,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x073D1B54,  VT_TIMEPROG,        10040, S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x0D3D092C,  VT_TEMP,            10041, S10041_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Générateur supplémentaire - Limitation mini de température de chaudière
-{0x0D3D092B,  VT_TEMP,            10042, S10042_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Générateur supplémentaire - Limitation maxi de température de chaudière
+{0x313D0573,  VT_ONOFF,           10019, S10019,   sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY, 255, 255},
+{0x053D1B4E,  VT_TIMEPROG,        10020, S_WD_1,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B4F,  VT_TIMEPROG,        10021, S_WD_2,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B50,  VT_TIMEPROG,        10022, S_WD_3,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B51,  VT_TIMEPROG,        10023, S_WD_4,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B52,  VT_TIMEPROG,        10024, S_WD_5,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B53,  VT_TIMEPROG,        10025, S_WD_6,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x053D1B54,  VT_TIMEPROG,        10026, S_WD_7,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B4E,  VT_TIMEPROG,        10027, S_WD_1,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B4F,  VT_TIMEPROG,        10028, S_WD_2,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B50,  VT_TIMEPROG,        10029, S_WD_3,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B51,  VT_TIMEPROG,        10030, S_WD_4,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B52,  VT_TIMEPROG,        10031, S_WD_5,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B53,  VT_TIMEPROG,        10032, S_WD_6,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x063D1B54,  VT_TIMEPROG,        10033, S_WD_7,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D1B4E,  VT_TIMEPROG,        10034, S_WD_1,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D1B4F,  VT_TIMEPROG,        10035, S_WD_2,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D1B50,  VT_TIMEPROG,        10036, S_WD_3,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D1B51,  VT_TIMEPROG,        10037, S_WD_4,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D1B52,  VT_TIMEPROG,        10038, S_WD_5,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D1B53,  VT_TIMEPROG,        10039, S_WD_6,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x073D1B54,  VT_TIMEPROG,        10040, S_WD_7,   0,                  NULL,         FL_RONLY, 211, 127},
+{0x0D3D092C,  VT_TEMP,            10041, S10041_0, 0,                  NULL,         FL_RONLY, 211, 127}, // Générateur supplémentaire - Limitation mini de température de chaudière
+{0x0D3D092B,  VT_TEMP,            10042, S10042_0, 0,                  NULL,         FL_RONLY, 211, 127}, // Générateur supplémentaire - Limitation maxi de température de chaudière
 {0x053D1ACC,  VT_YESNO,           10043, S10043_0, sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY,     211, 127}, // Configuration - LPB interface available
 {0x053D1ACD,  VT_YESNO,           10044, S10044_0, sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY,     211, 127}, // Configuration - Modbus interface available
 {0x053D009A,  VT_UNKNOWN,         10045, S10045_0, 0,                  NULL,         FL_RONLY,     211, 127}, // Diagnostic consommateurs - Message d'erreur
@@ -5745,16 +5748,16 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D17DB,  VT_ENUM,            10064, S10064_0, sizeof(E10064_0),   E10064_0,     FL_RONLY,     211, 127}, // Etat circuit rafraîchiss. 3
 {0x053D1A0F,  VT_ENUM,            10065, S10065_0, sizeof(E10065_0),   E10065_0,     FL_RONLY,     211, 127}, // Etat ventilation 3
 {0x233D0518,  VT_TEMP,            10066, S10066_0, 0,                  NULL,         FL_RONLY,     211, 127}, // Température de départ 3
-{0x2D3D058E,  VT_TEMP,            10067, S10067_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de confort chauffage
-{0x2D3D0590,  VT_TEMP,            10068, S10068_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne régime REDUIT
-{0x2D3D0592,  VT_TEMP,            10069, S10069_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne hors-gel de température Ambiante
-{0x313D06B9,  VT_TEMP,            10070, S10070_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne nominale de température ECS
-{0x2D3D068A,  VT_TEMP,            10071, S10071_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne manuelle séchage chapes de béton
-{0x053D058D,  VT_ENUM,            10072, S10072_0, sizeof(E10072_0),   E10072_0,     DEFAULT_FLAG, 211, 127}, // Fonction ramonage puissance brûleur
-{0x0D3D08EB,  VT_TEMP,            10073, S10073_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de chaudière en régime manuel
-{0x053D3022,  VT_PERCENT_NN,      10074, S10074_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne d'arrêt du régulateur
-{0x053D157C,  VT_YESNO,           10075, S10075_0, sizeof(ENUM_YESNO), ENUM_YESNO,   DEFAULT_FLAG, 211, 127}, // Reset utilisateur final
-{0x2D3D0572,  VT_ENUM,            10110, S_BATHK1, sizeof(E_BA_TEMP),  E_BA_TEMP,    DEFAULT_FLAG+FL_WONLY, 255, 255},
-{0x2E3D0572,  VT_ENUM,            10111, S_BATHK2, sizeof(E_BA_TEMP),  E_BA_TEMP,    DEFAULT_FLAG+FL_WONLY, 255, 255},
-{0x2F3D0572,  VT_ENUM,            10112, S_BATHK3, sizeof(E_BA_TEMP),  E_BA_TEMP,    DEFAULT_FLAG+FL_WONLY, 255, 255},
+{0x2D3D058E,  VT_TEMP,            10067, S10067_0, 0,                  NULL,         FL_RONLY, 211, 127}, // Consigne de confort chauffage
+{0x2D3D0590,  VT_TEMP,            10068, S10068_0, 0,                  NULL,         FL_RONLY, 211, 127}, // Consigne régime REDUIT
+{0x2D3D0592,  VT_TEMP,            10069, S10069_0, 0,                  NULL,         FL_RONLY, 211, 127}, // Consigne hors-gel de température Ambiante
+{0x313D06B9,  VT_TEMP,            10070, S10070_0, 0,                  NULL,         FL_RONLY, 211, 127}, // Consigne nominale de température ECS
+{0x2D3D068A,  VT_TEMP,            10071, S10071_0, 0,                  NULL,         FL_RONLY, 211, 127}, // Consigne manuelle séchage chapes de béton
+{0x053D058D,  VT_ENUM,            10072, S10072_0, sizeof(E10072_0),   E10072_0,     FL_RONLY, 211, 127}, // Fonction ramonage puissance brûleur
+{0x0D3D08EB,  VT_TEMP,            10073, S10073_0, 0,                  NULL,         FL_RONLY, 211, 127}, // Consigne de chaudière en régime manuel
+{0x053D3022,  VT_PERCENT_NN,      10074, S10074_0, 0,                  NULL,         FL_RONLY, 211, 127}, // Consigne d'arrêt du régulateur
+{0x053D157C,  VT_YESNO,           10075, S10075_0, sizeof(ENUM_YESNO), ENUM_YESNO,   FL_RONLY, 211, 127}, // Reset utilisateur final
+{0x2D3D0572,  VT_ENUM,            10110, S_BATHK1, sizeof(E_BA_TEMP),  E_BA_TEMP,    FL_RONLY, 255, 255},
+{0x2E3D0572,  VT_ENUM,            10111, S_BATHK2, sizeof(E_BA_TEMP),  E_BA_TEMP,    FL_RONLY, 255, 255},
+{0x2F3D0572,  VT_ENUM,            10112, S_BATHK3, sizeof(E_BA_TEMP),  E_BA_TEMP,    FL_RONLY, 255, 255},
 

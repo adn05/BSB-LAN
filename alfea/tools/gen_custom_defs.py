@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 """Produit la liste Alféa (BSB_LAN_custom_defs.h) à partir de la liste 211/127 de référence.
 
-Usage : gen_custom_defs.py <liste_source.h> <sortie.h> [--selection <fichier>]
+Usage : gen_custom_defs.py <liste_source.h> <sortie.h> [--selection <fichier>] [--ecriture <fichier>]
 
 Avec --selection, seules les entrées dont le numéro de ligne figure dans le fichier
 (numéros ou plages « a-b », commentaires « # ») sont conservées dans la cmdtbl.
 Les textes et énumérations non référencés sont éliminés à l'édition de liens.
 
+Avec --ecriture (liste blanche, même format), toute entrée hors liste reçoit FL_RONLY
+(FL_OEM conservé) et le tableau write_whitelist[][2] est émis pour la garde
+WRITE_WHITELIST de set() (BSB_LAN.ino). Voir docs/claude/08_plan_migration.md §5.2.
+
 Les corrections sont décrites et justifiées dans docs/claude/08a_analyse_liste_parametres.md.
 Chaque ajout porte le commentaire « ALFEA » ; aucune entrée source n'est supprimée.
 """
+import argparse
 import re
 import sys
 
@@ -56,6 +61,8 @@ AJOUTS = [
 ]
 
 ENTREE_LIGNE = re.compile(r'^\{0x[0-9A-Fa-f]{8},\s*VT_\w+,\s*([\d.]+),')
+# groupes : début jusqu'aux drapeaux inclus le séparateur, drapeaux, fin de l'entrée
+ENTREE_DRAPEAUX = re.compile(r'^(\{0x[0-9A-Fa-f]{8},\s*VT_\w+,\s*[\d.]+,\s*\w+,\s*[^,]+,\s*\w+,\s*)([^,]+?)(,\s*\w+,\s*\w+\},?.*)$')
 
 
 def lire_selection(chemin):
@@ -69,12 +76,28 @@ def lire_selection(chemin):
     return plages
 
 
+def dans(plages, ligne):
+    return any(a <= ligne <= b for a, b in plages)
+
+
 def main():
-    src, dst = sys.argv[1:3]
-    plages = lire_selection(sys.argv[4]) if len(sys.argv) > 4 and sys.argv[3] == '--selection' else None
+    args = argparse.ArgumentParser()
+    args.add_argument('source')
+    args.add_argument('sortie')
+    args.add_argument('--selection')
+    args.add_argument('--ecriture')
+    args = args.parse_args()
+    src, dst = args.source, args.sortie
+    plages = lire_selection(args.selection) if args.selection else None
+    blanche = lire_selection(args.ecriture) if args.ecriture else None
     lignes = open(src, encoding='utf-8').read().splitlines()
     debut = next(i for i, l in enumerate(lignes) if 'const cmd_t cmdtbl[]' in l)
-    sortie = lignes[:debut] + TEXTES.splitlines() + [lignes[debut]]
+    entete = TEXTES.splitlines()
+    if blanche is not None:
+        entete += ["// ALFEA : liste blanche d'écriture (alfea/params/ecriture.txt), garde WRITE_WHITELIST de set()",
+                   'const float write_whitelist[][2] = {'
+                   + ', '.join(f'{{{a:g}, {b:g}}}' for a, b in blanche) + '};', '']
+    sortie = lignes[:debut] + entete + [lignes[debut]]
     restants = dict(AJOUTS)
     i = debut + 1
     while i < len(lignes):
@@ -97,6 +120,15 @@ def main():
                 continue
             retenues.append(l)
         sortie = retenues
+    if blanche is not None:
+        for k, l in enumerate(sortie):
+            m = ENTREE_LIGNE.match(l)
+            if m and not dans(blanche, float(m.group(1))):
+                d = ENTREE_DRAPEAUX.match(l)
+                if not d:
+                    sys.exit(f'drapeaux illisibles : {l}')
+                drapeaux = 'FL_RONLY' + ('+FL_OEM' if 'FL_OEM' in d.group(2) else '')
+                sortie[k] = d.group(1) + drapeaux + d.group(3)
     with open(dst, 'w', encoding='utf-8', newline='\n') as f:
         f.write(ENTETE + '\n'.join(sortie) + '\n')
 

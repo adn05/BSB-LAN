@@ -1,0 +1,181 @@
+/************************************************************************************/
+/* Configuration BSB-LAN pour Atlantic Alféa Extensa Duo A.I. (RVS21, bus BSB)      */
+/* sur ESP32-C3 SuperMini + carte d'interface alfea/hardware.                        */
+/* Dérivée de BSB_LAN/BSB_LAN_config.h.default (CONFIG_VERSION 43).                 */
+/* Copiée dans le répertoire de build par docker/build.sh (cible alfea).            */
+/* Justifications : docs/claude/08_plan_migration.md §1.2, §4, §5.                   */
+/* Les secrets (WiFi, MQTT, mots de passe) sont dans alfea_secrets.h, hors dépôt.   */
+/************************************************************************************/
+
+#include "alfea_secrets.h"
+
+#define LANG FR
+
+// Les valeurs de ce fichier servent au premier démarrage, puis la NVS fait foi (modifiable via /C).
+byte UseEEPROM = 1;
+
+/*
+ * Réseau : WiFi du SuperMini (pas d'Ethernet sur le C3), DHCP.
+ */
+uint8_t network_type = WLAN;
+uint16_t HTTPPort = 80;
+bool useDHCP = true;
+byte ip_addr[4] = {192,168,1,88};
+byte gateway_addr[4] = {192,168,1,1};
+byte dns_addr[4] = {192,168,1,1};
+byte subnet_addr[4] = {255,255,255,0};
+
+char wifi_ssid[32] = ALFEA_WIFI_SSID;
+char wifi_pass[64] = ALFEA_WIFI_PASS;
+uint8_t bssid[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+char mDNS_hostname[32] = "bsb-lan-alfea";
+
+const char ntp_server[20] = "pool.ntp.org";
+const char local_timezone[30] = "CET-1CEST,M3.5.0,M10.5.0/3";
+
+/*
+ * Sécurité : authentification HTTP obligatoire (elle protège aussi l'OTA, BSB_LAN.ino:1842-1860).
+ */
+char PASSKEY[64] = "";
+byte trusted_ip_addr[4] = {0,0,0,0};
+byte trusted_ip_addr2[4] = {0,0,0,0};
+char USER_PASS[64] = ALFEA_USER_PASS;
+#if !defined(ALFEA_USER_PASS_DEFINI)
+#error "ALFEA_USER_PASS doit être défini (utilisateur:mot_de_passe) dans alfea_secrets.h"
+#endif
+
+byte mac[6] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };  // inutilisé en WiFi
+
+/*
+ * Bus BSB : adresse LAN 0x42, régulateur 0x00 (RVS21). L'IHM Atlantic est en 0x0A.
+ */
+uint8_t bus_type = 0;
+byte own_address = 0x42;
+byte dest_address = 0x00;
+bool pps_write = 0;
+byte QAA_TYPE = 0x53;
+
+// Carte d'interface alfea/hardware : RX = GPIO6, TX = GPIO7 (docs/claude/09 §3).
+byte bus_pins[2] = {6,7};
+
+/*
+ * Lecture seule par défaut (docs/claude/08 §1.3 et §5.2).
+ * FL_RONLY : aucun paramètre n'est modifiable, quel que soit le mode d'écriture choisi dans /C.
+ * L'écriture des programmes horaires, modes et consignes demande de compiler avec ALFEA_ECRITURE
+ * (liste blanche alfea_lignes_ecriture), puis de choisir le mode d'écriture 1 dans /C.
+ */
+#if defined(ALFEA_ECRITURE)
+#define DEFAULT_FLAG FL_SW_CTL_RONLY
+#else
+#define DEFAULT_FLAG FL_RONLY
+#endif
+
+// Pas de carte SD sur le C3 : les broches SD par défaut (18, 19) sont celles de l'USB natif.
+uint8_t LogDestination = FLASH;
+#define SD_SCK 18
+#define SD_MISO 19
+#define SD_MOSI 23
+#define SD_CS 5
+
+// LED bleue du SuperMini (docs/claude/09 §3).
+#define LED_BUILTIN 8
+
+uint8_t logTelegram = LOGTELEGRAM_OFF;
+
+/*
+ * Paramètres journalisés et publiés en MQTT (docs/claude/08 §5.1) : 40 entrées, tableau de 48.
+ */
+unsigned long log_interval = 60;
+parameter log_parameters[48] = {
+  {8700, -1},    // Température extérieure
+  {8740, -1},    // Température ambiante CC1 (salon + cuisine)
+  {8741, -1},    // Consigne ambiante actuelle CC1
+  {8743, -1},    // Température de départ CC1
+  {8744, -1},    // Consigne de départ résultante CC1
+  {8770, -1},    // Température ambiante CC2 (chambres)
+  {8771, -1},    // Consigne ambiante actuelle CC2
+  {8773, -1},    // Température de départ CC2
+  {8410, -1},    // Température de retour PAC
+  {8411, -1},    // Consigne PAC
+  {8412, -1},    // Température de départ PAC
+  {8400, -1},    // État compresseur 1
+  {8413, -1},    // Modulation compresseur
+  {8460, -1},    // Débit PAC
+  {8402, -1},    // Résistance électrique départ 1
+  {8403, -1},    // Résistance électrique départ 2
+  {8830, -1},    // Température ECS haut (B3)
+  {8831, -1},    // Consigne actuelle ECS
+  {8821, -1},    // Résistance électrique ECS
+  {8000, -1},    // État CC1
+  {8001, -1},    // État CC2
+  {8003, -1},    // État ECS
+  {8006, -1},    // État PAC
+  {700, -1},     // Mode CC1
+  {1000, -1},    // Mode CC2
+  {1600, -1},    // Mode ECS
+  {710, -1},     // Consigne confort CC1
+  {712, -1},     // Consigne réduit CC1
+  {1010, -1},    // Consigne confort CC2
+  {1012, -1},    // Consigne réduit CC2
+  {1610, -1},    // Consigne nominale ECS
+  {3113.1, -1},  // Énergie utilisée chauffage (#831)
+  {3113.2, -1},  // Énergie utilisée ECS (#831)
+  {3113.4, -1},  // Énergie utilisée totale (#831)
+  {8450, -1},    // Heures de fonctionnement compresseur
+  {8451, -1},    // Démarrages compresseur
+  {6700, -1},    // Erreur
+  {6708, -1},    // Message d'erreur PAC
+  {20100.1, -1}, // DHT22 : température
+  {20100.2, -1}, // DHT22 : humidité
+};
+
+/*
+ * MQTT vers le broker Mosquitto de Home Assistant (docs/claude/08 §5.3).
+ */
+char mqtt_broker_addr[65] = ALFEA_MQTT_BROKER;
+char MQTTUsername[65] = ALFEA_MQTT_USER;
+char MQTTPassword[65] = ALFEA_MQTT_PASS;
+char MQTTTopicPrefix[65] = "BSB-LAN";
+bool MQTTRefAD = true;                       // republier la discovery si le broker l'a perdue
+byte mqtt_mode = 1;                          // texte : requis par les gabarits de la discovery (04 L1)
+byte mqtt_unit_set = CF_MQTT_UNIT_HOMEASSISTANT;
+char MQTTDeviceID[32] = "bsb-lan-alfea";
+// Discovery sur toute la liste réduite (programmes horaires inclus), publication périodique des log_parameters.
+byte LoggingMode = CF_LOGMODE_MQTT;
+
+parameter avg_parameters[40] = {};
+
+char replaceDisabled[10] = "None";           // valeur attendue par HA pour un capteur inactif
+
+int8_t One_Wire_Pin = -1;
+
+// DHT22 sur GPIO5 (entrée J3 de la carte).
+int8_t DHT_Pins[10] = {5, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+
+byte BME_Sensors = 0;
+
+bool enable_ipwe = false;
+parameter ipwe_parameters[40] = {};
+
+#define USE_ADVANCED_PLOT_LOG_FILE
+#define DEFAULT_DAYS_TO_PLOT "3"
+
+bool enable_max_cul = false;
+byte max_cul_ip_addr[4] = {0,0,0,0};
+char max_device_list[20][11] = {};
+
+bool enable_version_check = false;
+
+// OTA activé : protégé par USER_PASS (obligatoire, voir plus haut).
+bool enable_ota_update = true;
+
+bool esp32_save_energy = false;
+bool webserver = false;
+
+byte debug_mode = 1;  // journal sur l'USB natif (CDC)
+byte verbose = 1;
+bool show_unknown = false;
+
+#define CONFIG_VERSION 43
+

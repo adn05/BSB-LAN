@@ -1,0 +1,21 @@
+# Liste blanche d'écriture : seuls ces paramètres peuvent être modifiés, et seulement si le firmware
+# est compilé avec ALFEA_ECRITURE puis le mode d'écriture 1 choisi dans /C.
+# Avertissement, effets d'une erreur et procédure : docs/claude/08_plan_migration.md §5.2.
+# Format : numéros ou plages « a-b » (sous-lignes comprises), commentaires « # ».
+
+# Programmes horaires : CC1 (salon + cuisine), CC2 (chambres), ECS
+501-507
+521-527
+561-567
+
+# Modes de fonctionnement CC1, CC2, ECS
+700
+1000
+1600
+
+# Consignes : confort et réduit CC1 et CC2, nominale ECS
+710
+712
+1010
+1012
+1610
