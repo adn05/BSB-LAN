@@ -16,7 +16,7 @@ Comportement :
 Usage :
   bsb_sim.py --autotest                       # contrôles de codage, sans matériel
   bsb_sim.py --port /dev/ttyUSB0 [--scenario f.json] [--liste ...] [--defs ...]
-  bsb_sim.py --port COM7 --pont               # via un 2e ESP32-C3 (alfea/tools/pont_bsb), sans adaptateur USB-UART
+  bsb_sim.py --port COM7 --pont               # via une ESP-C3-32S-Kit (alfea/tools/pont_bsb), sans adaptateur USB-UART
 """
 import argparse
 import json
@@ -142,14 +142,17 @@ class Regulateur:
 # ----------------------------------------------------------------------------- liaison série
 def boucle(port, reg, pont=False):
     import serial  # pyserial, seulement pour le mode matériel
-    ser = serial.Serial(None, 4800, bytesize=8, parity=serial.PARITY_ODD, stopbits=1, timeout=0.005)
+    if pont:   # NodeMCU ESP-C3-32S-Kit : liaison PC <-> pont en 115 200 8N1, le pont fait le 4800 8O1
+        ser = serial.Serial(None, 115200, timeout=0.005)
+    else:
+        ser = serial.Serial(None, 4800, bytesize=8, parity=serial.PARITY_ODD, stopbits=1, timeout=0.005)
     ser.port = port
-    ser.dtr = ser.rts = False          # USB natif d'un ESP32 : DTR/RTS peuvent provoquer un reset
+    ser.dtr = ser.rts = False          # cartes ESP32 : DTR/RTS pilotent EN et IO9 (reset, mode flash)
     ser.open()
     tampon = bytearray()
     dernier = time.monotonic()
     print(f'simulateur BSB sur {port} (4800 8O1, octets complémentés'
-          f'{", écho fait par le pont ESP32-C3" if pont else ""})', flush=True)
+          f'{", via le pont ESP32-C3 en 115 200 bauds, écho matériel" if pont else ""})', flush=True)
     while True:
         brut = ser.read(64)
         if brut:
@@ -216,7 +219,7 @@ def main():
     a = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     a.add_argument('--port')
     a.add_argument('--autotest', action='store_true')
-    a.add_argument('--pont', action='store_true', help='port = 2e ESP32-C3 avec alfea/tools/pont_bsb (écho fait par le pont)')
+    a.add_argument('--pont', action='store_true', help='port = NodeMCU ESP-C3-32S-Kit avec alfea/tools/pont_bsb (115 200 bauds, écho fait par le pont)')
     a.add_argument('--liste', default=os.path.join(DEPOT, 'alfea', 'params', 'BSB_LAN_custom_defs_ha.h'))
     a.add_argument('--defs', default=os.path.join(DEPOT, 'BSB_LAN', 'BSB_LAN_defs.h'))
     a.add_argument('--scenario', default=os.path.join(ICI, 'bsb_sim_scenario.json'))

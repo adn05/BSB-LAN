@@ -5,7 +5,7 @@
 #   alfea : configuration alfea/config + liste réduite alfea/params (firmware Alféa, lecture seule)
 #   alfea-ecriture : idem, compilé avec ALFEA_ECRITURE (écriture de la liste blanche possible
 #                    après choix du mode d'écriture dans /C ; docs/claude/08 §5.2)
-#   pont : firmware du 2e SuperMini servant de pont USB <-> bus logique pour le simulateur
+#   pont : firmware de la NodeMCU ESP-C3-32S-Kit servant de pont USB (CH340) <-> bus logique pour le simulateur
 #          (alfea/tools/pont_bsb, docs/claude/README_docker.md §3)
 # L'arbre BSB_LAN/ n'est jamais modifié : on compile une copie dans un répertoire temporaire.
 set -eu
@@ -18,7 +18,7 @@ SEUIL_POURCENT=85
 if [ "$CIBLE" = pont ]; then
   rm -rf "$SORTIE"
   mkdir -p "$SORTIE"
-  arduino-cli compile --fqbn "esp32:esp32:esp32c3:CDCOnBoot=cdc" --warnings default --output-dir "$SORTIE"     "$DEPOT/alfea/tools/pont_bsb" 2>&1 | tee "$SORTIE/compile.log"
+  arduino-cli compile --fqbn "esp32:esp32:esp32c3:CDCOnBoot=default" --warnings default --output-dir "$SORTIE"     "$DEPOT/alfea/tools/pont_bsb" 2>&1 | tee "$SORTIE/compile.log"
   [ -f "$SORTIE/pont_bsb.ino.merged.bin" ] || { echo "ÉCHEC de compilation" >&2; exit 1; }
   exit 0
 fi
