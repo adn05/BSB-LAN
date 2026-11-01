@@ -14,6 +14,9 @@
 | 05 | [05_fonctionnalites.md](05_fonctionnalites.md) | 1 | inventaire des fonctionnalités, coûts mesurés (.map), tri pour Alféa |
 | 06 | [06_carte_interface_bsb.md](06_carte_interface_bsb.md) | 1 bis | adaptateur officiel : étages, calculs, vigilance |
 | 07 | [07_faisabilite_esp32c3.md](07_faisabilite_esp32c3.md) | 2 | identification Alféa, ESP32 vs C3, cartes, budget mémoire, choix |
+| 08 | [08_plan_migration.md](08_plan_migration.md) | 3 | réduction par gardes `NO_…`, étapes et commits, build, secrets, paramètres HA, tests, risques |
+| 08a | [08a_analyse_liste_parametres.md](08a_analyse_liste_parametres.md) | 3 | analyse de la liste 211/127 contre un dump `/QD`, incohérences, nouvelle liste générée |
+| 09 | [09_design_carte_interface.md](09_design_carte_interface.md) | 3 | carte porteuse SuperMini : schéma, calculs, protections, alimentation, BOM, mesure de X86 |
 
 ## GATE 1 — synthèse (fin des phases 1, 1 bis et 2)
 
@@ -62,3 +65,23 @@
 | Q5 | Optocoupleurs conservés ; alimentation hors bus ; « alim 5 V de la PAC, sinon chargeur de téléphone » | pas de 5 V documenté sur le RVS21 ; G+ casserait l'isolation. Retenu : **chargeur USB 5 V** par défaut, module rail DIN en option (09 §4) |
 | Q6 | À vérifier (LDO du SuperMini, distance WiFi) | reste ouvert |
 | Q7 | Question non comprise | reformulée dans la synthèse GATE 2 |
+
+## GATE 2 — synthèse (fin de la phase 3)
+
+**Statut : en attente de validation.** Aucune implémentation du firmware ni fichier KiCad avant validation.
+
+- **Liste de paramètres (08a)** : la liste 211/127 de l'issue #622 (903 entrées) est fidèle à un dump `/QD` d'une autre machine 211/127 : 847/882 objets retrouvés, aucun numéro divergent, tailles cohérentes. Les 3 « absents » correspondent aux 3 enregistrements perdus du dump. Incohérences : 73 compteurs typés chaîne dont **3113** (I1), objets cachés manquants (#829, #831), 5057 oublié, niveau d'accès 6 inscriptible (**ramonage 7131**), `VT_VACATIONPROG` (#812). Nouvelle liste générée par script, 912 entrées : **1 697 285 o (86 %)** mesuré.
+- **Plan (08)** : gardes `NO_…` + `FORCE_READ_ONLY`, 10 étapes/commits, arduino-cli en Docker, secrets hors dépôt, **38 paramètres HA** (dont DHT22), tests build → simulateur → HA Docker → PAC.
+- **Carte (09)** : porteuse 50 × 40 mm pour SuperMini, topologie V3 conservée, écarts justifiés (R8 rappel TX, BC547C, TVS + PTC, DHT22 sur GPIO5, entrée 5 V + Schottky), alimentation par chargeur USB 5 V.
+
+### Décisions demandées
+1. Valider la stratégie de gardes et l'ordre des étapes E0-E10 (08 §2).
+2. Valider ou amender la liste des 38 paramètres HA (08 §5) ; confirmer l'existence d'un 2e circuit (CC2).
+3. Valider le design (09), en particulier les écarts à V3, et autoriser les fichiers KiCad dans `hardware/alfea-esp32c3/`.
+4. Alimentation : chargeur USB (défaut) ou module rail DIN ?
+
+### Questions ouvertes
+- Q6 : marquage du LDO du SuperMini (ME6211 / LP5907), distance PAC ↔ point d'accès WiFi.
+- Q7 reformulée : Home Assistant est-il déjà installé, comment (HA OS ou Docker) et en quelle version ? Avez-vous un broker MQTT (en général l'add-on Mosquitto de HA) ?
+- Q9 : photo de la sérigraphie de X86, pas du connecteur, mesures de tension (09 §8), à faire avant la GATE 3.
+- Q10 : à la mise en service, valeurs de 6224-6227 (famille/variante, 08a §6).
