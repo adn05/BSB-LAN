@@ -45,12 +45,19 @@ Le premier build télécharge environ 600 Mo, dont la chaîne RISC-V ; le Docker
   `docker run --rm -v "$PWD:/work" -w /work bsblan-build:cli-1.3.1-esp32-3.3.12 python3 alfea/tools/bsb_sim.py --autotest`
 - **Banc de test (T1) avec la NodeMCU ESP-C3-32S-Kit comme pont**, sans adaptateur USB-UART :
   1. **Pourquoi un firmware de pont** : BSB-LAN relit sa trame dès la fin de l'émission (`BSB_LAN/src/BSB/bsb.cpp:488-503`, `readByte()` non bloquant ligne 655). Sur le bus, cet écho est électrique. Un écho renvoyé par le PC arriverait plusieurs ms trop tard et chaque émission finirait en « Collision on the bus ». Le pont `alfea/tools/pont_bsb/pont_bsb.ino` recalcule donc, par interruption GPIO, **ligne = TX cible ET TX simulateur**, comme le ET câblé du bus. Il ne remonte au PC que les octets de la cible.
-  2. **Compiler** : `sh docker/compiler.sh pont` → `alfea/build/pont/pont_bsb.ino.merged.bin`. La carte a un CH340 sur l'UART0 : la console est à 115 200 bauds et `CDCOnBoot` est désactivé.
-  3. **Flasher** chaque carte depuis l'hôte, avec `pip install esptool`. Remplacer COMx par le port de la carte, visible dans le Gestionnaire de périphériques :
-     - pont : `esptool --chip esp32c3 --port COMx write_flash 0x0 alfea/build/pont/pont_bsb.ino.merged.bin` (CH340 : reset automatique) ;
-     - SuperMini : `esptool --chip esp32c3 --port COMy write_flash 0x0 alfea/build/alfea/BSB_LAN.ino.merged.bin`. Sur l'USB natif, si le port n'apparaît pas, maintenir BOOT en branchant l'USB.
+  2. **Compiler** : `sh docker/compiler.sh pont` → `alfea/build/pont/pont_bsb.ino.merged.bin`. La carte a un CH340 sur l'UART0 : la console est à 115 200 bauds et `CDCOnBoot` est désactivé. Son module ESP-C3-32S n'a que **2 Mo de flash** [MESURÉ : `esptool flash-id`] : compilation en `FlashSize=2M`, partitions `minimal`.
+  3. **Environnement de flash** sur l'hôte, hors Docker : sous Windows, Docker Desktop n'accède aux ports USB qu'avec usbipd et WSL. Versions figées dans `alfea/tools/requirements-flash.txt` (esptool 5.6.0, pyserial 3.5) :
+     ```sh
+     python -m venv alfea/build/venv
+     alfea/build/venv/Scripts/python -m pip install -r alfea/tools/requirements-flash.txt
+     ```
+     Puis, avec `alfea/build/venv/Scripts/python` (désigné `PY` ci-dessous) :
+     - `PY alfea/tools/flasher.py ports` : liste les ports et reconnaît les cartes à leur identifiant USB (CH340 1A86:7523 = pont, 303A:1001 = SuperMini) ;
+     - `PY alfea/tools/flasher.py pont` puis `PY alfea/tools/flasher.py alfea` : image complète en 0x0. **Elle efface la NVS**, donc la configuration saisie dans l'interface web ;
+     - `PY alfea/tools/flasher.py alfea --appli` : mises à jour, application seule en 0x10000, configuration conservée ;
+     - `PY alfea/tools/flasher.py console` : console du SuperMini (Ctrl+] pour quitter). `--port COMx` force un port. Sur l'USB natif, si le port n'apparaît pas, maintenir BOOT en branchant l'USB.
   4. **Câbler** en 3,3 V, sans composant : **IO6 du pont ← GPIO7 du SuperMini** (TX bus), **IO7 du pont → GPIO6 du SuperMini** (RX bus), GND ↔ GND. **IO10 du pont reste en l'air** : c'est la sortie interne de l'UART, relue par le pont. Ne pas utiliser IO3/4/5 ni IO18/19 du pont, câblées aux LED de la carte [À VÉRIFIER sur la sérigraphie]. Chaque carte est alimentée par son propre câble USB.
-  5. **Lancer le simulateur** sur l'hôte (`pip install pyserial`) : `python alfea/tools/bsb_sim.py --port COMx --pont`. La liaison PC-pont est à 115 200 bauds et l'écho est fait par le pont. Le terminal affiche `<-` pour chaque trame de BSB-LAN et `->` pour chaque réponse. La LED verte du pont clignote au trafic.
+  5. **Lancer le simulateur** sur l'hôte : `PY alfea/tools/bsb_sim.py --port COMx --pont`. La liaison PC-pont est à 115 200 bauds et l'écho est fait par le pont. Le terminal affiche `<-` pour chaque trame de BSB-LAN et `->` pour chaque réponse. La LED verte du pont clignote au trafic.
   6. Ouvrir l'interface web du SuperMini (adresse IP sur sa console USB) : identification 211/127, puis valeurs du scénario `alfea/tools/bsb_sim_scenario.json`.
 - **Variante avec adaptateur USB-UART 3,3 V** : TX de l'adaptateur sur GPIO6, RX sur GPIO7, masses communes, puis `bsb_sim.py --port ...` sans `--pont` (le simulateur fait alors l'écho, avec le risque de collision expliqué en 1).
   Sous Linux, depuis Docker : ajouter `--device /dev/ttyUSB0` et installer `pyserial` dans le conteneur.
@@ -73,4 +80,4 @@ docker compose -f docker/ha-test/compose.yaml -p hatest down
   ```
   Il signale toute entité modifiable en lecture seule, toute entité modifiable hors liste blanche et tout champ manquant. Il a été testé sur des messages factices : un capteur conforme, un `select` sur 700, un `text` sur 8743. Les deux anomalies attendues sont détectées dans chaque mode.
 
-Le flash se fait avec `esptool` depuis l'hôte, car l'accès USB depuis Docker n'est simple que sous Linux (`--device /dev/ttyACM0`). La procédure ira dans le guide (doc 11).
+Le flash se fait depuis l'hôte, dans l'environnement Python `alfea/build/venv` (§3, étape 3) : l'accès USB depuis Docker n'est simple que sous Linux (`--device /dev/ttyACM0`). C'est le seul écart à la règle « tout par Docker ».

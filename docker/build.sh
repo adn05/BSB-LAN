@@ -18,7 +18,8 @@ SEUIL_POURCENT=85
 if [ "$CIBLE" = pont ]; then
   rm -rf "$SORTIE"
   mkdir -p "$SORTIE"
-  arduino-cli compile --fqbn "esp32:esp32:esp32c3:CDCOnBoot=default" --warnings default --output-dir "$SORTIE"     "$DEPOT/alfea/tools/pont_bsb" 2>&1 | tee "$SORTIE/compile.log"
+  # module ESP-C3-32S de la carte : 2 Mo de flash (lu par esptool flash-id), d'où FlashSize=2M et le schéma « minimal »
+  arduino-cli compile --fqbn "esp32:esp32:esp32c3:CDCOnBoot=default,FlashSize=2M,PartitionScheme=minimal" --warnings default --output-dir "$SORTIE"     "$DEPOT/alfea/tools/pont_bsb" 2>&1 | tee "$SORTIE/compile.log"
   [ -f "$SORTIE/pont_bsb.ino.merged.bin" ] || { echo "ÉCHEC de compilation" >&2; exit 1; }
   exit 0
 fi
