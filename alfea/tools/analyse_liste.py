@@ -64,8 +64,8 @@ def lire_optbl(chemin):
     debut = txt.index('const units optbl[]={')
     opt = {}
     for m in re.finditer(r'\{(VT_\w+),\s*([\d.]+),\s*(\d+),\s*([\d+]+),\s*(DT_\w+)', txt[debut:debut + 40000]):
-        vt, _, en, pl, dt = m.groups()
-        opt[vt] = dict(en=int(en), pl=sum(int(x) for x in pl.split('+')), dt=dt)
+        vt, op, en, pl, dt = m.groups()
+        opt[vt] = dict(op=float(op), en=int(en), pl=sum(int(x) for x in pl.split('+')), dt=dt)
     return opt
 
 

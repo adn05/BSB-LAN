@@ -34,7 +34,18 @@ Le premier build télécharge environ 600 Mo, dont la chaîne RISC-V ; le Docker
 
 `sh docker/kicad/generer_carte.sh` régénère le projet KiCad à partir de `alfea/hardware/gen/carte.py`, puis lance l'ERC, le DRC avec parité schéma/PCB et les exports (PDF, BOM, SVG, rendu). Détails : `09_design_carte_interface.md` §9.
 
-## 3. À venir (plan 08)
+## 3. Simulateur de régulateur BSB (test sans PAC)
+
+`alfea/tools/bsb_sim.py` joue le rôle du RVS21 : identification 211/127, réponses aux lectures à partir de `alfea/tools/bsb_sim_scenario.json`, ACK des écritures (journalisées), écho du bus.
+
+- **Autotest sans matériel** (codage des trames et des valeurs contre des trames réelles : dump `/QD`, PR #812, code amont) :
+  `docker run --rm -v "$PWD:/work" -w /work bsblan-build:cli-1.3.1-esp32-3.3.12 python3 alfea/tools/bsb_sim.py --autotest`
+- **Banc de test** (T1) : adaptateur USB-UART **3,3 V** relié directement au SuperMini, sans carte d'interface. TX de l'adaptateur sur GPIO6, RX sur GPIO7, masses communes. Puis :
+  `python3 alfea/tools/bsb_sim.py --port /dev/ttyUSB0` (Linux ; `COM5` sous Windows, avec `pip install pyserial`).
+  Sous Linux, depuis Docker : ajouter `--device /dev/ttyUSB0` et installer `pyserial` dans le conteneur.
+- En lecture seule, aucune ligne « SET reçu » ne doit apparaître, quoi qu'on demande à l'interface web ou en MQTT.
+
+## 4. À venir (plan 08)
 
 - `docker/ha-test/` : Mosquitto + Home Assistant pour tester la discovery (étape E9).
 - Le flash se fait avec `esptool` depuis l'hôte, car l'accès USB depuis Docker n'est simple que sous Linux (`--device /dev/ttyACM0`). La procédure ira dans le guide (doc 11).
