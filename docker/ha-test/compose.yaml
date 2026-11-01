@@ -1,0 +1,20 @@
+# Pile de test locale : broker Mosquitto + Home Assistant (même version que l'installation cible).
+# Usage : docker compose -f docker/ha-test/compose.yaml up -d   puis http://localhost:8123
+# Documentation : docs/claude/README_docker.md §4. Réservé aux tests sur le réseau local.
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0.22
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:2026.10.4
+    ports:
+      - "8123:8123"
+    volumes:
+      - ./homeassistant/configuration.yaml:/config/configuration.yaml:ro
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - mosquitto

@@ -45,7 +45,21 @@ Le premier build télécharge environ 600 Mo, dont la chaîne RISC-V ; le Docker
   Sous Linux, depuis Docker : ajouter `--device /dev/ttyUSB0` et installer `pyserial` dans le conteneur.
 - En lecture seule, aucune ligne « SET reçu » ne doit apparaître, quoi qu'on demande à l'interface web ou en MQTT.
 
-## 4. À venir (plan 08)
+## 4. Pile de test Home Assistant (E9)
 
-- `docker/ha-test/` : Mosquitto + Home Assistant pour tester la discovery (étape E9).
-- Le flash se fait avec `esptool` depuis l'hôte, car l'accès USB depuis Docker n'est simple que sous Linux (`--device /dev/ttyACM0`). La procédure ira dans le guide (doc 11).
+`docker/ha-test/compose.yaml` : **Mosquitto 2.0.22** (accès anonyme, **test uniquement**) et **Home Assistant 2026.10.4**, la même version que votre installation.
+
+```sh
+docker compose -f docker/ha-test/compose.yaml -p hatest up -d     # puis http://localhost:8123
+docker compose -f docker/ha-test/compose.yaml -p hatest down
+```
+- Dans HA : créer le compte, puis Paramètres > Appareils et services > Ajouter > **MQTT**, broker `mosquitto`, port 1883.
+- Firmware de test : `mqtt_broker_addr` = adresse IP du PC qui fait tourner la pile, port 1883 (dans `alfea_secrets.h` ou la page `/C`).
+- **Vérification automatique de la discovery** (`alfea/tools/verif_discovery.py`, sans dépendance) :
+  ```sh
+  docker run --rm --network hatest_default -v "$PWD:/work" -w /work python:3.12-slim     python3 -I alfea/tools/verif_discovery.py --broker mosquitto            # firmware en lecture seule
+  # ajouter --ecriture alfea/params/ecriture.txt pour le firmware alfea-ecriture
+  ```
+  Il signale toute entité modifiable en lecture seule, toute entité modifiable hors liste blanche et tout champ manquant. Il a été testé sur des messages factices : un capteur conforme, un `select` sur 700, un `text` sur 8743. Les deux anomalies attendues sont détectées dans chaque mode.
+
+Le flash se fait avec `esptool` depuis l'hôte, car l'accès USB depuis Docker n'est simple que sous Linux (`--device /dev/ttyACM0`). La procédure ira dans le guide (doc 11).
