@@ -16,5 +16,6 @@ docker run --rm -v "$HW:/hw" -w /hw/gen "$IMAGE" sh -c '
   kicad-cli sch export pdf -o sorties/schema.pdf carte_bsb_c3.kicad_sch
   kicad-cli sch export bom --fields "Reference,Value,Footprint,MPN,\${QUANTITY}" --group-by Value,Footprint,MPN -o sorties/bom.csv carte_bsb_c3.kicad_sch
   kicad-cli pcb export svg --layers F.Cu,B.Cu,F.SilkS,Edge.Cuts,Dwgs.User --mode-single -o sorties/pcb.svg carte_bsb_c3.kicad_pcb
-  kicad-cli pcb render --side top --width 1600 --height 1150 --quality basic -o sorties/pcb_dessus.png carte_bsb_c3.kicad_pcb
+  kicad-cli pcb export pdf --layers F.Fab,Edge.Cuts --mode-single -o sorties/assemblage.pdf carte_bsb_c3.kicad_pcb
+  kicad-cli pcb render --side top --width 1600 --height 1000 --quality basic -o sorties/pcb_dessus.png carte_bsb_c3.kicad_pcb
 '

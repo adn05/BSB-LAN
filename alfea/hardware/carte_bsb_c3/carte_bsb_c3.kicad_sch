@@ -1379,7 +1379,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Transistor_BJT:BC557"
+		(symbol "Transistor_BJT:BC857"
 			(pin_names
 				(offset 0)
 				(hide yes)
@@ -1396,7 +1396,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "BC557"
+			(property "Value" "BC857"
 				(at 5.08 0 0)
 				(effects
 					(font
@@ -1405,7 +1405,7 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
+			(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 				(at 5.08 -1.905 0)
 				(effects
 					(font
@@ -1416,7 +1416,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "https://www.onsemi.com/pub/Collateral/BC556BTA-D.pdf"
+			(property "Datasheet" "https://www.onsemi.com/pub/Collateral/BC860-D.pdf"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1426,7 +1426,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "0.1A Ic, 45V Vce, PNP Small Signal Transistor, TO-92"
+			(property "Description" "0.1A Ic, 45V Vce, PNP Transistor, SOT-23"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1435,7 +1435,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "PNP Transistor"
+			(property "ki_keywords" "PNP transistor"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1444,7 +1444,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "BC557_0_1"
+			(symbol "BC857_0_1"
 				(polyline
 					(pts
 						(xy -2.54 0)
@@ -1524,7 +1524,7 @@
 					)
 				)
 			)
-			(symbol "BC557_1_1"
+			(symbol "BC857_1_1"
 				(pin input line
 					(at -5.08 0 0)
 					(length 2.54)
@@ -1535,7 +1535,7 @@
 							)
 						)
 					)
-					(number "2"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1553,7 +1553,7 @@
 							)
 						)
 					)
-					(number "1"
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1571,7 +1571,7 @@
 							)
 						)
 					)
-					(number "3"
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1581,7 +1581,7 @@
 				)
 			)
 			(embedded_fonts no)
-			(property "ki_fp_filters" "TO?92*"
+			(property "ki_fp_filters" "SOT?23*"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1591,7 +1591,7 @@
 				)
 			)
 		)
-		(symbol "Transistor_BJT:BC547"
+		(symbol "Transistor_BJT:BC847"
 			(pin_names
 				(offset 0)
 				(hide yes)
@@ -1608,7 +1608,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "BC547"
+			(property "Value" "BC847"
 				(at 5.08 0 0)
 				(effects
 					(font
@@ -1617,7 +1617,7 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
+			(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 				(at 5.08 -1.905 0)
 				(effects
 					(font
@@ -1628,7 +1628,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "https://www.onsemi.com/pub/Collateral/BC550-D.pdf"
+			(property "Datasheet" "http://www.infineon.com/dgdl/Infineon-BC847SERIES_BC848SERIES_BC849SERIES_BC850SERIES-DS-v01_01-en.pdf?fileId=db3a304314dca389011541d4630a1657"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1638,7 +1638,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "0.1A Ic, 45V Vce, Small Signal NPN Transistor, TO-92"
+			(property "Description" "0.1A Ic, 45V Vce, NPN Transistor, SOT-23"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1647,7 +1647,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "NPN Transistor"
+			(property "ki_keywords" "NPN Small Signal Transistor"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1656,7 +1656,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "BC547_0_1"
+			(symbol "BC847_0_1"
 				(polyline
 					(pts
 						(xy -2.54 0)
@@ -1695,7 +1695,7 @@
 					)
 				)
 			)
-			(symbol "BC547_1_1"
+			(symbol "BC847_1_1"
 				(polyline
 					(pts
 						(xy 0.635 0.635)
@@ -1747,7 +1747,7 @@
 							)
 						)
 					)
-					(number "2"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1765,7 +1765,7 @@
 							)
 						)
 					)
-					(number "1"
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1783,7 +1783,7 @@
 							)
 						)
 					)
-					(number "3"
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1793,7 +1793,7 @@
 				)
 			)
 			(embedded_fonts no)
-			(property "ki_fp_filters" "TO?92*"
+			(property "ki_fp_filters" "SOT?23*"
 				(at 0 0 0)
 				(effects
 					(font
@@ -2119,7 +2119,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Connector_Generic:Conn_01x03"
+		(symbol "Connector:Screw_Terminal_01x03"
 			(pin_names
 				(offset 1.016)
 				(hide yes)
@@ -2135,7 +2135,7 @@
 					)
 				)
 			)
-			(property "Value" "Conn_01x03"
+			(property "Value" "Screw_Terminal_01x03"
 				(at 0 -5.08 0)
 				(effects
 					(font
@@ -2161,7 +2161,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(property "Description" "Generic screw terminal, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"
 				(at 0 0 0)
 				(effects
 					(font
@@ -2170,7 +2170,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "connector"
+			(property "ki_keywords" "screw terminal"
 				(at 0 0 0)
 				(effects
 					(font
@@ -2179,7 +2179,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_fp_filters" "Connector*:*_1x??_*"
+			(property "ki_fp_filters" "TerminalBlock*:*"
 				(at 0 0 0)
 				(effects
 					(font
@@ -2188,7 +2188,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "Conn_01x03_1_1"
+			(symbol "Screw_Terminal_01x03_1_1"
 				(rectangle
 					(start -1.27 3.81)
 					(end 1.27 -3.81)
@@ -2200,9 +2200,11 @@
 						(type background)
 					)
 				)
-				(rectangle
-					(start -1.27 2.667)
-					(end 0 2.413)
+				(polyline
+					(pts
+						(xy -0.5334 2.8702)
+						(xy 0.3302 2.032)
+					)
 					(stroke
 						(width 0.1524)
 						(type default)
@@ -2211,9 +2213,11 @@
 						(type none)
 					)
 				)
-				(rectangle
-					(start -1.27 0.127)
-					(end 0 -0.127)
+				(polyline
+					(pts
+						(xy -0.5334 0.3302)
+						(xy 0.3302 -0.508)
+					)
 					(stroke
 						(width 0.1524)
 						(type default)
@@ -2222,9 +2226,83 @@
 						(type none)
 					)
 				)
-				(rectangle
-					(start -1.27 -2.413)
-					(end 0 -2.667)
+				(polyline
+					(pts
+						(xy -0.5334 -2.2098)
+						(xy 0.3302 -3.048)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.3556 3.048)
+						(xy 0.508 2.2098)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.3556 0.508)
+						(xy 0.508 -0.3302)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.3556 -2.032)
+						(xy 0.508 -2.8702)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 2.54)
+					(radius 0.635)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 0)
+					(radius 0.635)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 -2.54)
+					(radius 0.635)
 					(stroke
 						(width 0.1524)
 						(type default)
@@ -2779,7 +2857,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_Phoenix_MSTB:PhoenixContact_MSTBA_2,5_2-G-5,08_1x02_P5.08mm_Horizontal"
+		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MPT-0,5-2-2.54_1x02_P2.54mm_Horizontal"
 			(at 30.48 63.5 0)
 			(effects
 				(font
@@ -2806,7 +2884,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Phoenix MSTBA 2,5/2-G-5,08 + MSTB 2,5/2-ST-5,08"
+		(property "MPN" "Phoenix MPT 0,5/2-2,54"
 			(at 30.48 63.5 0)
 			(effects
 				(font
@@ -3865,7 +3943,7 @@
 		(uuid "bc6d6a37-48ce-5f42-ab35-4655fc9fdb52")
 	)
 	(symbol
-		(lib_id "Transistor_BJT:BC557")
+		(lib_id "Transistor_BJT:BC857")
 		(at 200.66 137.16 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -3881,7 +3959,7 @@
 				)
 			)
 		)
-		(property "Value" "BC557C"
+		(property "Value" "BC857C"
 			(at 200.66 144.78 0)
 			(effects
 				(font
@@ -3889,7 +3967,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 			(at 200.66 137.16 0)
 			(effects
 				(font
@@ -3916,7 +3994,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "BC557C"
+		(property "MPN" "BC857C"
 			(at 200.66 137.16 0)
 			(effects
 				(font
@@ -3951,7 +4029,7 @@
 			)
 			(justify right)
 		)
-		(uuid "66535420-2f90-5a96-b291-2a70ad0c03a8")
+		(uuid "9733b699-a373-5b07-ab0e-7ab59ddc9971")
 	)
 	(label "Q2_C"
 		(at 203.2 132.08 90)
@@ -3961,7 +4039,7 @@
 			)
 			(justify left)
 		)
-		(uuid "9733b699-a373-5b07-ab0e-7ab59ddc9971")
+		(uuid "df8e9ae4-1b47-5b0d-8926-fb632e10e98b")
 	)
 	(label "+3V3"
 		(at 203.2 142.24 270)
@@ -3971,7 +4049,7 @@
 			)
 			(justify right)
 		)
-		(uuid "df8e9ae4-1b47-5b0d-8926-fb632e10e98b")
+		(uuid "66535420-2f90-5a96-b291-2a70ad0c03a8")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -4400,7 +4478,7 @@
 		(uuid "d2c76da2-4256-51e3-b257-101f3921b45a")
 	)
 	(symbol
-		(lib_id "Transistor_BJT:BC547")
+		(lib_id "Transistor_BJT:BC847")
 		(at 76.2 137.16 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -4416,7 +4494,7 @@
 				)
 			)
 		)
-		(property "Value" "BC547C"
+		(property "Value" "BC847C"
 			(at 76.2 144.78 0)
 			(effects
 				(font
@@ -4424,7 +4502,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 			(at 76.2 137.16 0)
 			(effects
 				(font
@@ -4451,7 +4529,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "BC547C"
+		(property "MPN" "BC847C"
 			(at 76.2 137.16 0)
 			(effects
 				(font
@@ -4486,7 +4564,7 @@
 			)
 			(justify right)
 		)
-		(uuid "771ab773-ff09-5e7d-bf80-49e66029f5a6")
+		(uuid "97a11157-9d6c-5caf-88fa-20a612b454ca")
 	)
 	(label "BUS_P"
 		(at 78.74 132.08 90)
@@ -4496,7 +4574,7 @@
 			)
 			(justify left)
 		)
-		(uuid "97a11157-9d6c-5caf-88fa-20a612b454ca")
+		(uuid "da9be5db-8e01-509b-83aa-51bddd0fce62")
 	)
 	(label "BUS_N"
 		(at 78.74 142.24 270)
@@ -4506,7 +4584,7 @@
 			)
 			(justify right)
 		)
-		(uuid "da9be5db-8e01-509b-83aa-51bddd0fce62")
+		(uuid "771ab773-ff09-5e7d-bf80-49e66029f5a6")
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x08")
@@ -4957,7 +5035,7 @@
 		(uuid "b2b538e3-515b-5b74-a9b7-4d0299423c71")
 	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_01x03")
+		(lib_id "Connector:Screw_Terminal_01x03")
 		(at 345.44 152.4 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -4981,7 +5059,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical"
+		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MPT-0,5-3-2.54_1x03_P2.54mm_Horizontal"
 			(at 345.44 152.4 0)
 			(effects
 				(font
@@ -5008,7 +5086,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "JST B3B-XH-A"
+		(property "MPN" "Phoenix MPT 0,5/3-2,54"
 			(at 345.44 152.4 0)
 			(effects
 				(font
@@ -5480,7 +5558,7 @@
 				)
 			)
 		)
-		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_PT-1,5-2-3.5-H_1x02_P3.50mm_Horizontal"
+		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MPT-0,5-2-2.54_1x02_P2.54mm_Horizontal"
 			(at 254 30.48 0)
 			(effects
 				(font
@@ -5507,7 +5585,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Phoenix PT 1,5/2-3,5-H"
+		(property "MPN" "Phoenix MPT 0,5/2-2,54"
 			(at 254 30.48 0)
 			(effects
 				(font
@@ -5853,7 +5931,7 @@
 		)
 		(uuid "d626d253-bbeb-589e-bff9-b72179435b82")
 	)
-	(text "Topologie de l adaptateur officiel V3, ecarts : R8, Q1 gain C, D3, F1, entree DHT22, entree 5 V (docs/claude/09)."
+	(text "Topologie de l adaptateur officiel V3, ecarts : R8, Q1/Q2 gain C en SOT-23, D3, F1, entree DHT22, entree 5 V (docs/claude/09)."
 		(at 25.4 27.94 0)
 		(effects
 			(font
@@ -5863,7 +5941,7 @@
 		)
 		(uuid "95a91d69-9777-59c4-a8a6-d37a9ceea8e3")
 	)
-	(text "RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/1500 = 6,2 mA a 13 V ; TX : I_F(OK2) = 6,3 mA, Ib(Q1) ~34 uA -> 14 mA (BC547C)."
+	(text "RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/1500 = 6,2 mA a 13 V ; TX : I_F(OK2) = 6,3 mA, Ib(Q1) ~34 uA -> 14 mA (BC847C)."
 		(at 25.4 210.82 0)
 		(effects
 			(font

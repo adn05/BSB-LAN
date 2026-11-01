@@ -132,6 +132,9 @@ def pcb(chemin):
         x, y, rot = c['pcb']
         fp.SetPosition(pcbnew.VECTOR2I(mm(x), mm(y)))
         fp.SetOrientationDegrees(rot)
+        if lib.split('_')[0] in ('Resistor', 'Capacitor', 'Diode', 'LED', 'Fuse') or lib == 'Package_TO_SOT_SMD':
+            # carte dense : références des CMS sur le plan d'assemblage (F.Fab), pas en sérigraphie
+            fp.Reference().SetLayer(pcbnew.F_Fab)
         if 'ref_at' in c:
             fp.Reference().SetPosition(pcbnew.VECTOR2I(mm(c['ref_at'][0]), mm(c['ref_at'][1])))
         brs = libsym.broches(c['lib'])
@@ -152,6 +155,7 @@ def pcb(chemin):
         fp = pcbnew.FootprintLoad(os.path.join(racine_fp, 'MountingHole.pretty'), 'MountingHole_3.2mm_M3')
         fp.SetFPID(pcbnew.LIB_ID('MountingHole', 'MountingHole_3.2mm_M3'))
         fp.SetReference(f'H{i}')
+        fp.Reference().SetVisible(False)
         fp.SetAttributes(fp.GetAttributes() | pcbnew.FP_BOARD_ONLY | pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES)
         fp.SetPosition(pcbnew.VECTOR2I(mm(x), mm(y)))
         board.Add(fp)
@@ -198,11 +202,15 @@ def pcb(chemin):
         p.SetTextThickness(mm(h * 0.15))
         board.Add(p)
 
-    texte('BUS BSB', 116.0, 147.0)
-    texte('ESP32-C3', 146.5, 124.5)
-    texte('X86 : CL+ / CL-', 106.0, 133.0, h=0.8)
-    texte('ANTENNE : PAS DE CUIVRE', 159.5, 135.0, couche=pcbnew.Dwgs_User, h=1.0)
-    texte('Interface BSB C3 rev A', 156.0, 139.0, h=0.8)
+    texte('BUS BSB', 113.5, 131.0)
+    texte('ESP32-C3', 149.0, 105.6)
+    texte('CL+', 110.3, 117.7, h=0.8)
+    texte('CL-', 110.3, 115.16, h=0.8)
+    texte('J2 : 5V / GND', 143.5, 101.6, h=0.8)
+    texte('GND DAT 3V3', 134.3, 124.2, h=0.8)
+    texte('X86 : CL+ / CL-', 106.5, 122.6, h=0.8)
+    texte('ANTENNE', 138.3, 116.0, couche=pcbnew.Dwgs_User, h=1.0)
+    texte('Interface BSB C3 rev B', 148.5, 130.5, h=0.8)
     pcbnew.SaveBoard(chemin, board)
 
 
