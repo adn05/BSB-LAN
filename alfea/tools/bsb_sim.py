@@ -17,6 +17,7 @@ Usage :
   bsb_sim.py --autotest                       # contrôles de codage, sans matériel
   bsb_sim.py --port /dev/ttyUSB0 [--scenario f.json] [--liste ...] [--defs ...]
   bsb_sim.py --port COM7 --pont               # via une ESP-C3-32S-Kit (alfea/tools/pont_bsb), sans adaptateur USB-UART
+  bsb_sim.py ... --panne f.txt                # f.txt contient « muet » ou « crc » : panne injectée à chaud
 """
 import argparse
 import json
@@ -140,7 +141,16 @@ class Regulateur:
 
 
 # ----------------------------------------------------------------------------- liaison série
-def boucle(port, reg, pont=False):
+def lire_panne(chemin):
+    """Panne injectée, relue à chaque trame : contenu du fichier « muet » (aucune réponse) ou « crc »
+    (réponses à CRC faux) ; fichier absent ou autre contenu : fonctionnement normal."""
+    try:
+        return open(chemin, encoding='utf-8').read().strip() if chemin else ''
+    except OSError:
+        return ''
+
+
+def boucle(port, reg, pont=False, panne=None):
     import serial  # pyserial, seulement pour le mode matériel
     if pont:   # NodeMCU ESP-C3-32S-Kit : liaison PC <-> pont en 115 200 8N1, le pont fait le 4800 8O1
         ser = serial.Serial(None, 115200, timeout=0.005)
@@ -185,6 +195,13 @@ def boucle(port, reg, pont=False):
                 continue
             print(f'<- {t.hex(" ")}', flush=True)
             rep = reg.repondre(src, dst, typ, cmd, charge)
+            mode = lire_panne(panne)
+            if rep and mode == 'muet':
+                print('   (panne : pas de réponse)', flush=True)
+                rep = None
+            elif rep and mode == 'crc':
+                rep = rep[:-1] + bytes([rep[-1] ^ 0x5A])
+                print('   (panne : CRC faussé)', flush=True)
             if rep:
                 time.sleep(0.03)
                 ser.write(bytes(b ^ 0xFF for b in rep))
@@ -236,13 +253,14 @@ def main():
     a.add_argument('--liste', default=os.path.join(DEPOT, 'alfea', 'params', 'BSB_LAN_custom_defs_ha.h'))
     a.add_argument('--defs', default=os.path.join(DEPOT, 'BSB_LAN', 'BSB_LAN_defs.h'))
     a.add_argument('--scenario', default=os.path.join(ICI, 'bsb_sim_scenario.json'))
+    a.add_argument('--panne', help='fichier relu à chaque trame : « muet » ou « crc » pour injecter une panne')
     args = a.parse_args()
     scenario = json.load(open(args.scenario, encoding='utf-8'))
     if args.autotest:
         sys.exit(autotest(args.liste, args.defs, scenario))
     if not args.port:
         a.error('--port ou --autotest requis')
-    boucle(args.port, Regulateur(args.liste, args.defs, scenario), args.pont)
+    boucle(args.port, Regulateur(args.liste, args.defs, scenario), args.pont, args.panne)
 
 
 if __name__ == '__main__':
