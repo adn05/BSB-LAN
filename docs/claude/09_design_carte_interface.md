@@ -76,7 +76,7 @@ Calcul (06 §3.1) : seuil ≈ 3,7 V ; I_F = (V_bus − 3,7) / 1 500 = 6,2 mA à 
 Calculs (VCC = 3,3 V) :
 - **TX bas** : I_F(OK2) = (3,3 − 0,2 − 1,2) / 300 = **6,3 mA**. Ib(Q2) = (3,3 − 0,7) / 4,7 k − 0,7 / 10 k = 0,55 − 0,07 = **0,48 mA** ; Ic = 6,3 mA, β forcé ≈ 13 ≪ β min (420) : saturé. Courant sur la GPIO : 0,55 mA.
 - **TX haut ou haute impédance** (reset, bootloader) : R8 maintient V_EB = 0 et Q2 reste bloqué. **Sans R8**, une GPIO flottante ou tirée bas par un pull-down interne au reset pourrait allumer Q2 et **tirer le bus à 0 pendant le démarrage** (06 V5). R8 consomme 0,33 mA quand TX est bas, ce qui est négligeable.
-- **Pouvoir de descente de Q1** : Ib(Q1) = (V_bus − 0,7 − 0,3) / R1 − 0,7 / R7 = (13 − 1,0) / 330 k − 2,1 µA ≈ **34 µA**. Ic max = β × Ib : 6,8 mA avec un transistor de gain B (β min 200), **14 mA avec un BC847C** (gain C (β min 420). L'adaptateur officiel fonctionne, ce qui suggère que la source du bus débite moins de quelques mA en court-circuit [SUPPOSÉ]. Le gain C double la marge sans changer la topologie. Si la mesure du niveau bas pendant nos trames (GATE 3, oscilloscope) dépasse ~1 V, on passe R1 à 100 kΩ (Ib ≈ 115 µA).
+- **Pouvoir de descente de Q1** : Ib(Q1) = (V_bus − 0,7 − 0,3) / R1 − 0,7 / R7 = (13 − 1,0) / 330 k − 2,1 µA ≈ **34 µA**. Ic max = β × Ib : 6,8 mA avec un transistor de gain B (β min 200), **14 mA avec un BC847C** (gain C, β min 420). L'adaptateur officiel fonctionne, ce qui suggère que la source du bus débite moins de quelques mA en court-circuit [SUPPOSÉ]. Le gain C double la marge sans changer la topologie. Si la mesure du niveau bas pendant nos trames (GATE 3, oscilloscope) dépasse ~1 V, on passe R1 à 100 kΩ (Ib ≈ 115 µA).
 
 ### 2.4 Entrée DHT22 (D5)
 | Réf. | Valeur | Connexion | Rôle |
