@@ -28,6 +28,7 @@ CARTES = {
 }
 IMAGES = {
     'pont': ('pont', 'pont_bsb.ino'),
+    'pont-diag': ('pont-diag', 'pont_bsb.ino'),
     'alfea': ('alfea', 'BSB_LAN.ino'),
 }
 
@@ -39,7 +40,7 @@ def carte_de(p):
 def trouver_port(carte, force):
     if force:
         return force
-    ports = [p.device for p in list_ports.comports() if carte_de(p) == carte]
+    ports = [p.device for p in list_ports.comports() if carte_de(p) == carte.split('-')[0]]
     if len(ports) != 1:
         sys.exit(f'{len(ports)} port(s) reconnu(s) pour « {carte} » : préciser --port COMx (voir « ports »).')
     return ports[0]

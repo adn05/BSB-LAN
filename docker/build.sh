@@ -7,6 +7,7 @@
 #                    après choix du mode d'écriture dans /C ; docs/claude/08 §5.2)
 #   pont : firmware de la NodeMCU ESP-C3-32S-Kit servant de pont USB (CH340) <-> bus logique pour le simulateur
 #          (alfea/tools/pont_bsb, docs/claude/README_docker.md §3)
+#   pont-diag : idem avec PONT_DIAG (compteurs de fronts et d'octets, une ligne par seconde sur la console)
 # L'arbre BSB_LAN/ n'est jamais modifié : on compile une copie dans un répertoire temporaire.
 set -eu
 CIBLE="${1:-alfea}"
@@ -15,11 +16,13 @@ SORTIE="$DEPOT/alfea/build/$CIBLE"
 FQBN="esp32:esp32:esp32c3:PartitionScheme=min_spiffs,CDCOnBoot=cdc"
 SEUIL_POURCENT=85
 
-if [ "$CIBLE" = pont ]; then
+if [ "$CIBLE" = pont ] || [ "$CIBLE" = pont-diag ]; then
   rm -rf "$SORTIE"
   mkdir -p "$SORTIE"
   # module ESP-C3-32S de la carte : 2 Mo de flash (lu par esptool flash-id), d'où FlashSize=2M et le schéma « minimal »
-  arduino-cli compile --fqbn "esp32:esp32:esp32c3:CDCOnBoot=default,FlashSize=2M,PartitionScheme=minimal" --warnings default --output-dir "$SORTIE"     "$DEPOT/alfea/tools/pont_bsb" 2>&1 | tee "$SORTIE/compile.log"
+  arduino-cli compile --fqbn "esp32:esp32:esp32c3:CDCOnBoot=default,FlashSize=2M,PartitionScheme=minimal" --warnings default \
+    --build-property "compiler.cpp.extra_flags=$([ "$CIBLE" = pont-diag ] && echo -DPONT_DIAG)" \
+    --output-dir "$SORTIE" "$DEPOT/alfea/tools/pont_bsb" 2>&1 | tee "$SORTIE/compile.log"
   [ -f "$SORTIE/pont_bsb.ino.merged.bin" ] || { echo "ÉCHEC de compilation" >&2; exit 1; }
   exit 0
 fi
@@ -43,7 +46,7 @@ case "$CIBLE" in
       cp "$DEPOT/alfea/config/alfea_secrets.h.example" "$TMP/BSB_LAN/alfea_secrets.h"
     fi
     ;;
-  *) echo "cible inconnue : $CIBLE (amont | alfea | alfea-ecriture | pont)" >&2; exit 2 ;;
+  *) echo "cible inconnue : $CIBLE (amont | alfea | alfea-ecriture | pont | pont-diag)" >&2; exit 2 ;;
 esac
 OPTIONS=""
 [ "$CIBLE" = alfea-ecriture ] && OPTIONS="-DALFEA_ECRITURE"

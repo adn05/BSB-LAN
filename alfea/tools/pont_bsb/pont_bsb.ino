@@ -34,7 +34,15 @@ static const gpio_num_t BROCHE_LIGNE = GPIO_NUM_7;      // sortie : ligne vue pa
 static const gpio_num_t BROCHE_TX_SIM = GPIO_NUM_10;    // sortie de l'UART1, relue (ne pas câbler)
 static const int BROCHE_LED = 4;                        // LED verte de la LED RVB, active à l'état haut
 
+#ifdef PONT_DIAG
+// Diagnostic (compilation avec -DPONT_DIAG) : une ligne texte par seconde sur la console, au lieu des octets du bus.
+static volatile uint32_t fronts = 0;
+#endif
+
 static void IRAM_ATTR et_cable(void *) {
+#ifdef PONT_DIAG
+  fronts = fronts + 1;
+#endif
   gpio_set_level(BROCHE_LIGNE, gpio_get_level(BROCHE_TX_CIBLE) & gpio_get_level(BROCHE_TX_SIM));
 }
 
@@ -60,6 +68,16 @@ void setup() {
 
 void loop() {
   static bool led = false;
+#ifdef PONT_DIAG
+  static uint32_t t = 0, octets = 0;
+  while (Serial1.available()) { Serial1.read(); octets++; }
+  if (millis() - t >= 1000) {
+    t = millis();
+    Serial.printf("fronts=%lu octets_uart1=%lu IO6=%d IO7=%d IO10=%d\n",(unsigned long)fronts, (unsigned long)octets,
+                  gpio_get_level(BROCHE_TX_CIBLE), gpio_get_level(BROCHE_LIGNE), gpio_get_level(BROCHE_TX_SIM));
+  }
+  return;
+#endif
   uint8_t tampon[64];
   size_t n = Serial1.available();
   if (n) {
