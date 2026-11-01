@@ -6,3 +6,7 @@ fp-info-cache
 \#auto_saved_files\#
 _autosave-*
 *.lck
+# Sorties de compilation (docker/compiler.sh)
+build/
+# Secrets locaux (modèle versionné : config/alfea_secrets.h.example)
+config/alfea_secrets.h
