@@ -16,6 +16,7 @@ Comportement :
 Usage :
   bsb_sim.py --autotest                       # contrôles de codage, sans matériel
   bsb_sim.py --port /dev/ttyUSB0 [--scenario f.json] [--liste ...] [--defs ...]
+  bsb_sim.py --port COM7 --pont               # via un 2e ESP32-C3 (alfea/tools/pont_bsb), sans adaptateur USB-UART
 """
 import argparse
 import json
@@ -139,16 +140,21 @@ class Regulateur:
 
 
 # ----------------------------------------------------------------------------- liaison série
-def boucle(port, reg):
+def boucle(port, reg, pont=False):
     import serial  # pyserial, seulement pour le mode matériel
-    ser = serial.Serial(port, 4800, bytesize=8, parity=serial.PARITY_ODD, stopbits=1, timeout=0.005)
+    ser = serial.Serial(None, 4800, bytesize=8, parity=serial.PARITY_ODD, stopbits=1, timeout=0.005)
+    ser.port = port
+    ser.dtr = ser.rts = False          # USB natif d'un ESP32 : DTR/RTS peuvent provoquer un reset
+    ser.open()
     tampon = bytearray()
     dernier = time.monotonic()
-    print(f'simulateur BSB sur {port} (4800 8O1, octets complémentés)', flush=True)
+    print(f'simulateur BSB sur {port} (4800 8O1, octets complémentés'
+          f'{", écho fait par le pont ESP32-C3" if pont else ""})', flush=True)
     while True:
         brut = ser.read(64)
         if brut:
-            ser.write(brut)                                  # écho du bus
+            if not pont:
+                ser.write(brut)                              # écho du bus (adaptateur USB-UART)
             tampon += bytes(b ^ 0xFF for b in brut)
             dernier = time.monotonic()
         while tampon and tampon[0] != 0xDC:
@@ -210,6 +216,7 @@ def main():
     a = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     a.add_argument('--port')
     a.add_argument('--autotest', action='store_true')
+    a.add_argument('--pont', action='store_true', help='port = 2e ESP32-C3 avec alfea/tools/pont_bsb (écho fait par le pont)')
     a.add_argument('--liste', default=os.path.join(DEPOT, 'alfea', 'params', 'BSB_LAN_custom_defs_ha.h'))
     a.add_argument('--defs', default=os.path.join(DEPOT, 'BSB_LAN', 'BSB_LAN_defs.h'))
     a.add_argument('--scenario', default=os.path.join(ICI, 'bsb_sim_scenario.json'))
@@ -219,7 +226,7 @@ def main():
         sys.exit(autotest(args.liste, args.defs, scenario))
     if not args.port:
         a.error('--port ou --autotest requis')
-    boucle(args.port, Regulateur(args.liste, args.defs, scenario))
+    boucle(args.port, Regulateur(args.liste, args.defs, scenario), args.pont)
 
 
 if __name__ == '__main__':
