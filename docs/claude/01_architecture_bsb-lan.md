@@ -288,7 +288,7 @@ Schéma persistant : `BSB_LAN/BSB_LAN_EEPROMconfig.h` (enum `CF_*`, versions 0 �
 | # | Constat | Référence | Impact Alféa |
 |---|---|---|---|
 | S1 | Le « mode lecture seule » est **logiciel** : `programIsreadOnly()` refuse `set()` si `programWriteMode == 0`, mais ce mode est modifiable à distance par la page `/C` ou `/JW` | `BSB_LAN/BSB_LAN.ino:1376-1388`, `:2919-2922`, `:7820-7822` | Pour une vraie lecture seule par défaut : `DEFAULT_FLAG = FL_RONLY` à la compilation |
-| S2 | **`/YR<hex>` émet une trame brute arbitraire** sur le bus (y compris SET) **sans passer par `programIsreadOnly()`**, protégé seulement par `debug_mode != 0` (=1 par défaut) | `BSB_LAN/BSB_LAN.ino:5630-5646` | **Contournement de la lecture seule** → à supprimer à la compilation |
+| S2 | **Trois routes émettent un télégramme brut arbitraire** (type quelconque, y compris SET 0x03) **sans passer par `programIsreadOnly()`** : `/YR<hex>` (relais, si `debug_mode != 0`, =1 par défaut), `/Y<type><cmd>…` (si `debug_mode != 0`) et **`/JY<type>,<cmd>,<payload>` sans aucune condition** | `BSB_LAN/BSB_LAN.ino:5630-5646`, `:5676-5710`, `:5804-5832` | **Contournement de la lecture seule** → les trois routes sont à exclure à la compilation |
 | S3 | `/G<pin>=<v>` pilote n'importe quelle GPIO (y compris TX du bus ou broches de strapping) | `BSB_LAN/BSB_LAN.ino:6840-6884` | à supprimer |
 | S4 | AP de secours avec mot de passe public codé en dur | `BSB_LAN/BSB_LAN.ino:7669` | à remplacer ou désactiver |
 | S5 | Authentification : Basic Auth en clair, passkey dans l'URL ; OTA sans auth si `USER_PASS` vide | `:4757-4779`, `:1841-1889` | réseau local de confiance + mot de passe obligatoire |
