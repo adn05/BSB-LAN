@@ -68,7 +68,15 @@
 
 ## GATE 2 — synthèse (fin de la phase 3)
 
-**Statut : en attente de validation.** Aucune implémentation du firmware ni fichier KiCad avant validation.
+**Statut : design de la carte, paramètres et alimentation validés ; plan amendé, en attente du feu vert pour la Phase 4.**
+
+Réponses de l'utilisateur (après la synthèse ci-dessous) :
+- liste de paramètres : **réduite aux paramètres utiles** → 96 entrées, 1 638 533 o (83 %), soit −58 752 o (08a §5.4) ;
+- paramètres HA validés ; **2 circuits** (CC1 : salon et cuisine ; CC2 : chambres) ;
+- **écriture** souhaitée pour les **programmes horaires, modes et consignes** (CC1, CC2, ECS) : liste blanche, désactivée par défaut, avertissement et procédure dans 08 §5.2 ;
+- fichiers de la carte dans **`alfea/hardware/`** : projet KiCad 9 généré, ERC/DRC/parité à 0, **non routé** (09 §9) ;
+- alimentation : **chargeur USB**, rail DIN en option ;
+- Q7 : **HA OS**, Core 2026.10.4, pas de broker → add-on Mosquitto (08 §5.3) ; Q6 : à observer pendant les essais.
 
 - **Liste de paramètres (08a)** : la liste 211/127 de l'issue #622 (903 entrées) est fidèle à un dump `/QD` d'une autre machine 211/127 : 847/882 objets retrouvés, aucun numéro divergent, tailles cohérentes. Les 3 « absents » correspondent aux 3 enregistrements perdus du dump. Incohérences : 73 compteurs typés chaîne dont **3113** (I1), objets cachés manquants (#829, #831), 5057 oublié, niveau d'accès 6 inscriptible (**ramonage 7131**), `VT_VACATIONPROG` (#812). Nouvelle liste générée par script, 912 entrées : **1 697 285 o (86 %)** mesuré.
 - **Plan (08)** : gardes `NO_…` + `FORCE_READ_ONLY`, 10 étapes/commits, arduino-cli en Docker, secrets hors dépôt, **38 paramètres HA** (dont DHT22), tests build → simulateur → HA Docker → PAC.
