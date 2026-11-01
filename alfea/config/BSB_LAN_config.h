@@ -67,6 +67,7 @@ byte bus_pins[2] = {6,7};
  */
 #if defined(ALFEA_ECRITURE)
 #define DEFAULT_FLAG FL_SW_CTL_RONLY
+#define WRITE_WHITELIST               // garde de set() : seules les lignes de write_whitelist[] (alfea/params/ecriture.txt)
 #else
 #define DEFAULT_FLAG FL_RONLY
 #endif

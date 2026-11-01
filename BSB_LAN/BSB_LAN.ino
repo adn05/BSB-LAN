@@ -2923,6 +2923,17 @@ int set(float line      // the ProgNr of the heater parameter
     printlnToDebug("Parameter is readonly!");
     return 2;   // return value for trying to set a readonly parameter
   }
+#ifdef WRITE_WHITELIST
+  // Only parameters within the ranges of write_whitelist[][2] (defined in BSB_LAN_custom_defs.h) may be written
+  bool whitelisted = false;
+  for (size_t k = 0; k < sizeof(write_whitelist) / sizeof(write_whitelist[0]); k++) {
+    if (line >= write_whitelist[k][0] && line <= write_whitelist[k][1]) whitelisted = true;
+  }
+  if (!whitelisted) {
+    printlnToDebug("Parameter is not in write whitelist!");
+    return 2;   // same return value as for a readonly parameter
+  }
+#endif
   if ((dev_flags & FL_FORCE_INF) && setcmd) {
     printlnToDebug("Parameter is of FORCE_INF type and thus requires setting via INF, not SET, doing the switch for you now...");
     setcmd = false;     // FORCE_INF indicates that parameter requires setting a value via INF, not SET. So in case a command is sent via the web interface's "Set" button, make sure that it is still successful.

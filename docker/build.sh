@@ -2,7 +2,9 @@
 # Compile BSB-LAN pour ESP32-C3 dans l'image docker/arduino-cli (lancé par docker/compiler.sh).
 # Usage : build.sh <cible>
 #   amont : code, configuration et liste par défaut de l'amont (référence de taille)
-#   alfea : configuration alfea/config + liste réduite alfea/params (firmware Alféa)
+#   alfea : configuration alfea/config + liste réduite alfea/params (firmware Alféa, lecture seule)
+#   alfea-ecriture : idem, compilé avec ALFEA_ECRITURE (écriture de la liste blanche possible
+#                    après choix du mode d'écriture dans /C ; docs/claude/08 §5.2)
 # L'arbre BSB_LAN/ n'est jamais modifié : on compile une copie dans un répertoire temporaire.
 set -eu
 CIBLE="${1:-alfea}"
@@ -20,7 +22,7 @@ case "$CIBLE" in
     cp "$TMP/BSB_LAN/BSB_LAN_config.h.default" "$TMP/BSB_LAN/BSB_LAN_config.h"
     cp "$TMP/BSB_LAN/BSB_LAN_custom_defs.h.default" "$TMP/BSB_LAN/BSB_LAN_custom_defs.h"
     ;;
-  alfea)
+  alfea|alfea-ecriture)
     cp "$DEPOT/alfea/config/BSB_LAN_config.h" "$TMP/BSB_LAN/BSB_LAN_config.h"
     cp "$DEPOT/alfea/params/BSB_LAN_custom_defs_ha.h" "$TMP/BSB_LAN/BSB_LAN_custom_defs.h"
     if [ -f "$DEPOT/alfea/config/alfea_secrets.h" ]; then
@@ -30,12 +32,14 @@ case "$CIBLE" in
       cp "$DEPOT/alfea/config/alfea_secrets.h.example" "$TMP/BSB_LAN/alfea_secrets.h"
     fi
     ;;
-  *) echo "cible inconnue : $CIBLE (amont | alfea)" >&2; exit 2 ;;
+  *) echo "cible inconnue : $CIBLE (amont | alfea | alfea-ecriture)" >&2; exit 2 ;;
 esac
+OPTIONS=""
+[ "$CIBLE" = alfea-ecriture ] && OPTIONS="-DALFEA_ECRITURE"
 
 rm -rf "$SORTIE"
 mkdir -p "$SORTIE"
-arduino-cli compile --fqbn "$FQBN" --warnings none --output-dir "$SORTIE" "$TMP/BSB_LAN" 2>&1 | tee "$SORTIE/compile.log"
+arduino-cli compile --fqbn "$FQBN" --warnings none --build-property "compiler.cpp.extra_flags=$OPTIONS" --output-dir "$SORTIE" "$TMP/BSB_LAN" 2>&1 | tee "$SORTIE/compile.log"
 [ -f "$SORTIE/BSB_LAN.ino.bin" ] || { echo "ÉCHEC de compilation" >&2; exit 1; }
 
 python3 "$DEPOT/alfea/tools/mapsize.py" "$SORTIE/BSB_LAN.ino.map" > "$SORTIE/taille.txt"
