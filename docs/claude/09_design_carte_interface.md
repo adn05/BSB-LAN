@@ -48,7 +48,7 @@ Nœuds côté bus [CONSTATÉ dans le schéma maître] : `CL_P_IN` (J1-1, avant F
 | J1 | bornier à vis 2 pts, pas 2,54 | 1 = CL+, 2 = CL- | raccordement X86 |
 | F1 | PTC 0,10 A maintien | J1-1 → `BUS+` | limite le courant si erreur de câblage (ex. 24 V) **[écart : absent en V3]** |
 | D2 | 1N4148W | anode `BUS-`, cathode `CL_N_IN` | **en série dans le retour CL-** : bloque tout l'étage bus (réception et émission) en cas d'inversion |
-| D3 | TVS bidirectionnelle SMAJ18CA (V_RWM 18 V, V_BR ≥ 20 V) | `BUS+` ↔ `BUS-` | surtensions et ESD ; bidirectionnelle pour tolérer une inversion de polarité **[écart]** |
+| D3 | TVS bidirectionnelle SMAJ18CA (V_RWM 18 V, V_BR ≥ 20 V) | `BUS_P` ↔ `CL_N_IN` (en amont de D2) | surtensions et ESD ; bidirectionnelle pour tolérer une inversion de polarité **[écart]** |
 
 ### 2.2 Réception : bus → GPIO6 (identique à V3)
 | Réf. | Valeur | Connexion |
@@ -147,7 +147,7 @@ Un chargeur de 1 A donne une marge ×2,8 sur la pointe. Avec un LP5907 (250 mA, 
 |---|---|
 | Isolation | les deux côtés sont en TBTS ; l'isolation est fonctionnelle (boucles de masse, surtensions de mode commun), pas de sécurité. **Distance ≥ 3 mm** entre cuivres bus et MCU, sous les 4N25 (rangées à 7,62 mm) ; fente de 1 mm optionnelle. Isolement du 4N25 : 5 000 V eff. |
 | Polarité | D2 en série dans le retour CL- + TVS bidirectionnelle : une inversion bloque tout l'étage bus, rien n'est détruit et rien ne fonctionne (V1 de 06). La LED D1 éteinte signale l'inversion |
-| Surtension, erreur de câblage | D3 écrête au-delà de 20 V ; F1 s'ouvre si la source débite (ex. borne 24 V). **Point d'attention** : D3 est en aval de D2, donc une surtension positive se referme par D2 (1N4148W, I_FSM de l'ordre de 2 A sur 1 µs [À VÉRIFIER]) alors que D3 supporte 13,8 A crête (10/1000 µs). **Proposition, non appliquée, à votre décision** : raccorder D3 entre `BUS_P` et `CL_N_IN` (avant D2). Une inversion de polarité resterait sans effet, car D3 est bidirectionnelle |
+| Surtension, erreur de câblage | D3 écrête au-delà de 20 V ; F1 s'ouvre si la source débite (ex. borne 24 V). D3 est raccordée entre `BUS_P` et `CL_N_IN`, **en amont de D2** (décision de l'utilisateur, J23) : le courant de surtension ne traverse que F1 et D3 (13,8 A crête en 10/1000 µs), plus D2 (1N4148W, I_FSM de l'ordre de 2 A sur 1 µs [À VÉRIFIER]). Une inversion de polarité reste sans effet : D3 est bidirectionnelle et D2 bloque |
 | ESD | D3 côté bus, D5 côté DHT22 ; manipulation avec bracelet (V7 de 06) |
 | CEM | **aucun condensateur** entre CL+ et CL- (il déformerait les fronts et chargerait le bus) ; câble en paire torsadée, si possible blindée, avec le blindage à la masse **côté PAC seulement** [À VÉRIFIER : recommandation Siemens] ; éloigné des câbles du compresseur et de l'onduleur |
 | Environnement | chaufferie de 0 à 50 °C [SUPPOSÉ] : composants -40/+85 °C au minimum ; boîtier ABS avec presse-étoupes, hors des projections d'eau ; vernis de tropicalisation optionnel si condensation |

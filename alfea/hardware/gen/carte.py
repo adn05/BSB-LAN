@@ -22,7 +22,7 @@ COMPOSANTS = [
     dict(ref='F1', lib='Device:Polyfuse', val='PTC 0,1 A', fp='Fuse:Fuse_1812_4532Metric', mpn='Bourns MF-MSMF010-2',
          sch=(55.88, 50.8), pcb=(110.5, 104.0, 0), pins={'1': 'CL_P_IN', '2': 'BUS_P'}),
     dict(ref='D3', lib='Device:D_TVS', val='SMAJ18CA', fp='Diode_SMD:D_SMA', mpn='Littelfuse SMAJ18CA',
-         sch=(76.2, 73.66), pcb=(117.5, 106.0, 90), pins={'1': 'BUS_P', '2': 'BUS_N'}),
+         sch=(76.2, 73.66), pcb=(117.5, 106.0, 90), pins={'1': 'BUS_P', '2': 'CL_N_IN'}),
     # --- Réception : bus -> OK1 (côté bus)
     dict(ref='R2', lib='Device:R', val='1k5 1206', fp='Resistor_SMD:R_1206_3216Metric', mpn='1,5 kOhm 1 % 1206',
          sch=(99.06, 50.8), pcb=(110.0, 110.0, 90), pins={'1': 'BUS_P', '2': 'BUS_R2_OK1'}),

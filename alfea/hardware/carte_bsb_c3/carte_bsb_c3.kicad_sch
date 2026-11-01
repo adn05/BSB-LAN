@@ -8,7 +8,7 @@
 		(title "Interface BSB isolée pour ESP32-C3 SuperMini (Alféa Extensa Duo A.I.)")
 		(rev "A")
 		(company "branche alfea-extensa")
-		(comment 1 "Généré par alfea/hardware/gen/gen_kicad.py, ne pas éditer sans régénérer ou reporter dans carte.py")
+		(comment 1 "Schéma maître (édité dans KiCad) ; toute modification de net est à reporter dans alfea/hardware/gen/carte.py")
 		(comment 2 "Connexions par étiquettes de net ; topologie adaptateur BSB-LAN V3 (docs/claude/06 et 09)")
 	)
 	(lib_symbols
@@ -2750,7 +2750,7 @@
 		)
 		(uuid "0595e781-aa98-5ee1-b800-8c3c486034df")
 	)
-	(text "RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/1500 = 6,2 mA a 13 V ; TX : I_F(OK2) = 6,3 mA, Ib(Q1) ~34 uA -> 14 mA (BC847C)."
+	(text "RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/1500 = 6,2 mA a 13 V ; TX : I_F(OK2) = 6,3 mA, OK2+Q1 en Darlington, I_E(OK2) >= 1,3 mA -> Q1 sature, V(BUS_P) ~0,85 V (~1,6 V aux bornes avec D2). D3 entre BUS_P et CL_N_IN, en amont de D2."
 		(exclude_from_sim no)
 		(at 45.974 215.138 0)
 		(effects
@@ -3030,7 +3030,7 @@
 		)
 		(uuid "10a0f372-1bb4-55a6-b759-0fe2b847df0f")
 	)
-	(label "BUS_N"
+	(label "CL_N_IN"
 		(at 59.69 119.38 270)
 		(effects
 			(font

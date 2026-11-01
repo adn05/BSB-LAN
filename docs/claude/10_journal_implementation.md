@@ -49,6 +49,7 @@
 | J19 | après E10 | pont sur **NodeMCU ESP-C3-32S-Kit** (matériel de l'utilisateur) : USB par CH340 sur l'UART0, donc 115 200 bauds côté PC ; lignes IO6/IO7, UART interne sur IO10 ; IO3/4/5 et IO18/19 évitées (LED de la carte) | broches LED de la carte [À VÉRIFIER sur la sérigraphie] |
 | J20 | carte | schéma maître = fichier KiCad retouché par l'utilisateur ; le générateur ne l'écrase plus ; `carte.py` aligné, parité DRC 0. La retouche corrige la commande de Q1 (R1 en série dans le collecteur de OK2 dans ma rev B : niveau bas ≈ 4,6 V à 5 mA de bus) | 09 §2.3 |
 | J21 | carte | routage par **Freerouting 2.1.0** en conteneur, nettoyage des segments en double ou en impasse, plan GND côté ESP32 : DRC 0 toutes sévérités | routage non reproductible au tracé près ; contrôles toujours à 0. À relire avant commande |
+| J23 | carte | **D3 déplacée** entre `BUS_P` et `CL_N_IN`, en amont de D2 (décision de l'utilisateur) ; notes du schéma maître mises à jour. Plaquette : D3 debout au pas de 2,54 mm (D10-E10), Q1, R7, R1, R2 décalés de 2 trous, coupe E9 → E11. ERC 0, DRC 0 toutes sévérités et parité 0 sur les deux cartes | les surtensions positives ne passent plus par D2 (09 §5) |
 | J22 | carte | **variante traversante** pour plaquette à bandes (14 × 57), vérifiée par le DRC (bandes = pistes) ; D5 non montée faute d'équivalent traversant à faible fuite | 09b |
 
 ## Rapport de taille final (E10)

@@ -27,12 +27,12 @@ COMPOSANTS = {
     'J1': ('BSB (X86)', None, None, {'1': (1, 4), '2': (1, 3)}),
     'F1': ('PTC 0,1 A', f'{LIB_LOCALE}:PTC_Radial_P5.08mm', 'Bourns MF-R010 (radiale, pas 5,1 mm)', {'1': (4, 4), '2': (4, 2)}),
     'D2': ('1N4148', 'Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal', '1N4148 (DO-35)', {'1': (6, 3), '2': (6, 0)}),
-    'Q1': ('BC547C', 'Package_TO_SOT_THT:TO-92_Inline_Wide', 'BC547C', {'1': (8, 2), '3': (8, 0)}),
-    'R7': ('330k', RV, '330 kOhm 1 % 0,25 W', {'1': (10, 1), '2': (10, 0)}),
+    'D3': ('SA18CA', 'Diode_THT:D_DO-15_P2.54mm_Vertical_AnodeUp', 'Littelfuse SA18CA (500 W, DO-15)', {'1': (8, 2), '2': (8, 3)}),
+    'Q1': ('BC547C', 'Package_TO_SOT_THT:TO-92_Inline_Wide', 'BC547C', {'1': (10, 2), '3': (10, 0)}),
+    'R7': ('330k', RV, '330 kOhm 1 % 0,25 W', {'1': (12, 1), '2': (12, 0)}),
     'D1': ('rouge', 'LED_THT:LED_D3.0mm', 'LED rouge 3 mm', {'1': (10, 7), '2': (10, 6)}),
-    'R1': ('330k', RV5, '330 kOhm 1 % 0,25 W', {'1': (12, 1), '2': (12, 3)}),
-    'R2': ('1k5', 'Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal', '1,5 kOhm 1 % 0,25 W', {'1': (14, 2), '2': (14, 5)}),
-    'D3': ('SA18CA', 'Diode_THT:D_DO-15_P5.08mm_Vertical_AnodeUp', 'Littelfuse SA18CA (500 W, DO-15)', {'1': (16, 2), '2': (16, 0)}),
+    'R1': ('330k', RV5, '330 kOhm 1 % 0,25 W', {'1': (14, 1), '2': (14, 3)}),
+    'R2': ('1k5', 'Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal', '1,5 kOhm 1 % 0,25 W', {'1': (16, 2), '2': (16, 5)}),
     'OK2': ('4N25', None, None, {'1': (22, 3), '4': (19, 1)}),
     'OK1': ('4N25', None, None, {'1': (19, 5), '4': (22, 7)}),
     # --- côté ESP32
@@ -67,7 +67,7 @@ BROCHES_TO92 = {'1': '2', '2': '3', '3': '1'}
 ISOLATION = (20, 21)
 
 COUPES = [
-    (5, 4), (7, 3),                                   # fin de CL+ et de CL- (entrée J1)
+    (5, 4), (9, 3),                                   # fin de CL+ et de CL- (entrée J1)
     (18, 7),                                          # isole OK1-3 (non connectée)
     (25, 5), (30, 3), (30, 4), (32, 6), (36, 1), (36, 2), (36, 5),
     (40, 1), (40, 2), (40, 3), (40, 4), (40, 5), (40, 6), (40, 7), (40, 8),   # sous le SuperMini

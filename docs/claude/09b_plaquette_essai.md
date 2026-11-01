@@ -32,7 +32,7 @@ Génération : `sh docker/kicad/generer_carte.sh` (variante dérivée du schéma
 | Réf. | CMS (carte) | Traversant (plaquette) | Remarque |
 |---|---|---|---|
 | Q1 / Q2 | BC847C / BC857C, SOT-23 | **BC547C / BC557C**, TO-92 | mêmes puces et gains (β 420-800), ceux de l'adaptateur V3. Brochage différent (TO-92 : 1 C, 2 B, 3 E), le symbole du schéma est changé en conséquence. Empreinte TO-92 « Wide » : pattes au pas de 2,54 mm |
-| D3 | SMAJ18CA (400 W) | **SA18CA** (500 W, DO-15) | même V_RWM (18 V), bidirectionnelle |
+| D3 | SMAJ18CA (400 W) | **SA18CA** (500 W, DO-15) | même V_RWM (18 V), bidirectionnelle. Montée debout au pas de 2,54 mm (D10-E10) : elle relie `BUS_P` (bande D) à `CL_N_IN` (bande E), deux bandes voisines |
 | F1 | MF-MSMF010-2 (1812) | **MF-R010** (radiale, pas 5,1 mm) | même maintien (0,10 A). Empreinte locale `alfea_tht:PTC_Radial_P5.08mm` à pattes droites, celles de KiCad étant décalées |
 | D4 | SS14 | **1N5819** (DO-41) | Schottky 1 A, 40 V, comme le SS14 |
 | D2 | 1N4148W | 1N4148 (DO-35) | |
@@ -47,8 +47,8 @@ Nomenclature complète : `alfea/hardware/carte_bsb_c3_tht/sorties/bom.csv` (D5 e
 
 ```
  trous 1 ......... 21 |22 23| 24 ................. 39   41 ... 47   48 ......... 57
-       J1 F1 D2 Q1 R7 | iso | R4  Q2 R3 R8 R6 R5 R10  [SuperMini]   D4 C2 C1  J2
-       R1 R2 D3 D1    |     | R9  D5                   USB en bas              J3
+       J1 F1 D2 D3 Q1 R7  | iso | R4  Q2 R3 R8 R6 R5 R10  [SuperMini]   D4 C2 C1  J2
+             D1 R1 R2     |     | R9  D5                   USB en bas              J3
        OK1, OK2 à cheval sur la rainure (rangées de broches aux trous 21 et 24)
 ```
 - **Côté bus** (trous 1-21, bandes B-I) : J1 au bord gauche (fils vers la gauche), puis l'étage d'entrée et d'émission.
@@ -64,7 +64,7 @@ Nomenclature complète : `alfea/hardware/carte_bsb_c3_tht/sorties/bom.csv` (D5 e
 | `BUS_N` | B1-21 et I1-19 | reliées par le fil 1 (B19 → I19) |
 | `BUS_P` | D1-21 | |
 | `BUS_Q1_B` | C1-21 | |
-| `CL_P_IN` / `CL_N_IN` | F1-6 / E1-8 | entre J1 et F1 / D2 |
+| `CL_P_IN` / `CL_N_IN` | F1-6 / E1-10 | entre J1 et F1 / D2 et D3 |
 | `+3V3` | H24-33, H43-47, K24-57 | fils 2 (H27 → K27) et 5 (H45 → K45) |
 | `GND` | D24-37, I43-57, M24-57 | fils 3 (D34 → M34) et 4 (I43 → M43) |
 | `RX` / `TX` / `DHT_IO` | I24-41 / H35-41 / J24-41 | vers les GPIO 6, 7, 5 du module |

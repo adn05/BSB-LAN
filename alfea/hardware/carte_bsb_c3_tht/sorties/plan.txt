@@ -7,7 +7,7 @@ Repère : bande = lettre (de haut en bas, côté composants), trou = numéro (de
    - C42
    - D38
    - D42
-   - E9
+   - E11
    - E32
    - E42
    - F7
@@ -34,12 +34,12 @@ Repère : bande = lettre (de haut en bas, côté composants), trou = numéro (de
    - J1   BSB (X86)        1:F3, 2:E3             Phoenix MPT 0,5/2-2,54
    - F1   PTC 0,1 A        1:F6, 2:D6             Bourns MF-R010 (radiale, pas 5,1 mm)
    - D2   1N4148           1:E8, 2:B8             1N4148 (DO-35)
-   - Q1   BC547C           1:D10, 3:B10           BC547C
-   - R7   330k             1:C12, 2:B12           330 kOhm 1 % 0,25 W
+   - D3   SA18CA           1:D10, 2:E10           Littelfuse SA18CA (500 W, DO-15)
+   - Q1   BC547C           1:D12, 3:B12           BC547C
+   - R7   330k             1:C14, 2:B14           330 kOhm 1 % 0,25 W
    - D1   rouge            1:I12, 2:H12           LED rouge 3 mm
-   - R1   330k             1:C14, 2:E14           330 kOhm 1 % 0,25 W
-   - R2   1k5              1:D16, 2:G16           1,5 kOhm 1 % 0,25 W
-   - D3   SA18CA           1:D18, 2:B18           Littelfuse SA18CA (500 W, DO-15)
+   - R1   330k             1:C16, 2:E16           330 kOhm 1 % 0,25 W
+   - R2   1k5              1:D18, 2:G18           1,5 kOhm 1 % 0,25 W
    - OK2  4N25             1:E24, 4:C21           Vishay 4N25
    - OK1  4N25             1:G21, 4:I24           Vishay 4N25
    - R4   330k             1:G26, 2:I26           330 kOhm 1 % 0,25 W
@@ -61,17 +61,17 @@ Repère : bande = lettre (de haut en bas, côté composants), trou = numéro (de
    - J3   DHT22            1:K56, 2:L56           Phoenix MPT 0,5/3-2,54
 
 4. BANDES UTILISÉES (net : bande, trous)
-   - BUS_N        B1..21 (D2.2, Q1.3, R7.2, D3.2, fil)
+   - BUS_N        B1..21 (D2.2, Q1.3, R7.2, fil)
    - BUS_Q1_B     C1..21 (Q1.2, R7.1, R1.1, OK2.4)
    - unconnected-(OK2-NC-Pad3) C24..37 (OK2.3)
    - unconnected-(J5-Pin_8-Pad8) C39..41 (J5.8)
    - unconnected-(J4-Pin_8-Pad8) C43..57 (J4.8)
-   - BUS_P        D1..21 (F1.2, Q1.1, R2.1, D3.1, OK2.5)
+   - BUS_P        D1..21 (F1.2, D3.1, Q1.1, R2.1, OK2.5)
    - GND          D24..37 (OK2.2, fil)
    - unconnected-(J5-Pin_7-Pad7) D39..41 (J5.7)
    - unconnected-(J4-Pin_7-Pad7) D43..57 (J4.7)
-   - CL_N_IN      E1..8 (J1.2, D2.1)
-   - BUS_OK2_B    E10..21 (R1.2, OK2.6)
+   - CL_N_IN      E1..10 (J1.2, D2.1, D3.2)
+   - BUS_OK2_B    E12..21 (R1.2, OK2.6)
    - OK2_A        E24..31 (OK2.1, R3.2)
    - unconnected-(J5-Pin_6-Pad6) E33..41 (J5.6)
    - unconnected-(J4-Pin_6-Pad6) E43..57 (J4.6)
