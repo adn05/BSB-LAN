@@ -5638,6 +5638,7 @@ void loop() {
           forcedflushToWebClient();
           break;
         }
+#ifndef NO_RAW_TELEGRAMS    // /Y and /YR send arbitrary telegrams, bypassing the read-only checks of set()
         if (p[1]=='Y') {
           if (p[2]=='R' && debug_mode) {
             printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
@@ -5753,6 +5754,7 @@ void loop() {
             break;
           }
         }
+#endif
         if (p[1]=='J') {
           uint32_t cmd=0;
           // Parse potential JSON payload
@@ -5812,6 +5814,7 @@ void loop() {
             break;
           }
 
+#ifndef NO_RAW_TELEGRAMS    // /JY sends arbitrary telegrams, bypassing the read-only checks of set()
           if (p[2] == 'Y') {  // raw data query
             uint8_t destAddr = bus->getBusDest();
             uint8_t tempDestAddr = destAddr;
@@ -5871,6 +5874,7 @@ void loop() {
             forcedflushToWebClient();
             break;
           }
+#endif
 
           if (p[2] == 'I'){ // dump configuration in JSON
             bool not_first = false;
@@ -6848,6 +6852,7 @@ next_parameter:
                 avgCounter = 1;
               }
             }
+#ifndef NO_GPIO_URL         // /G reads and drives any GPIO, including the bus TX pin and strapping pins
           } else if (range[0]=='G') { // handle gpio command
             uint8_t val;
             uint8_t pin;
@@ -6893,6 +6898,7 @@ next_parameter:
               digitalWrite(pin, val);
             }
             printFmtToWebClient("GPIO%hu: %d", pin, val!=LOW?1:0);
+#endif
           } else if (range[0]=='B') {
             if (range[1]=='0') { // reset furnace duration
               printToWebClient(STR20006);

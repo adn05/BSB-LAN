@@ -180,3 +180,8 @@ bool show_unknown = false;
 
 #define CONFIG_VERSION 43
 
+
+// Sécurité (docs/claude/08 §1.3) : pas de télégrammes bruts (/Y, /YR, /JY contournent la lecture seule),
+// pas de pilotage de GPIO par URL (/G).
+#define NO_RAW_TELEGRAMS
+#define NO_GPIO_URL

@@ -12,6 +12,9 @@
 | E1 | alfea : configuration, liste réduite 96 entrées, lecture seule par `DEFAULT_FLAG` | 1 638 949 o | 83 % | 65 680 o | E1 |
 | E2 | alfea (lecture seule, garde exclue) | 1 638 949 o | 83 % | 65 680 o | E2 |
 | E2 | alfea-ecriture (`ALFEA_ECRITURE` : `DEFAULT_FLAG FL_SW_CTL_RONLY` + `WRITE_WHITELIST`) | 1 639 155 o | 83 % | 65 680 o | E2 |
+| E3 | amont (gardes inactives : identique à E0) | 1 610 749 o | 81 % | 65 624 o | E3 |
+| E3 | alfea + `NO_RAW_TELEGRAMS`, `NO_GPIO_URL` | 1 636 511 o | 83 % | 65 680 o | E3 |
+| E3 | alfea-ecriture | 1 636 717 o | 83 % | 65 680 o | E3 |
 
 ## Décisions et écarts au plan
 
@@ -26,3 +29,4 @@
 | J6 | E1 | la lecture seule par configuration (J3) et le marquage `FL_RONLY` du générateur (J4) sont livrés dès E1 ; E2 ne garde que la garde `WRITE_WHITELIST` dans le code et la variante de build avec écriture | aucun build Alféa n'existe sans lecture seule, même entre deux étapes |
 | J7 | E2 | test fonctionnel de la garde (SET refusé hors liste, accepté dans la liste) reporté au simulateur (E8) | nécessite une carte C3 ; à ce stade, preuve par compilation des deux variantes (+206 o pour la garde) |
 | J8 | E2 | scripts `docker/*.sh` remis en fins de ligne LF | une réécriture sous Windows les avait passés en CRLF (`set: Illegal option -`) ; `docker/.gitattributes` impose LF à l'extraction |
+| J9 | E3 | contrôle dans le binaire : le message « …in order to use /Y command! » est présent dans l'image amont et absent de l'image Alféa | preuve que les routes `/Y` sont retirées ; test HTTP sur carte en E8 |
