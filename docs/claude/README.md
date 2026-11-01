@@ -17,6 +17,8 @@
 | 08 | [08_plan_migration.md](08_plan_migration.md) | 3 | réduction par gardes `NO_…`, étapes et commits, build, secrets, paramètres HA, tests, risques |
 | 08a | [08a_analyse_liste_parametres.md](08a_analyse_liste_parametres.md) | 3 | analyse de la liste 211/127 contre un dump `/QD`, incohérences, nouvelle liste générée |
 | 09 | [09_design_carte_interface.md](09_design_carte_interface.md) | 3 | carte porteuse SuperMini : schéma, calculs, protections, alimentation, BOM, mesure de X86 |
+| 10 | [10_journal_implementation.md](10_journal_implementation.md) | 4 | journal des étapes E0-E10, décisions et écarts, rapport de taille, diff amont |
+| — | [README_docker.md](README_docker.md) | 4 | build firmware, carte KiCad, simulateur BSB, pile HA de test |
 
 ## GATE 1 — synthèse (fin des phases 1, 1 bis et 2)
 
@@ -93,3 +95,18 @@ Réponses de l'utilisateur (après la synthèse ci-dessous) :
 - Q7 reformulée : Home Assistant est-il déjà installé, comment (HA OS ou Docker) et en quelle version ? Avez-vous un broker MQTT (en général l'add-on Mosquitto de HA) ?
 - Q9 : photo de la sérigraphie de X86, pas du connecteur, mesures de tension (09 §8), à faire avant la GATE 3.
 - Q10 : à la mise en service, valeurs de 6224-6227 (famille/variante, 08a §6).
+
+## Phase 4 — synthèse (avant la GATE 3)
+
+**Statut : implémentation terminée et validée sans matériel. GATE 3 à venir** : rien n'a été branché sur la PAC.
+
+- **Firmware Alféa** (`sh docker/compiler.sh alfea`) : **1 410 705 o (71 %)**, **49 104 o de RAM** (amont : 1 610 749 o, 65 624 o). Lecture seule par défaut ; variante `alfea-ecriture` limitée à la liste blanche (programmes horaires, modes, consignes).
+- **Diff sur le code amont** : 27 lignes ajoutées, 4 supprimées, dans `BSB_LAN/BSB_LAN.ino` seulement. Le reste est dans `alfea/`, `docker/` et `docs/claude/`.
+- **E6 et E7 écartées après mesure** : environ 4 points de partition, pour des gardes sur une centaine de sites (10 J14).
+- **Validé sans matériel** : builds amont et Alféa, simulateur (autotest 13/13 sur trames réelles), pile Mosquitto + HA 2026.10.4, vérificateur de discovery.
+- **Carte** : révision B, 62 × 33 mm, ERC/DRC/parité à 0, **non routée**.
+
+### Avant la GATE 3 (de votre côté)
+1. Un SuperMini et un adaptateur USB-UART 3,3 V pour le banc T1/T2 (10, « Reste à faire »), ou bien la carte d'interface fabriquée.
+2. Mesures de X86 (09 §8) et photo de la sérigraphie.
+3. Fichier `alfea/config/alfea_secrets.h` (modèle `.example`) : WiFi, MQTT, mots de passe.

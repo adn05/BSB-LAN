@@ -1,7 +1,9 @@
 # 10 — Journal d'implémentation (Phase 4)
 
 > **Résumé**
-> Suivi étape par étape du plan 08 (E0 à E10) : ce qui a été fait, mesuré, décidé, et les écarts au plan.
+> Phase 4 réalisée, à l'exception de **E6 et E7, écartées après mesure** (J14). Firmware Alféa : **1 410 705 o de flash (71 %, marge OTA de 29 %)** et **49 104 o de RAM statique**, contre 1 610 749 o et 65 624 o pour l'amont (**−200 044 o de flash, −16 520 o de RAM**).
+> Lecture seule par défaut sans modifier le code (`DEFAULT_FLAG FL_RONLY`) ; écriture optionnelle limitée à une liste blanche (variante `alfea-ecriture`). Routes `/Y`, `/YR`, `/JY` et `/G` retirées ; mot de passe de l'AP configurable ; filtre d'IP de confiance corrigé. **Diff sur le code amont : 27 lignes ajoutées, 4 supprimées, dans `BSB_LAN/BSB_LAN.ino` seulement.**
+> Validé sans matériel : builds, simulateur (autotest 13/13), pile HA. **Restent les tests sur banc (T1, T2) avec un SuperMini**, puis la GATE 3.
 > Toutes les tailles sont **mesurées** par `sh docker/compiler.sh <cible>` (arduino-cli 1.3.1, esp32 3.3.12, `esp32c3`, `min_spiffs`, partition app de 1 966 080 o).
 
 ## Tableau de taille
@@ -43,3 +45,34 @@
 | J15 | E8 | simulateur `alfea/tools/bsb_sim.py` : autotest 13/13 en Docker (CRC 0x3F7B du code amont, trame d'identification du dump, SET et ACK de la PR #812, QUR 8700, encodage des types utilisés) | la boucle série (écho, temporisations) reste à valider sur banc, avec un SuperMini et un adaptateur USB-UART : c'est le test T1 |
 | J16 | E8 | le simulateur renvoie l'**écho** de chaque octet | sans écho, BSB-LAN prendrait la réponse, arrivée dans sa fenêtre de 50 ms, pour une collision (`src/BSB/bsb.cpp:488-503`) |
 | J17 | E9 | pile `docker/ha-test` (Mosquitto 2.0.22, HA 2026.10.4) démarrée : HA répond sur 8123 (302 vers la création de compte), 0 ligne d'erreur dans ses journaux ; vérificateur de discovery testé sur messages factices (anomalies détectées dans les deux modes) | la discovery réelle sera vérifiée avec le firmware sur banc (T2), car elle demande le SuperMini |
+
+## Rapport de taille final (E10)
+
+| | Amont (E0) | Alféa (E5, final) | Écart |
+|---|---|---|---|
+| Flash (image app) | 1 610 749 o (81 %) | **1 410 705 o (71 %)** | **−200 044 o (−12,4 %)** |
+| RAM statique | 65 624 o | **49 104 o** | **−16 520 o (−25 %)** |
+| Marge OTA dans la partition app | 355 331 o | **555 375 o** | +200 044 o |
+
+Principaux postes retirés (d'après `alfea/build/*/taille.txt`) : mbedTLS (`libmbedtls` + `libmbedtls_2` ≈ 115 Ko, `libmbedcrypto` −37 Ko), code du sketch −48 Ko (client TLS et bundle de certificats, routes retirées), `heating_cmdtbl` −16 000 o de RAM. Ajoutés : la liste réduite 211/127 (+27 784 o par rapport à la liste par défaut, surtout la table de textes des codes d'erreur).
+
+## Diff sur le code amont
+
+`git diff 41558d24 -- BSB_LAN/` : un seul fichier, `BSB_LAN/BSB_LAN.ino`, **+27 / −4 lignes**.
+| Garde ou correctif | Lignes |
+|---|---|
+| `WRITE_WHITELIST` dans `set()` | +11 |
+| `NO_RAW_TELEGRAMS` (`/Y`, `/YR`, `/JY`) | +4 |
+| `NO_GPIO_URL` (`/G`) | +2 |
+| `AP_PASSWORD` | +3, et 2 lignes remplacées (+2 / −2) |
+| filtre d'IP de confiance | +5 / −2 (commentaire de 2 lignes, condition de 3 lignes au lieu de 2) |
+
+Tout le reste est hors de `BSB_LAN/` : `alfea/`, `docker/`, `docs/claude/`.
+
+## Reste à faire avant la GATE 3 (nécessite le matériel)
+
+| Test | Moyen | Critère |
+|---|---|---|
+| T1 banc | SuperMini + adaptateur USB-UART 3,3 V + `bsb_sim.py` | identification 211/127, valeurs du scénario lues, **aucun « SET reçu »** en lecture seule, `/Y` `/JY` `/G` inopérants, garde de liste blanche (variante écriture), IP de confiance |
+| T2 HA | pile `docker/ha-test` + `verif_discovery.py` | « CONFORME » en lecture seule ; entités, unités, disponibilité |
+| Carte | après fabrication, sans PAC | 3,3 V présent, LED D1 éteinte sans bus, TX au repos pendant le démarrage (R8), bus de banc 15 V + seconde carte |
