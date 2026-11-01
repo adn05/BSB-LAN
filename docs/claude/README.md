@@ -17,6 +17,7 @@
 | 08 | [08_plan_migration.md](08_plan_migration.md) | 3 | réduction par gardes `NO_…`, étapes et commits, build, secrets, paramètres HA, tests, risques |
 | 08a | [08a_analyse_liste_parametres.md](08a_analyse_liste_parametres.md) | 3 | analyse de la liste 211/127 contre un dump `/QD`, incohérences, nouvelle liste générée |
 | 09 | [09_design_carte_interface.md](09_design_carte_interface.md) | 3 | carte porteuse SuperMini : schéma, calculs, protections, alimentation, BOM, mesure de X86 |
+| 09b | [09b_plaquette_essai.md](09b_plaquette_essai.md) | 4 | variante traversante sur plaquette à bandes : coupes, fils, implantation, contrôles |
 | 10 | [10_journal_implementation.md](10_journal_implementation.md) | 4 | journal des étapes E0-E10, décisions et écarts, rapport de taille, diff amont |
 | — | [README_docker.md](README_docker.md) | 4 | build firmware, carte KiCad, simulateur BSB, pile HA de test |
 
@@ -61,7 +62,7 @@
 | # | Réponse | Conséquence |
 |---|---|---|
 | Q1 | IHM, menu « version logicielle » : **Régulation : RVS21 - 89.006.090** | version applicative Atlantic, différente de la notice R32 (85.002.030). La correspondance avec la version OV (402.6 dans la liste de référence) et avec famille/variante est inconnue : **lecture de 6220-6229 obligatoire à la mise en service** (08a §6) |
-| Q2 | X86 : connecteur **vert 6 broches**, rien de branché, tension non mesurable pour l'instant | cohérent avec l'issue #405 (`B2 M B1 3 2 1`). Mesure obligatoire avant branchement (procédure dans 09 §8) |
+| Q2 | X86 : bornier à vis débrochable `B2 M B1 3 2 1` (photo `images/x86_alfea.jpeg`) ; **0 V mesuré entre 1, 2 et 3** | à confirmer par une mesure témoin (09 §8) : 0 V même sur G+ suggère une mesure faussée ou une régulation non alimentée. **Question ouverte** tant que la mesure n'est pas refaite |
 | Q3 | **2 Navilink A59 sans fil**, pas sur X86 | pas d'autre maître sur X86 ; les sondes passent par une liaison radio dont le récepteur n'est pas sur X86 [À VÉRIFIER]. Deux sondes suggèrent deux circuits (CC1 et CC2) : la liste HA inclut CC2 |
 | Q4 | Concevoir notre carte avec KiCad | design dans 09, fichiers KiCad dans `hardware/alfea-esp32c3/` **après la GATE 2** (règle de la mission) |
 | Q5 | Optocoupleurs conservés ; alimentation hors bus ; « alim 5 V de la PAC, sinon chargeur de téléphone » | pas de 5 V documenté sur le RVS21 ; G+ casserait l'isolation. Retenu : **chargeur USB 5 V** par défaut, module rail DIN en option (09 §4) |
@@ -104,9 +105,10 @@ Réponses de l'utilisateur (après la synthèse ci-dessous) :
 - **Diff sur le code amont** : 27 lignes ajoutées, 4 supprimées, dans `BSB_LAN/BSB_LAN.ino` seulement. Le reste est dans `alfea/`, `docker/` et `docs/claude/`.
 - **E6 et E7 écartées après mesure** : environ 4 points de partition, pour des gardes sur une centaine de sites (10 J14).
 - **Validé sans matériel** : builds amont et Alféa, simulateur (autotest 13/13 sur trames réelles), pile Mosquitto + HA 2026.10.4, vérificateur de discovery.
-- **Carte** : révision B, 62 × 33 mm, ERC/DRC/parité à 0, **non routée**.
+- **Carte** : schéma maître retouché par l'utilisateur (émission V3), révision B 62 × 33 mm **routée par Freerouting** (DRC 0 toutes sévérités, Gerber) ; **variante traversante** sur plaquette à bandes (09b, DRC 0).
+- **Pont de test** : firmware `pont_bsb` pour la NodeMCU ESP-C3-32S-Kit (ET câblé du bus, 10 J18-J19).
 
 ### Avant la GATE 3 (de votre côté)
-1. Un SuperMini et un adaptateur USB-UART 3,3 V pour le banc T1/T2 (10, « Reste à faire »), ou bien la carte d'interface fabriquée.
-2. Mesures de X86 (09 §8) et photo de la sérigraphie.
-3. Fichier `alfea/config/alfea_secrets.h` (modèle `.example`) : WiFi, MQTT, mots de passe.
+1. Banc T1/T2 : SuperMini + NodeMCU ESP-C3-32S-Kit en pont (README_docker §3), puis la plaquette (09b) ou la carte CMS fabriquée.
+2. **Refaire la mesure de X86** avec la mesure témoin (09 §8) : la première a donné 0 V partout. Photo reçue.
+3. ~~Fichier `alfea/config/alfea_secrets.h`~~ : créé (firmware compilé avec, 71 %). L'utilisateur MQTT est resté `bsblan` : à créer tel quel dans l'add-on Mosquitto.

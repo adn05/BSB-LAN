@@ -17,6 +17,7 @@
 ```sh
 sh docker/compiler.sh amont   # amont non modifié, configuration et liste par défaut (référence de taille)
 sh docker/compiler.sh alfea   # firmware Alféa : alfea/config/BSB_LAN_config.h + alfea/params/BSB_LAN_custom_defs_ha.h
+sh docker/compiler.sh pont    # pont de test sur NodeMCU ESP-C3-32S-Kit (§3)
 ```
 
 **Cible `alfea`** : il faut d'abord copier `alfea/config/alfea_secrets.h.example` en `alfea/config/alfea_secrets.h` (fichier ignoré par git) et le remplir. Sans ce fichier, le build utilise le modèle et prévient que l'image n'est pas flashable en l'état.
@@ -32,7 +33,9 @@ Le premier build télécharge environ 600 Mo, dont la chaîne RISC-V ; le Docker
 
 ## 2. Carte d'interface
 
-`sh docker/kicad/generer_carte.sh` régénère le projet KiCad à partir de `alfea/hardware/gen/carte.py`, puis lance l'ERC, le DRC avec parité schéma/PCB et les exports (PDF, BOM, SVG, rendu). Détails : `09_design_carte_interface.md` §9.
+`sh docker/kicad/generer_carte.sh` (≈ 1 min) :
+- **carte CMS** : PCB placé à partir de `alfea/hardware/gen/carte.py`, routage par **Freerouting 2.1.0** (`eclipse-temurin:21-jre`, jar officiel à sha256 vérifié, mis en cache dans `alfea/build/outils/`), plan de masse, puis ERC, DRC avec parité et exports (PDF, BOM, SVG, rendus, Gerber). Le schéma maître, édité dans KiCad, n'est jamais écrasé. Détails : 09 §9 ;
+- **variante traversante** (plaquette à bandes) dérivée du schéma maître, avec ses contrôles et ses plans de montage. Détails : 09b.
 
 ## 3. Simulateur de régulateur BSB (test sans PAC)
 
@@ -40,8 +43,16 @@ Le premier build télécharge environ 600 Mo, dont la chaîne RISC-V ; le Docker
 
 - **Autotest sans matériel** (codage des trames et des valeurs contre des trames réelles : dump `/QD`, PR #812, code amont) :
   `docker run --rm -v "$PWD:/work" -w /work bsblan-build:cli-1.3.1-esp32-3.3.12 python3 alfea/tools/bsb_sim.py --autotest`
-- **Banc de test** (T1) : adaptateur USB-UART **3,3 V** relié directement au SuperMini, sans carte d'interface. TX de l'adaptateur sur GPIO6, RX sur GPIO7, masses communes. Puis :
-  `python3 alfea/tools/bsb_sim.py --port /dev/ttyUSB0` (Linux ; `COM5` sous Windows, avec `pip install pyserial`).
+- **Banc de test (T1) avec la NodeMCU ESP-C3-32S-Kit comme pont**, sans adaptateur USB-UART :
+  1. **Pourquoi un firmware de pont** : BSB-LAN relit sa trame dès la fin de l'émission (`BSB_LAN/src/BSB/bsb.cpp:488-503`, `readByte()` non bloquant ligne 655). Sur le bus, cet écho est électrique. Un écho renvoyé par le PC arriverait plusieurs ms trop tard et chaque émission finirait en « Collision on the bus ». Le pont `alfea/tools/pont_bsb/pont_bsb.ino` recalcule donc, par interruption GPIO, **ligne = TX cible ET TX simulateur**, comme le ET câblé du bus. Il ne remonte au PC que les octets de la cible.
+  2. **Compiler** : `sh docker/compiler.sh pont` → `alfea/build/pont/pont_bsb.ino.merged.bin`. La carte a un CH340 sur l'UART0 : la console est à 115 200 bauds et `CDCOnBoot` est désactivé.
+  3. **Flasher** chaque carte depuis l'hôte, avec `pip install esptool`. Remplacer COMx par le port de la carte, visible dans le Gestionnaire de périphériques :
+     - pont : `esptool --chip esp32c3 --port COMx write_flash 0x0 alfea/build/pont/pont_bsb.ino.merged.bin` (CH340 : reset automatique) ;
+     - SuperMini : `esptool --chip esp32c3 --port COMy write_flash 0x0 alfea/build/alfea/BSB_LAN.ino.merged.bin`. Sur l'USB natif, si le port n'apparaît pas, maintenir BOOT en branchant l'USB.
+  4. **Câbler** en 3,3 V, sans composant : **IO6 du pont ← GPIO7 du SuperMini** (TX bus), **IO7 du pont → GPIO6 du SuperMini** (RX bus), GND ↔ GND. **IO10 du pont reste en l'air** : c'est la sortie interne de l'UART, relue par le pont. Ne pas utiliser IO3/4/5 ni IO18/19 du pont, câblées aux LED de la carte [À VÉRIFIER sur la sérigraphie]. Chaque carte est alimentée par son propre câble USB.
+  5. **Lancer le simulateur** sur l'hôte (`pip install pyserial`) : `python alfea/tools/bsb_sim.py --port COMx --pont`. La liaison PC-pont est à 115 200 bauds et l'écho est fait par le pont. Le terminal affiche `<-` pour chaque trame de BSB-LAN et `->` pour chaque réponse. La LED verte du pont clignote au trafic.
+  6. Ouvrir l'interface web du SuperMini (adresse IP sur sa console USB) : identification 211/127, puis valeurs du scénario `alfea/tools/bsb_sim_scenario.json`.
+- **Variante avec adaptateur USB-UART 3,3 V** : TX de l'adaptateur sur GPIO6, RX sur GPIO7, masses communes, puis `bsb_sim.py --port ...` sans `--pont` (le simulateur fait alors l'écho, avec le risque de collision expliqué en 1).
   Sous Linux, depuis Docker : ajouter `--device /dev/ttyUSB0` et installer `pyserial` dans le conteneur.
 - En lecture seule, aucune ligne « SET reçu » ne doit apparaître, quoi qu'on demande à l'interface web ou en MQTT.
 

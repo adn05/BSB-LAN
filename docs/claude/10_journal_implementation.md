@@ -45,6 +45,11 @@
 | J15 | E8 | simulateur `alfea/tools/bsb_sim.py` : autotest 13/13 en Docker (CRC 0x3F7B du code amont, trame d'identification du dump, SET et ACK de la PR #812, QUR 8700, encodage des types utilisés) | la boucle série (écho, temporisations) reste à valider sur banc, avec un SuperMini et un adaptateur USB-UART : c'est le test T1 |
 | J16 | E8 | le simulateur renvoie l'**écho** de chaque octet | sans écho, BSB-LAN prendrait la réponse, arrivée dans sa fenêtre de 50 ms, pour une collision (`src/BSB/bsb.cpp:488-503`) |
 | J17 | E9 | pile `docker/ha-test` (Mosquitto 2.0.22, HA 2026.10.4) démarrée : HA répond sur 8123 (302 vers la création de compte), 0 ligne d'erreur dans ses journaux ; vérificateur de discovery testé sur messages factices (anomalies détectées dans les deux modes) | la discovery réelle sera vérifiée avec le firmware sur banc (T2), car elle demande le SuperMini |
+| J18 | après E10 | **J16 amendée** : l'écho logiciel du PC arrive trop tard. Après `serial->flush()`, BSB-LAN attend le premier octet puis lit toute sa trame d'un coup avec `readByte()` non bloquant (`bsb.cpp:488-503`, `:655-661`). Tout octet d'écho absent à cet instant est lu comme 0x00, d'où une collision. Écho réalisé par le **pont ESP32-C3 en ET câblé** (interruption GPIO, latence de quelques µs pour des bits de 208 µs) | l'option `--pont` du simulateur coupe l'écho logiciel. Sans pont, l'écho via adaptateur USB-UART reste disponible mais risque des collisions [SUPPOSÉ, non mesuré] |
+| J19 | après E10 | pont sur **NodeMCU ESP-C3-32S-Kit** (matériel de l'utilisateur) : USB par CH340 sur l'UART0, donc 115 200 bauds côté PC ; lignes IO6/IO7, UART interne sur IO10 ; IO3/4/5 et IO18/19 évitées (LED de la carte) | broches LED de la carte [À VÉRIFIER sur la sérigraphie] |
+| J20 | carte | schéma maître = fichier KiCad retouché par l'utilisateur ; le générateur ne l'écrase plus ; `carte.py` aligné, parité DRC 0. La retouche corrige la commande de Q1 (R1 en série dans le collecteur de OK2 dans ma rev B : niveau bas ≈ 4,6 V à 5 mA de bus) | 09 §2.3 |
+| J21 | carte | routage par **Freerouting 2.1.0** en conteneur, nettoyage des segments en double ou en impasse, plan GND côté ESP32 : DRC 0 toutes sévérités | routage non reproductible au tracé près ; contrôles toujours à 0. À relire avant commande |
+| J22 | carte | **variante traversante** pour plaquette à bandes (14 × 57), vérifiée par le DRC (bandes = pistes) ; D5 non montée faute d'équivalent traversant à faible fuite | 09b |
 
 ## Rapport de taille final (E10)
 
@@ -73,6 +78,6 @@ Tout le reste est hors de `BSB_LAN/` : `alfea/`, `docker/`, `docs/claude/`.
 
 | Test | Moyen | Critère |
 |---|---|---|
-| T1 banc | SuperMini + adaptateur USB-UART 3,3 V + `bsb_sim.py` | identification 211/127, valeurs du scénario lues, **aucun « SET reçu »** en lecture seule, `/Y` `/JY` `/G` inopérants, garde de liste blanche (variante écriture), IP de confiance |
+| T1 banc | SuperMini + **pont NodeMCU ESP-C3-32S-Kit** (`pont_bsb`) + `bsb_sim.py --pont` (README_docker §3) | identification 211/127, valeurs du scénario lues, **aucun « SET reçu »** en lecture seule, `/Y` `/JY` `/G` inopérants, garde de liste blanche (variante écriture), IP de confiance |
 | T2 HA | pile `docker/ha-test` + `verif_discovery.py` | « CONFORME » en lecture seule ; entités, unités, disponibilité |
-| Carte | après fabrication, sans PAC | 3,3 V présent, LED D1 éteinte sans bus, TX au repos pendant le démarrage (R8), bus de banc 15 V + seconde carte |
+| Carte | plaquette (09b) ou carte CMS fabriquée, sans PAC | 3,3 V présent, LED D1 éteinte sans bus, TX au repos pendant le démarrage (R8), bus de banc 15 V + seconde carte |
