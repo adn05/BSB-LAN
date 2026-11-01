@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """Produit la liste Alféa (BSB_LAN_custom_defs.h) à partir de la liste 211/127 de référence.
 
-Usage : gen_custom_defs.py <liste_source.h> <sortie.h>
+Usage : gen_custom_defs.py <liste_source.h> <sortie.h> [--selection <fichier>]
+
+Avec --selection, seules les entrées dont le numéro de ligne figure dans le fichier
+(numéros ou plages « a-b », commentaires « # ») sont conservées dans la cmdtbl.
+Les textes et énumérations non référencés sont éliminés à l'édition de liens.
 
 Les corrections sont décrites et justifiées dans docs/claude/08a_analyse_liste_parametres.md.
 Chaque ajout porte le commentaire « ALFEA » ; aucune entrée source n'est supprimée.
@@ -54,8 +58,20 @@ AJOUTS = [
 ENTREE_LIGNE = re.compile(r'^\{0x[0-9A-Fa-f]{8},\s*VT_\w+,\s*([\d.]+),')
 
 
+def lire_selection(chemin):
+    plages = []
+    for ligne in open(chemin, encoding='utf-8'):
+        ligne = ligne.split('#')[0].strip()
+        if not ligne:
+            continue
+        debut, _, fin = ligne.partition('-')
+        plages.append((float(debut), float(fin or debut) + 0.95))
+    return plages
+
+
 def main():
     src, dst = sys.argv[1:3]
+    plages = lire_selection(sys.argv[4]) if len(sys.argv) > 4 and sys.argv[3] == '--selection' else None
     lignes = open(src, encoding='utf-8').read().splitlines()
     debut = next(i for i, l in enumerate(lignes) if 'const cmd_t cmdtbl[]' in l)
     sortie = lignes[:debut] + TEXTES.splitlines() + [lignes[debut]]
@@ -73,6 +89,14 @@ def main():
         i += 1
     if restants:
         sys.exit(f'ancres introuvables : {sorted(restants)}')
+    if plages is not None:
+        retenues = []
+        for l in sortie:
+            m = ENTREE_LIGNE.match(l)
+            if m and not any(a <= float(m.group(1)) <= b for a, b in plages):
+                continue
+            retenues.append(l)
+        sortie = retenues
     with open(dst, 'w', encoding='utf-8', newline='\n') as f:
         f.write(ENTETE + '\n'.join(sortie) + '\n')
 

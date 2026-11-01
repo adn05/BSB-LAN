@@ -1,0 +1,54 @@
+# Sélection des paramètres compilés dans le firmware Alféa (liste réduite).
+# Une ligne = un numéro de paramètre BSB-LAN ; « a-b » = plage inclusive (sous-lignes .1, .2… comprises).
+# Les entrées génériques (famille 255) des lignes retenues sont conservées, les autres sont retirées.
+# Justification : docs/claude/08_plan_migration.md §5 et docs/claude/08a_analyse_liste_parametres.md §5.4.
+
+# Date et heure du régulateur
+0-3
+# Identification (famille, variante, versions) : indispensable à la mise en service (08a §6)
+6220-6229
+
+# Programmes horaires : CC1 (salon + cuisine), CC2 (chambres), ECS
+501-507
+521-527
+561-567
+# Programmes horaires cachés (niveau 6) vus dans le dump, à comparer à l'IHM (08 §5.2)
+10020-10033
+
+# Modes et consignes
+700
+710
+712
+1000
+1010
+1012
+1600
+1610
+
+# Températures
+8700
+8740-8744
+8770-8774
+8410-8413
+8830-8832
+
+# États, PAC, appoints, ECS
+8000
+8001
+8003
+8006
+8400
+8402
+8403
+8460
+8821
+
+# Énergie et compteurs
+3113-3113.4
+8450
+8451
+
+# Défauts
+6700
+6701
+6708
