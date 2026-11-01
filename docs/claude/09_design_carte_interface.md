@@ -1,9 +1,9 @@
 # 09 — Design de la carte d'interface BSB pour ESP32-C3 SuperMini
 
 > **Résumé**
-> Carte porteuse 2 couches de 50 × 40 mm. Le SuperMini s'y enfiche (2 × 8 broches au pas de 2,54 mm). Elle reprend **la topologie éprouvée de l'adaptateur officiel V3** : 2 × 4N25, BC547/BC557, mêmes valeurs. Les **écarts sont limités et justifiés** : rappel de TX au démarrage, transistor de bus en gain C, TVS et PTC sur l'entrée, retrait de l'EEPROM, entrée DHT22 protégée, entrée 5 V avec diode anti-retour.
+> Carte porteuse 2 couches de **70 × 49 mm** (placement réel, §6 ; le 50 × 40 mm initial n'était pas tenable avec les borniers et l'isolation). Le SuperMini s'y enfiche (2 × 8 broches au pas de 2,54 mm). Elle reprend **la topologie éprouvée de l'adaptateur officiel V3** : 2 × 4N25, BC547/BC557, mêmes valeurs. Les **écarts sont limités et justifiés** : rappel de TX au démarrage, transistor de bus en gain C, TVS et PTC sur l'entrée, retrait de l'EEPROM, entrée DHT22 protégée, entrée 5 V avec diode anti-retour.
 > **Isolation galvanique conservée** : rien n'est prélevé sur le bus pour l'ESP32. L'alimentation vient d'un **chargeur USB 5 V** (défaut, aucune intervention sur le 230 V) ou d'un module 5 V rail DIN (option).
-> Brochage : RX = GPIO6, TX = GPIO7, DHT22 = GPIO5, LED = GPIO8 (sur le SuperMini). Fichiers KiCad dans `hardware/alfea-esp32c3/` **après la GATE 2**.
+> Brochage : RX = GPIO6, TX = GPIO7, DHT22 = GPIO5, LED = GPIO8 (sur le SuperMini). **Projet KiCad 9 généré dans `alfea/hardware/carte_bsb_c3/`** : ERC 0, DRC 0, parité schéma/PCB 0 ; **PCB placé, non routé** (§9).
 > **Avant tout branchement**, X86 doit être mesuré (§8) : polarité et tension du bus ne sont pas documentées par Atlantic.
 
 Conventions : **[CONSTATÉ]**, **[SUPPOSÉ]**, **[À VÉRIFIER]**. Les calculs reprennent les valeurs de 06 §3 (4N25 : CTR ≥ 20 % à 10 mA, Vf 1,2 V ; C3 : V_IH ≥ 2,48 V, V_IL ≤ 0,83 V).
@@ -152,22 +152,26 @@ Un chargeur de 1 A donne une marge ×2,8 sur la pointe. Avec un LP5907 (250 mA, 
 
 ## 6. Format de la carte
 
+Placement réel (rendu `alfea/hardware/carte_bsb_c3/sorties/pcb_dessus.png`) :
+
 ```
- 50 mm
-┌─────────────────────────────────────────────────┐
-│ o J1(CL+/CL-)  F1 D3   R2 D1 D2      ║  SuperMini │  o = trous M3
-│                Q1 R1 R7   OK1 OK2    ║  (2×8, enfiché)
-│        CÔTÉ BUS                      ║  antenne → bord │ 40 mm
-│                      fente ≥ 3 mm    ║  R3-R6 R8 Q2    │
-│ o J3(DHT22)  J2(5V) D4 C1 C2         ║            o    │
-└─────────────────────────────────────────────────┘
+ 70 mm
+┌──────────────────────────────────────────────────────────────┐
+│ H1  F1  D3 R2 │OK1│ R4   J2(5 V, ouvert vers le haut)  J4 ┆ J5 │
+│     D1  D2    │   │ R5   D4  C2                        SuperMini │
+│J1 (BSB, ouvert│iso│ R6   C1                   (USB vers le haut) │ 49 mm
+│ vers la gauche)│  │ R8   Q2                         zone antenne │
+│ R1  Q1        │OK2│ R3   R9 C3 / R10 D5          sans cuivre      │
+│ H2  R7        │   │      J3 (DHT22)              H3        H4    │
+└──────────────────────────────────────────────────────────────┘
 ```
-[Disposition indicative : J3 et J2 sont côté MCU et seront placés à droite de la fente lors du routage.]
+- Bande d'isolation de 3 mm (zone interdite au cuivre, x = 123,4 à 126,4 mm) entre les deux rangées de broches des 4N25.
+- Zone sans cuivre de 21 × 27 mm sous et devant l'antenne du SuperMini (coin inférieur droit).
 
 - 2 couches, FR-4 1,6 mm, finition HASL ou ENIG.
 - Empreintes : CMS 0805 (1206 pour R2), 4N25 en DIP-6 traversant (ou SMD-6 « 4N25-X007 »), BC547C/BC557C en TO-92 ou BC847C/BC857C en SOT-23.
 - Le SuperMini est monté sur **barrettes femelles** (remplaçable) : écartement des rangées **[À VÉRIFIER sur un exemplaire au pied à coulisse]**, 15,24 mm (0,6") attendu.
-- 4 trous M3 pour entretoises ; boîtier de type 80 × 60 × 30 mm.
+- 4 trous M3 pour entretoises ; boîtier de type 100 × 68 × 40 mm.
 
 ## 7. Nomenclature (BOM)
 
@@ -210,3 +214,32 @@ Contexte : connecteur vert à 6 broches, rien de branché (Q2 de l'utilisateur).
 3. PAC sous tension, multimètre en continu, pointe COM sur la broche supposée CL- (`2`) : mesurer chacune des autres. Attendu [SUPPOSÉ] : **12 à 15 V** sur CL+ (`1`), avec une valeur moyenne légèrement inférieure à cause du trafic.
 4. Si un oscilloscope est disponible (sonde différentielle, ou oscilloscope sur batterie) : des créneaux de 208 µs entre `1` et `2` confirment le BSB. Relever le **niveau bas** et la **tension de repos**.
 5. Me transmettre les mesures : elles fixent la tension nominale de D3 (SMAJ18CA ou autre) et valident le sens de raccordement de J1.
+
+## 9. Fichiers KiCad (après la GATE 2)
+
+| Fichier | Rôle |
+|---|---|
+| `alfea/hardware/gen/carte.py` | **source unique** : composants, valeurs, empreintes, références fabricant, positions sur le schéma et le PCB, affectation broche → net |
+| `alfea/hardware/gen/gen_kicad.py`, `libsym.py`, `sexpr.py` | générateur : schéma (connexions par étiquettes de net), PCB (placement, nets, contour, zones interdites), projet |
+| `alfea/hardware/carte_bsb_c3/carte_bsb_c3.kicad_{pro,sch,pcb}` | projet KiCad 9, ouvrable directement |
+| `alfea/hardware/carte_bsb_c3/sorties/` | `schema.pdf`, `bom.csv`, `pcb.svg`, `pcb_dessus.png`, rapports `erc.rpt` et `drc.rpt` |
+| `docker/kicad/generer_carte.sh` | régénération et contrôles dans l'image officielle `kicad/kicad:9.0.6` |
+
+**Régénérer** : `sh docker/kicad/generer_carte.sh` depuis la racine du dépôt. Les UUID dérivent des références, donc deux générations donnent les mêmes fichiers.
+
+**Contrôles** [MESURÉ, image `kicad/kicad:9.0.6`] :
+- ERC : **0** violation.
+- Netlist exportée du schéma comparée à `carte.py` : **66 broches, 0 écart**, aucune connexion en trop.
+- DRC avec parité schéma/PCB : **0** violation, **0** écart de parité. Il reste **46 connexions non routées**, ce qui est attendu tant que le PCB n'est pas routé.
+
+**Routage : à faire.** J'ai tenté un routage automatique avec Freerouting en Docker (export Specctra DSN, zones interdites incluses), mais l'exécution du jar téléchargé a été refusée par les permissions de la session. Deux possibilités :
+1. router à la main dans KiCad (46 connexions, 2 couches) ;
+2. m'autoriser à exécuter Freerouting 2.1.0 (jar officiel GitHub, sha256 `2c07d58f…5def`) dans un conteneur `eclipse-temurin:21-jre`, puis reprise et DRC.
+
+**Pistes conseillées** : 0,25 mm pour les signaux ; 0,5 mm pour `+5V`, `GND` et `BUS_N`/`BUS_P` (robustesse mécanique, le courant reste faible) ; plan de masse `GND` en face arrière **côté ESP32 uniquement**, hors zone antenne ; aucune piste ni plan dans la bande d'isolation ; garde ≥ 0,5 mm autour des nets du bus (exposés à des surtensions).
+
+**Avant fabrication, à vérifier sur un exemplaire** :
+- le brochage du SuperMini (5V, GND, 3V3, GPIO4-0 d'un côté ; GPIO5-10, 20, 21 de l'autre) et l'entraxe des rangées (15,24 mm) ;
+- le sens du connecteur USB (vers le haut, débordant du bord) ;
+- la position de l'antenne céramique, qui doit tomber dans la zone sans cuivre ;
+- l'empreinte de la fiche X86 (pas du connecteur vert, §8).
