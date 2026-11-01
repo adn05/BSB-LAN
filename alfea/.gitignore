@@ -1,0 +1,8 @@
+# Fichiers locaux de KiCad et de Python, régénérés à chaque ouverture ou exécution
+__pycache__/
+*.kicad_prl
+*-backups/
+fp-info-cache
+\#auto_saved_files\#
+_autosave-*
+*.lck
