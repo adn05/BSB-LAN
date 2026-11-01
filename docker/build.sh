@@ -8,6 +8,8 @@
 #   pont : firmware de la NodeMCU ESP-C3-32S-Kit servant de pont USB (CH340) <-> bus logique pour le simulateur
 #          (alfea/tools/pont_bsb, docs/claude/README_docker.md §3)
 #   pont-diag : idem avec PONT_DIAG (compteurs de fronts et d'octets, une ligne par seconde sur la console)
+#   test-broches : test des GPIO du SuperMini (alfea/tools/test_broches), console USB
+#   test-broches-pont : le même test pour la NodeMCU ESP-C3-32S-Kit du pont (2 Mo, console CH340)
 # L'arbre BSB_LAN/ n'est jamais modifié : on compile une copie dans un répertoire temporaire.
 set -eu
 CIBLE="${1:-alfea}"
@@ -24,6 +26,15 @@ if [ "$CIBLE" = pont ] || [ "$CIBLE" = pont-diag ]; then
     --build-property "compiler.cpp.extra_flags=$([ "$CIBLE" = pont-diag ] && echo -DPONT_DIAG)" \
     --output-dir "$SORTIE" "$DEPOT/alfea/tools/pont_bsb" 2>&1 | tee "$SORTIE/compile.log"
   [ -f "$SORTIE/pont_bsb.ino.merged.bin" ] || { echo "ÉCHEC de compilation" >&2; exit 1; }
+  exit 0
+fi
+
+if [ "$CIBLE" = test-broches ] || [ "$CIBLE" = test-broches-pont ]; then
+  rm -rf "$SORTIE"
+  mkdir -p "$SORTIE"
+  [ "$CIBLE" = test-broches ] && CARTE="$FQBN" || CARTE="esp32:esp32:esp32c3:CDCOnBoot=default,FlashSize=2M,PartitionScheme=minimal"
+  arduino-cli compile --fqbn "$CARTE" --warnings default --output-dir "$SORTIE" "$DEPOT/alfea/tools/test_broches" 2>&1 | tee "$SORTIE/compile.log"
+  [ -f "$SORTIE/test_broches.ino.merged.bin" ] || { echo "ÉCHEC de compilation" >&2; exit 1; }
   exit 0
 fi
 
@@ -46,7 +57,7 @@ case "$CIBLE" in
       cp "$DEPOT/alfea/config/alfea_secrets.h.example" "$TMP/BSB_LAN/alfea_secrets.h"
     fi
     ;;
-  *) echo "cible inconnue : $CIBLE (amont | alfea | alfea-ecriture | pont | pont-diag)" >&2; exit 2 ;;
+  *) echo "cible inconnue : $CIBLE (amont | alfea | alfea-ecriture | pont | pont-diag | test-broches | test-broches-pont)" >&2; exit 2 ;;
 esac
 OPTIONS=""
 [ "$CIBLE" = alfea-ecriture ] && OPTIONS="-DALFEA_ECRITURE"
