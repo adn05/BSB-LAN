@@ -154,7 +154,20 @@ def boucle(port, reg, pont=False):
     print(f'simulateur BSB sur {port} (4800 8O1, octets complémentés'
           f'{", via le pont ESP32-C3 en 115 200 bauds, écho matériel" if pont else ""})', flush=True)
     while True:
-        brut = ser.read(64)
+        try:
+            brut = ser.read(64)
+        except serial.SerialException as err:     # port USB perdu (réénumération, coupure) : on le rouvre
+            print(f'port {port} perdu ({err}), réouverture...', flush=True)
+            ser.close()
+            while not ser.is_open:
+                time.sleep(0.5)
+                try:
+                    ser.open()
+                except serial.SerialException:
+                    pass
+            print(f'port {port} rouvert', flush=True)
+            tampon.clear()
+            continue
         if brut:
             if not pont:
                 ser.write(brut)                              # écho du bus (adaptateur USB-UART)

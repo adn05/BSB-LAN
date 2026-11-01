@@ -2,6 +2,8 @@
 """Vérifie les messages d'auto-discovery Home Assistant publiés par BSB-LAN sur un broker MQTT.
 
 Usage : verif_discovery.py [--broker hôte] [--port 1883] [--ecriture alfea/params/ecriture.txt] [--duree 5]
+        verif_discovery.py --secrets alfea/config/alfea_secrets.h   # broker, utilisateur et mot de passe MQTT
+                                                                    # lus dans les secrets, jamais affichés
 
 Client MQTT 3.1.1 minimal (bibliothèque standard seulement) : s'abonne à homeassistant/+/BSB-LAN/+/config
 et à BSB-LAN/status, lit les messages retenus pendant --duree secondes, puis contrôle :
@@ -12,6 +14,7 @@ Code de sortie 0 si tout est conforme.
 """
 import argparse
 import json
+import re
 import socket
 import struct
 import sys
@@ -61,10 +64,16 @@ def paquets(sock):
             tampon = tampon[i + n:]
 
 
-def collecter(hote, port, duree):
+def collecter(hote, port, duree, utilisateur=None, mot_de_passe=None):
     sock = socket.create_connection((hote, port), timeout=duree)
-    corps = chaine('MQTT') + bytes([4, 2]) + struct.pack('>H', 30) + chaine('verif-discovery')
+    drapeaux = 0x02 | (0x80 if utilisateur else 0) | (0x40 if utilisateur and mot_de_passe else 0)
+    corps = chaine('MQTT') + bytes([4, drapeaux]) + struct.pack('>H', 30) + chaine('verif-discovery')
+    if utilisateur:
+        corps += chaine(utilisateur) + (chaine(mot_de_passe) if mot_de_passe else b'')
     sock.sendall(b'\x10' + longueur(len(corps)) + corps)
+    entete, connack = next(paquets(sock), (0, b''))
+    if entete >> 4 != 2 or len(connack) < 2 or connack[1] != 0:
+        sys.exit(f'connexion refusée par le broker (CONNACK {connack.hex() or "absent"} ; 05 = non autorisé)')
     abonnements = chaine('homeassistant/+/BSB-LAN/+/config') + b'\x00' + chaine('BSB-LAN/status') + b'\x00'
     corps = struct.pack('>H', 1) + abonnements
     sock.sendall(b'\x82' + longueur(len(corps)) + corps)
@@ -84,6 +93,13 @@ def collecter(hote, port, duree):
     return messages
 
 
+def lire_secrets(chemin):
+    texte = open(chemin, encoding='utf-8').read()
+    val = dict(re.findall(r'#define\s+(ALFEA_MQTT_\w+)\s+"([^"]*)"', texte))
+    hote, _, port = val['ALFEA_MQTT_BROKER'].partition(':')
+    return hote, int(port or 1883), val.get('ALFEA_MQTT_USER'), val.get('ALFEA_MQTT_PASS')
+
+
 def lire_plages(chemin):
     plages = []
     for ligne in open(chemin, encoding='utf-8'):
@@ -100,9 +116,13 @@ def main():
     p.add_argument('--port', type=int, default=1883)
     p.add_argument('--ecriture')
     p.add_argument('--duree', type=float, default=5)
+    p.add_argument('--secrets', help='alfea_secrets.h : broker, utilisateur et mot de passe MQTT (jamais affichés)')
     args = p.parse_args()
     blanche = lire_plages(args.ecriture) if args.ecriture else None
-    messages = collecter(args.broker, args.port, args.duree)
+    utilisateur = mot_de_passe = None
+    if args.secrets:
+        args.broker, args.port, utilisateur, mot_de_passe = lire_secrets(args.secrets)
+    messages = collecter(args.broker, args.port, args.duree, utilisateur, mot_de_passe)
     print('BSB-LAN/status :', messages.get('BSB-LAN/status', '(absent)'))
     erreurs, par_type = [], {}
     for sujet, texte in sorted(messages.items()):
