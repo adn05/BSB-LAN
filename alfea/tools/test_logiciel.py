@@ -147,7 +147,7 @@ def conforme(attendu, obtenu):
         return attendu == v
 
 
-def test_valeurs(cible, mqtt, scenario):
+def test_valeurs(cible, mqtt, scenario, decouverte):
     print('\n== Valeurs lues (HTTP /JQ) contre le scénario ==')
     lignes = sorted({e['line'] for e in lire_liste(os.path.join(DEPOT, 'alfea', 'params', 'BSB_LAN_custom_defs_ha.h'))})
     valeurs = {float(k): v for k, v in scenario['valeurs'].items()}
@@ -164,7 +164,10 @@ def test_valeurs(cible, mqtt, scenario):
 
     print('\n== Valeurs publiées en MQTT ==')
     msgs = mqtt.lire('BSB-LAN/0/+/+/status', 6)
-    pub = {float(t.split('/')[3]): c for t, c in msgs.items()}
+    # sujet de chaque ligne d'après la discovery (« ~ ») : BSB-LAN publie parfois une lecture en échec sous la
+    # catégorie du paramètre précédent (decodedTelegram.cat périmé, mqtt_handler.h:57), sujets ignorés par HA
+    sujet = {float(d['unique_id'].split('-')[0]): d['~'] + '/status' for d in decouverte}
+    pub = {l: msgs[t] for l, t in sujet.items() if t in msgs}
     fausses, vues = [], 0
     for l, v in valeurs.items():
         if l in pub:
@@ -216,23 +219,27 @@ def test_routes(cible, bus):
     controle('/JY inopérante', '"error"' not in corps and 'payload' not in corps.lower(), f'HTTP {code}')
     time.sleep(2)
     trames, _ = bus.depuis()
-    # Une URL non reconnue retombe sur la lecture du paramètre 0 (« Y06… », « G5 » valent 0) : QUR date/heure,
-    # inoffensif. Toute autre trame (QINF 0x053D0064 demandé par /Y, SET, INF) serait une trame brute.
-    autres = [t for t in trames if not (t[4] == 0x06 and t[5:9] == bytes.fromhex('3d05000b'))]
-    controle('aucune trame brute émise par ces routes (seule la lecture ordinaire du paramètre 0)', not autres,
+    # Une URL non reconnue retombe sur la lecture du paramètre 0 (« Y06… », « G5 » valent 0), et la tournée de
+    # journalisation (60 s) peut tomber pendant le test : ce sont des QUR, inoffensifs. Toute autre trame (type
+    # autre que QUR, ou la commande 0x053D0064 demandée par /Y) serait une trame brute.
+    autres = [t for t in trames if t[4] != 0x06 or t[5:9] in (bytes.fromhex('3d050064'), bytes.fromhex('053d0064'))]
+    controle('aucune trame brute émise par ces routes (seulement des lectures QUR ordinaires)', not autres,
              '; '.join(t.hex(' ') for t in autres))
 
 
 def test_pannes(cible, chemin_panne):
     print('\n== Robustesse : CRC faux, silence du bus ==')
     avant = cible.demarrages()
-    for panne in ('crc', 'muet'):
-        open(chemin_panne, 'w', encoding='utf-8').write(panne)
-        r = cible.jq([8700])['8700']
-        controle(f'panne « {panne} » : lecture de 8700 signalée en erreur', r.get('error', 0) != 0 or r.get('value') in ('', '---'),
-                 f'error {r.get("error")}, value {r.get("value")!r}')
-    open(chemin_panne, 'w', encoding='utf-8').write('')
-    r = cible.jq([8700])['8700']
+    try:
+        for panne in ('crc', 'muet'):
+            open(chemin_panne, 'w', encoding='utf-8').write(panne)
+            r = cible.jq([8700]).get('8700', {})        # paramètre parfois absent de la réponse : erreur aussi
+            controle(f'panne « {panne} » : lecture de 8700 signalée en erreur',
+                     not r or r.get('error', 0) != 0 or r.get('value') in ('', '---'),
+                     f'error {r.get("error")}, value {r.get("value")!r}' if r else '8700 absent de la réponse')
+    finally:
+        open(chemin_panne, 'w', encoding='utf-8').write('')
+    r = cible.jq([8700]).get('8700', {})
     controle('reprise après la panne : 8700 = 3.5', r.get('error') == 0 and conforme('3.5', r))
     apres = cible.demarrages()
     controle('pas de redémarrage du SuperMini pendant les pannes', avant is None or apres is None or apres >= avant,
@@ -363,7 +370,7 @@ def main():
         except ValueError:
             pass                                   # JSON invalide : signalé par controle_discovery()
     if a.phase == 'lecture':
-        test_valeurs(cible, mqtt, scenario)
+        test_valeurs(cible, mqtt, scenario, decouverte)
         test_lecture_seule(cible, mqtt, bus, decouverte)
         test_routes(cible, bus)
         if a.panne:

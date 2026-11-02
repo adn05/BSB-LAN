@@ -329,6 +329,20 @@ bool mqtt_send_discovery(bool create=true) {
         }
         if (bus->getBusDest() == 0 || line < 15000) {     // do not send (again) parameters > 15000 when using non-zero device ID
           if (MQTTPubSubClient->connected()) {
+#ifdef MQTT_DISCOVERY_CLEAN_TYPES
+            // The component (sensor, select, text...) depends on the write mode: remove the retained configs of the
+            // other components for this unique_id, otherwise Home Assistant keeps stale duplicates after a mode change.
+            if (create) {
+              static const char* const components[] = {"sensor/", "binary_sensor/", "switch/", "select/", "text/"};
+              const char* rest = strstr(MQTTTopic, "BSB-LAN/");
+              char other_topic[sizeof(MQTTTopic)];
+              for (uint8_t c = 0; rest && c < sizeof(components) / sizeof(components[0]); c++) {
+                if (strncmp(MQTTTopic + strlen("homeassistant/"), components[c], strlen(components[c])) == 0) continue;
+                snprintf(other_topic, sizeof(other_topic), "homeassistant/%s%s", components[c], rest);
+                MQTTPubSubClient->publish(other_topic, "", true);
+              }
+            }
+#endif
             MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, 1, true);
           } else {
             printlnToDebug("No connection to MQTT broker, aborting...");

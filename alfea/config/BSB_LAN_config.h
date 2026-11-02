@@ -190,9 +190,13 @@ bool show_unknown = false;
 #define AP_PASSWORD ALFEA_AP_PASSWORD
 static_assert(sizeof(AP_PASSWORD) >= 9, "ALFEA_AP_PASSWORD : au moins 8 caractères (WPA2)");
 
-// Discovery MQTT republiée à chaque démarrage, dès que la PAC est identifiée (sans cela, BSB-LAN ne la renvoie
-// que si le broker a perdu la session persistante, ou sur /M1!0 ; docs/claude/04 §1.1, journal J27).
+// Discovery MQTT republiée à chaque démarrage, dès que la PAC est identifiée, et à chaque changement du mode
+// d'écriture (entités modifiables ou non ; journal J28). Sans cela, BSB-LAN ne la renvoie
+// que si le broker a perdu la session persistante, ou sur /M1!0 (docs/claude/04 §1.1, journal J27).
 #define MQTT_DISCOVERY_ON_BOOT
+// Le type d'entité (sensor, select, text...) dépend du mode d'écriture : chaque publication de discovery efface les
+// configurations retenues des autres types pour le même unique_id (sinon doublons périmés dans HA, journal J28).
+#define MQTT_DISCOVERY_CLEAN_TYPES
 
 // Broker Mosquitto local en 1883 : TLS inutile (docs/claude/08 §1.2).
 #define NO_TLS

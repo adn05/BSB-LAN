@@ -1379,12 +1379,23 @@ bool programIsreadOnly(uint16_t param_len) {
       case 0: return true; //All read-only.
       case 1: if ((param_len & FL_OEM) == FL_OEM || ((param_len & FL_RONLY) == FL_RONLY && (default_flag & FL_RONLY) != FL_RONLY)) return true; else return false; //All writable except read-only and OEM
       case 2: if ((param_len & FL_RONLY) == FL_RONLY) return true; else return false; //All writable except read-only
+      default: return true; //Unknown mode (e.g. never saved: erased EEPROM/NVS reads 0xFF): read-only, not writable
     }
   } else { //defs-controlled.
     if ((param_len & FL_RONLY) == FL_RONLY) return true;
   }
   return false;
 }
+
+#ifdef WRITE_WHITELIST
+// true if line is outside the ranges of write_whitelist[][2] (defined in BSB_LAN_custom_defs.h): read-only then
+bool notInWriteWhitelist(float line) {
+  for (size_t k = 0; k < sizeof(write_whitelist) / sizeof(write_whitelist[0]); k++) {
+    if (line >= write_whitelist[k][0] && line <= write_whitelist[k][1]) return false;
+  }
+  return true;
+}
+#endif
 
  /** *****************************************************************
   *  Function:  loadPrognrElementsFromTable(int, int)
@@ -1410,7 +1421,11 @@ void loadPrognrElementsFromTable(float nr, int i) {
   decodedTelegram.enumstr_len=active_cmdtbl[i].enumstr_len;
   decodedTelegram.enumstr = active_cmdtbl[i].enumstr;
   decodedTelegram.flags=active_cmdtbl[i].flags;
-  if (programIsreadOnly(decodedTelegram.flags)) {
+  bool read_only = programIsreadOnly(decodedTelegram.flags);
+#ifdef WRITE_WHITELIST
+  read_only = read_only || notInWriteWhitelist(nr);  // also shown read-only in web UI and MQTT discovery
+#endif
+  if (read_only) {
     decodedTelegram.readwrite = FL_RONLY; //read only
   } else if ((decodedTelegram.flags & FL_WONLY) == FL_WONLY) {
     decodedTelegram.readwrite = FL_WONLY; //write only
@@ -2925,11 +2940,7 @@ int set(float line      // the ProgNr of the heater parameter
   }
 #ifdef WRITE_WHITELIST
   // Only parameters within the ranges of write_whitelist[][2] (defined in BSB_LAN_custom_defs.h) may be written
-  bool whitelisted = false;
-  for (size_t k = 0; k < sizeof(write_whitelist) / sizeof(write_whitelist[0]); k++) {
-    if (line >= write_whitelist[k][0] && line <= write_whitelist[k][1]) whitelisted = true;
-  }
-  if (!whitelisted) {
+  if (notInWriteWhitelist(line)) {
     printlnToDebug("Parameter is not in write whitelist!");
     return 2;   // same return value as for a readonly parameter
   }
@@ -7019,11 +7030,14 @@ next_parameter:
       mqtt_connect();        //Luposoft, connect to mqtt
       MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
 #ifdef MQTT_DISCOVERY_ON_BOOT
-      // Publish the discovery once per boot, as soon as the heater is identified: mqtt_connect() only does it
-      // when the broker lost the (persistent) session, and a discovery sent before identification is incomplete.
+      // Publish the discovery once per boot, as soon as the heater is identified, and again whenever the write mode
+      // changes (entities become read-only or writable): mqtt_connect() only does it when the broker lost the
+      // (persistent) session, and a discovery sent before identification is incomplete.
       static bool boot_discovery_done = false;
-      if (!boot_discovery_done && MQTTPubSubClient->connected() && my_dev_fam != DEV_FAM(DEV_NONE)) {
-        printlnToDebug("Publishing MQTT discovery after boot...");
+      static byte discovery_write_mode = 0;
+      if ((!boot_discovery_done || discovery_write_mode != programWriteMode) && MQTTPubSubClient->connected() && my_dev_fam != DEV_FAM(DEV_NONE)) {
+        printlnToDebug("Publishing MQTT discovery after boot or write mode change...");
+        discovery_write_mode = programWriteMode;
         boot_discovery_done = mqtt_send_discovery(true);
       }
 #endif
