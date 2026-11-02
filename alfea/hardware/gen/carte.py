@@ -16,8 +16,8 @@ C0805 = 'Capacitor_SMD:C_0805_2012Metric'
 
 COMPOSANTS = [
     # --- Entrée bus et protections (côté bus)
-    dict(ref='J1', lib='Connector:Screw_Terminal_01x02', val='BSB (X86)', fp='TerminalBlock_Phoenix:TerminalBlock_Phoenix_MPT-0,5-2-2.54_1x02_P2.54mm_Horizontal',
-         mpn='Phoenix MPT 0,5/2-2,54', sch=(30.48, 63.5), pcb=(103.62, 117.7, 90),
+    dict(ref='J1', lib='Connector:Screw_Terminal_01x02', val='BSB (X86)', fp='Connector_Phoenix_MC:PhoenixContact_MCV_1,5_2-G-3.5_1x02_P3.50mm_Vertical',
+         mpn='Hong Cheng HC-JXDZVC-3.5-2P', sch=(30.48, 63.5), pcb=(103.62, 117.7, 90),
          pins={'1': 'CL_P_IN', '2': 'CL_N_IN'}),
     dict(ref='F1', lib='Device:Polyfuse', val='PTC 0,1 A', fp='Fuse:Fuse_1812_4532Metric', mpn='Bourns MF-MSMF010-2',
          sch=(55.88, 50.8), pcb=(110.5, 104.0, 0), pins={'1': 'CL_P_IN', '2': 'BUS_P'}),
@@ -30,7 +30,7 @@ COMPOSANTS = [
          sch=(114.3, 81.28), pcb=(113.0, 110.5, 90), pins={'1': 'BUS_N', '2': 'BUS_OK1_D1'}),
     dict(ref='D2', lib='Device:D', val='1N4148W', fp='Diode_SMD:D_SOD-123', mpn='1N4148W',
          sch=(114.3, 96.52), pcb=(116.5, 113.0, 90), pins={'1': 'CL_N_IN', '2': 'BUS_N'}),
-    dict(ref='OK1', lib='Isolator:4N25', val='4N25', fp='Package_DIP:DIP-6_W7.62mm', mpn='Vishay 4N25',
+    dict(ref='U1', lib='Isolator:4N25', val='4N25', fp='Package_DIP:SMDIP-6_W9.53mm', mpn='Lite-On 4N25S-TA1',
          sch=(144.78, 55.88), pcb=(121.0, 104.5, 0),
          pins={'1': 'BUS_R2_OK1', '2': 'BUS_OK1_D1', '4': 'RX', '5': '+3V3', '6': 'OK1_B'}, nc=['3']),
     # --- Réception côté ESP32
@@ -47,7 +47,7 @@ COMPOSANTS = [
          sch=(200.66, 137.16), pcb=(132.75, 117.2, 0), pins={'3': 'Q2_C', '1': 'Q2_B', '2': '+3V3'}),
     dict(ref='R3', lib='Device:R', val='300', fp=R0805, mpn='300 Ohm 1 % 0805',
          sch=(180.34, 152.4), pcb=(131.45, 120.8, 90), pins={'1': 'Q2_C', '2': 'OK2_A'}),
-    dict(ref='OK2', lib='Isolator:4N25', val='4N25', fp='Package_DIP:DIP-6_W7.62mm', mpn='Vishay 4N25',
+    dict(ref='U2', lib='Isolator:4N25', val='4N25', fp='Package_DIP:SMDIP-6_W9.53mm', mpn='Lite-On 4N25S-TA1',
          sch=(144.78, 137.16), pcb=(128.62, 129.08, 180),
          pins={'1': 'OK2_A', '2': 'GND', '4': 'BUS_Q1_B', '5': 'BUS_P', '6': 'BUS_OK2_B'}, nc=['3']),
     # --- Émission côté bus
@@ -76,8 +76,8 @@ COMPOSANTS = [
     dict(ref='C3', lib='Device:C', val='100n', fp=C0805, mpn='100 nF X7R 0805',
          sch=(256.54, 170.18), pcb=(143.5, 120.6, 0), pins={'1': '+3V3', '2': 'GND'}),
     # --- Alimentation 5 V
-    dict(ref='J2', lib='Connector:Screw_Terminal_01x02', val='5V ext.', fp='TerminalBlock_Phoenix:TerminalBlock_Phoenix_MPT-0,5-2-2.54_1x02_P2.54mm_Horizontal',
-         mpn='Phoenix MPT 0,5/2-2,54', sch=(254.0, 30.48), pcb=(131.7, 103.62, 0), ref_at=(137.6, 103.6), pins={'1': '5V_IN', '2': 'GND'}),
+    dict(ref='J2', lib='Connector:Screw_Terminal_01x02', val='5V ext.', fp='Connector_Phoenix_MC:PhoenixContact_MCV_1,5_2-G-3.5_1x02_P3.50mm_Vertical',
+         mpn='Hong Cheng HC-JXDZVC-3.5-2P', sch=(254.0, 30.48), pcb=(131.7, 103.62, 0), ref_at=(137.6, 103.6), pins={'1': '5V_IN', '2': 'GND'}),
     dict(ref='D4', lib='Device:D_Schottky', val='SS14', fp='Diode_SMD:D_SMA', mpn='SS14',
          sch=(279.4, 27.94), pcb=(154.3, 115.9, 90), pins={'1': '+5V', '2': '5V_IN'}),
     dict(ref='C1', lib='Device:C_Polarized', val='100u 10V', fp='Capacitor_SMD:CP_Elec_6.3x5.4', mpn='100 uF 10 V alu SMD 6,3 mm',
@@ -102,9 +102,9 @@ ISOLATION = (123.4, 100.0, 126.4, 133.0)
 ANTENNE = (135.6, 106.0, 139.8, 124.0)
 
 NOTES = [
-    ((25.4, 22.86), 'COTE BUS (alimente par le bus, ~6 mA)  |  isolation optique OK1/OK2  |  COTE ESP32 (3,3 V du SuperMini)'),
+    ((25.4, 22.86), 'COTE BUS (alimente par le bus, ~6 mA)  |  isolation optique U1/U2  |  COTE ESP32 (3,3 V du SuperMini)'),
     ((25.4, 27.94), 'Topologie de l adaptateur officiel V3, ecarts : R8, Q1/Q2 gain C en SOT-23, D3, F1, entree DHT22, entree 5 V (docs/claude/09).'),
-    ((25.4, 210.82), 'RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/1500 = 6,2 mA a 13 V ; TX : I_F(OK2) = 6,3 mA, Ib(Q1) ~34 uA -> 14 mA (BC847C).'),
+    ((25.4, 210.82), 'RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/1500 = 6,2 mA a 13 V ; TX : I_F(U2) = 6,3 mA, Ib(Q1) ~34 uA -> 14 mA (BC847C).'),
     ((25.4, 215.9), 'R8 maintient Q2 bloque quand GPIO7 est en haute impedance (reset, bootloader) : le bus n est pas tire a 0 au demarrage.'),
     ((25.4, 220.98), 'Brochage du SuperMini et entraxe des rangees (15,24 mm) a verifier sur un exemplaire avant fabrication.'),
 ]

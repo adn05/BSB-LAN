@@ -12,6 +12,68 @@
 		(comment 2 "Connexions par étiquettes de net ; topologie adaptateur BSB-LAN V3 (docs/claude/06 et 09)")
 	)
 	(lib_symbols
+		(symbol "alfea:Fiche_bornier"
+			(exclude_from_sim yes)
+			(in_bom yes)
+			(on_board no)
+			(property "Reference" "JJ"
+				(at 0 3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Fiche_bornier"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Fiche enfichable de bornier (côté câble), sans empreinte, commandée avec la carte"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Fiche_bornier_0_1"
+				(rectangle
+					(start -5.08 2.54)
+					(end 5.08 -2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Connector:Screw_Terminal_01x02"
 			(pin_names
 				(offset 1.016)
@@ -2750,7 +2812,7 @@
 		)
 		(uuid "0595e781-aa98-5ee1-b800-8c3c486034df")
 	)
-	(text "RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/1500 = 6,2 mA a 13 V ; TX : I_F(OK2) = 6,3 mA, OK2+Q1 en Darlington, I_E(OK2) >= 1,3 mA -> Q1 sature, V(BUS_P) ~0,85 V (~1,6 V aux bornes avec D2). D3 entre BUS_P et CL_N_IN, en amont de D2."
+	(text "RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/1500 = 6,2 mA a 13 V ; TX : I_F(U2) = 6,3 mA, OK2+Q1 en Darlington, I_E(OK2) >= 1,3 mA -> Q1 sature, V(BUS_P) ~0,85 V (~1,6 V aux bornes avec D2). D3 entre BUS_P et CL_N_IN, en amont de D2."
 		(exclude_from_sim no)
 		(at 45.974 215.138 0)
 		(effects
@@ -2959,7 +3021,7 @@
 		)
 		(uuid "d3add899-ff0b-5ed2-8d24-75174e7a3107")
 	)
-	(text "COTE BUS (alimente par le bus, ~6 mA)  |  isolation optique OK1/OK2  |  COTE ESP32 (3,3 V du SuperMini)"
+	(text "COTE BUS (alimente par le bus, ~6 mA)  |  isolation optique U1/U2  |  COTE ESP32 (3,3 V du SuperMini)"
 		(exclude_from_sim no)
 		(at 112.522 29.718 0)
 		(effects
@@ -3111,7 +3173,7 @@
 		(uuid "30b3ed2e-f215-562a-8b4d-12d80d74a6e5")
 	)
 	(label "GND"
-		(at 353.06 83.82 270)
+		(at 373.38 83.82 270)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3291,7 +3353,7 @@
 		(uuid "771ab773-ff09-5e7d-bf80-49e66029f5a6")
 	)
 	(label "+5V"
-		(at 337.82 76.2 90)
+		(at 345.44 76.2 90)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3331,7 +3393,7 @@
 		(uuid "85d29d5c-e03c-5185-99a9-12fb7eed3e17")
 	)
 	(label "+3V3"
-		(at 353.06 76.2 90)
+		(at 373.38 76.2 90)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3611,7 +3673,7 @@
 		(uuid "df8e9ae4-1b47-5b0d-8926-fb632e10e98b")
 	)
 	(label "GND"
-		(at 337.82 83.82 270)
+		(at 345.44 83.82 270)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3723,7 +3785,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "SMAJ18CA"
 			(at 59.69 115.57 0)
 			(effects
 				(font
@@ -3732,12 +3794,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Littelfuse SMAJ18CA"
+		(property "MPN" "hongjiacheng SMAJ18CA"
 			(at 59.69 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C19077539"
+			(at 59.69 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/hongjiacheng-SMAJ18CA/C19077539"
+			(at 59.69 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -3774,7 +3856,7 @@
 				)
 			)
 		)
-		(property "Value" "BSB (X86)"
+		(property "Value" "HC-JXDZVC-3.5-2P"
 			(at 28.194 125.476 0)
 			(effects
 				(font
@@ -3782,7 +3864,7 @@
 				)
 			)
 		)
-		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MPT-0,5-2-2.54_1x02_P2.54mm_Horizontal"
+		(property "Footprint" "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_2-G-3.5_1x02_P3.50mm_Vertical"
 			(at 27.94 114.3 0)
 			(effects
 				(font
@@ -3800,7 +3882,15 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "BSB (X86)"
+			(at 28.194 128.016 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "Hong Cheng HC-JXDZVC-3.5-2P"
 			(at 27.94 114.3 0)
 			(effects
 				(font
@@ -3809,12 +3899,23 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Phoenix MPT 0,5/2-2,54"
+		(property "JLCPCB Part #" "C51927058"
 			(at 27.94 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/HongCheng-HC_JXDZVC_3_52P/C51927058"
+			(at 27.94 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -3851,7 +3952,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "0805W8F1002T5E"
 			(at 236.22 81.28 0)
 			(effects
 				(font
@@ -3878,7 +3979,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "10k"
 			(at 234.95 83.82 0)
 			(effects
 				(font
@@ -3887,12 +3988,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "10 kOhm 1 % 0805"
+		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 0805W8F1002T5E"
 			(at 234.95 83.82 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C17414"
+			(at 234.95 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/18102-0805W8F1002T5E/C17414"
+			(at 234.95 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -3928,7 +4049,7 @@
 				)
 			)
 		)
-		(property "Value" "SuperMini gauche"
+		(property "Value" "22850108ANG1SYA01"
 			(at 292.1 116.84 0)
 			(effects
 				(font
@@ -3954,7 +4075,15 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "SuperMini gauche"
+			(at 292.1 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "JILN 22850108ANG1SYA01"
 			(at 292.1 132.08 0)
 			(effects
 				(font
@@ -3963,12 +4092,23 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "barrette femelle 1x8 2,54 mm"
+		(property "JLCPCB Part #" "C429957"
 			(at 292.1 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/JILN-22850108ANG1SYA01/C429957"
+			(at 292.1 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4023,7 +4163,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100"
+		(property "Value" "0805W8F1000T5E"
 			(at 209.55 143.51 0)
 			(effects
 				(font
@@ -4050,7 +4190,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "100"
 			(at 212.09 144.78 0)
 			(effects
 				(font
@@ -4059,12 +4199,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "100 Ohm 0805"
+		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 0805W8F1000T5E"
 			(at 212.09 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C17408"
+			(at 212.09 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/18096-0805W8F1000T5E/C17408"
+			(at 212.09 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4092,7 +4252,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "495821d1-1836-5510-bc50-83839ef92482")
-		(property "Reference" "OK1"
+		(property "Reference" "U1"
 			(at 138.43 118.11 0)
 			(effects
 				(font
@@ -4100,7 +4260,7 @@
 				)
 			)
 		)
-		(property "Value" "4N25"
+		(property "Value" "4N25S-TA1"
 			(at 138.43 133.35 0)
 			(effects
 				(font
@@ -4108,7 +4268,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_DIP:DIP-6_W7.62mm"
+		(property "Footprint" "Package_DIP:SMDIP-6_W9.53mm"
 			(at 138.43 125.73 0)
 			(effects
 				(font
@@ -4126,7 +4286,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "4N25"
 			(at 138.43 125.73 0)
 			(effects
 				(font
@@ -4135,12 +4295,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Vishay 4N25"
+		(property "MPN" "Lite-On 4N25S-TA1"
 			(at 138.43 125.73 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C143074"
+			(at 138.43 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/LiteOn-4N25STA1/C143074"
+			(at 138.43 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4165,7 +4345,7 @@
 		(instances
 			(project "carte_bsb_c3"
 				(path "/e870cb4c-d38d-5ec4-8d47-ef3c2646a16f"
-					(reference "OK1")
+					(reference "U1")
 					(unit 1)
 				)
 			)
@@ -4173,7 +4353,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 337.82 80.01 0)
+		(at 345.44 80.01 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4181,7 +4361,7 @@
 		(dnp no)
 		(uuid "4e29a82b-43b2-5442-b818-ee41330cc034")
 		(property "Reference" "C2"
-			(at 340.36 78.74 0)
+			(at 347.98 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4189,8 +4369,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100n"
-			(at 340.36 81.28 0)
+		(property "Value" "CGA0805X7R104K250KT"
+			(at 347.98 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4199,7 +4379,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 337.82 80.01 0)
+			(at 345.44 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4208,7 +4388,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 337.82 80.01 0)
+			(at 345.44 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4216,8 +4396,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 337.82 80.01 0)
+		(property "Description" "100n"
+			(at 345.44 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4225,12 +4405,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "100 nF X7R 0805"
-			(at 337.82 80.01 0)
+		(property "MPN" "HRE CGA0805X7R104K250KT"
+			(at 345.44 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C36911366"
+			(at 345.44 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/HRE-CGA0805X7R104K250KT/C36911366"
+			(at 345.44 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4292,7 +4492,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "PESD5V0S1BA"
 			(at 190.5 162.56 0)
 			(effects
 				(font
@@ -4301,12 +4501,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Nexperia PESD5V0S1BA"
+		(property "MPN" "TECH PUBLIC PESD5V0S1BA"
 			(at 190.5 162.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C2827694"
+			(at 190.5 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/TECHPUBLIC-PESD5V0S1BA/C2827694"
+			(at 190.5 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4342,7 +4562,7 @@
 				)
 			)
 		)
-		(property "Value" "rouge"
+		(property "Value" "NCD0805R1"
 			(at 73.66 153.67 0)
 			(effects
 				(font
@@ -4368,7 +4588,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "rouge"
 			(at 73.66 149.86 0)
 			(effects
 				(font
@@ -4377,12 +4597,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "LED rouge 0805"
+		(property "MPN" "Foshan NationStar Optoelectronics NCD0805R1"
 			(at 73.66 149.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C84256"
+			(at 73.66 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/85425-NCD0805R1/C84256"
+			(at 73.66 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4419,7 +4659,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "4k7"
+		(property "Value" "0805W8F4701T5E"
 			(at 170.18 139.7 0)
 			(effects
 				(font
@@ -4446,7 +4686,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "4k7"
 			(at 167.64 138.43 0)
 			(effects
 				(font
@@ -4455,12 +4695,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "4,7 kOhm 1 % 0805"
+		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 0805W8F4701T5E"
 			(at 167.64 138.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C17673"
+			(at 167.64 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/18361-0805W8F4701T5E/C17673"
+			(at 167.64 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4497,7 +4757,7 @@
 				)
 			)
 		)
-		(property "Value" "SuperMini droite"
+		(property "Value" "22850108ANG1SYA01"
 			(at 261.62 116.84 0)
 			(effects
 				(font
@@ -4523,7 +4783,15 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "SuperMini droite"
+			(at 261.62 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "JILN 22850108ANG1SYA01"
 			(at 261.62 132.08 0)
 			(effects
 				(font
@@ -4532,12 +4800,23 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "barrette femelle 1x8 2,54 mm"
+		(property "JLCPCB Part #" "C429957"
 			(at 261.62 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/JILN-22850108ANG1SYA01/C429957"
+			(at 261.62 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4592,7 +4871,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "PTC 0,1 A"
+		(property "Value" "MF-MSMF010-2"
 			(at 53.34 92.456 90)
 			(effects
 				(font
@@ -4619,7 +4898,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "PTC 0,1 A"
 			(at 49.53 96.52 0)
 			(effects
 				(font
@@ -4628,12 +4907,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Bourns MF-MSMF010-2"
+		(property "MPN" "BOURNS MF-MSMF010-2"
 			(at 49.53 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C12430"
+			(at 49.53 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/MF-MSMF010-2/C12430"
+			(at 49.53 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4670,7 +4969,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "330k"
+		(property "Value" "RS-05K334JT"
 			(at 104.521 82.423 90)
 			(effects
 				(font
@@ -4697,7 +4996,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "330k"
 			(at 102.87 85.09 0)
 			(effects
 				(font
@@ -4706,12 +5005,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "330 kOhm 1 % 0805"
+		(property "MPN" "FH (Guangdong Fenghua Advanced Tech) RS-05K334JT"
 			(at 102.87 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C294705"
+			(at 102.87 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/279230-RS05K334JT/C294705"
+			(at 102.87 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4748,7 +5067,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "300"
+		(property "Value" "0805W8F3000T5E"
 			(at 180.086 91.186 90)
 			(effects
 				(font
@@ -4775,7 +5094,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "300"
 			(at 181.61 93.98 0)
 			(effects
 				(font
@@ -4784,12 +5103,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "300 Ohm 1 % 0805"
+		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 0805W8F3000T5E"
 			(at 181.61 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C17617"
+			(at 181.61 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/18305-0805W8F3000T5E/C17617"
+			(at 181.61 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4826,7 +5165,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1k5 1206"
+		(property "Value" "1206W4F1501T5E"
 			(at 76.708 93.218 90)
 			(effects
 				(font
@@ -4853,7 +5192,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "1k5 1206"
 			(at 73.66 96.52 0)
 			(effects
 				(font
@@ -4862,12 +5201,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "1,5 kOhm 1 % 1206"
+		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 1206W4F1501T5E"
 			(at 73.66 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C26030"
+			(at 73.66 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/26773-1206W4F1501T5E/C26030"
+			(at 73.66 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4904,7 +5263,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "330k"
+		(property "Value" "RS-05K334JT"
 			(at 71.501 136.017 90)
 			(effects
 				(font
@@ -4931,7 +5290,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "330k"
 			(at 73.66 138.43 0)
 			(effects
 				(font
@@ -4940,12 +5299,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "330 kOhm 1 % 0805"
+		(property "MPN" "FH (Guangdong Fenghua Advanced Tech) RS-05K334JT"
 			(at 73.66 138.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C294705"
+			(at 73.66 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/279230-RS05K334JT/C294705"
+			(at 73.66 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -4982,7 +5361,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "4k7"
+		(property "Value" "0805W8F4701T5E"
 			(at 233.934 94.234 90)
 			(effects
 				(font
@@ -5009,7 +5388,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "4k7"
 			(at 234.95 97.79 0)
 			(effects
 				(font
@@ -5018,12 +5397,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "4,7 kOhm 1 % 0805"
+		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 0805W8F4701T5E"
 			(at 234.95 97.79 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C17673"
+			(at 234.95 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/18361-0805W8F4701T5E/C17673"
+			(at 234.95 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5060,7 +5459,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "4k7"
+		(property "Value" "0805W8F4701T5E"
 			(at 233.68 160.02 90)
 			(effects
 				(font
@@ -5087,7 +5486,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "4k7"
 			(at 232.41 162.56 0)
 			(effects
 				(font
@@ -5096,12 +5495,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "4,7 kOhm 1 % 0805"
+		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 0805W8F4701T5E"
 			(at 232.41 162.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C17673"
+			(at 232.41 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/18361-0805W8F4701T5E/C17673"
+			(at 232.41 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5130,7 +5549,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "94ee356c-7d47-5c9d-984d-1dbd1dfbb2f5")
-		(property "Reference" "OK2"
+		(property "Reference" "U2"
 			(at 138.43 88.9 0)
 			(effects
 				(font
@@ -5138,7 +5557,7 @@
 				)
 			)
 		)
-		(property "Value" "4N25"
+		(property "Value" "4N25S-TA1"
 			(at 138.43 104.14 0)
 			(effects
 				(font
@@ -5146,7 +5565,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_DIP:DIP-6_W7.62mm"
+		(property "Footprint" "Package_DIP:SMDIP-6_W9.53mm"
 			(at 138.43 96.52 0)
 			(effects
 				(font
@@ -5164,7 +5583,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "4N25"
 			(at 138.43 96.52 0)
 			(effects
 				(font
@@ -5173,12 +5592,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Vishay 4N25"
+		(property "MPN" "Lite-On 4N25S-TA1"
 			(at 138.43 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C143074"
+			(at 138.43 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/LiteOn-4N25STA1/C143074"
+			(at 138.43 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5203,7 +5642,7 @@
 		(instances
 			(project "carte_bsb_c3"
 				(path "/e870cb4c-d38d-5ec4-8d47-ef3c2646a16f"
-					(reference "OK2")
+					(reference "U2")
 					(unit 1)
 				)
 			)
@@ -5226,7 +5665,7 @@
 				)
 			)
 		)
-		(property "Value" "DHT22"
+		(property "Value" "DB2EVC-2.54-3P-GN"
 			(at 213.106 187.96 90)
 			(effects
 				(font
@@ -5252,7 +5691,15 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "DHT22"
+			(at 213.106 190.5 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "DORABO DB2EVC-2.54-3P-GN"
 			(at 212.09 180.34 0)
 			(effects
 				(font
@@ -5261,12 +5708,23 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Phoenix MPT 0,5/3-2,54"
+		(property "JLCPCB Part #" "C2927494"
 			(at 212.09 180.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/C2927494"
+			(at 212.09 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5306,7 +5764,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "330k"
+		(property "Value" "RS-05K334JT"
 			(at 170.434 125.222 0)
 			(effects
 				(font
@@ -5333,7 +5791,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "330k"
 			(at 167.64 123.19 0)
 			(effects
 				(font
@@ -5342,12 +5800,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "330 kOhm 1 % 0805"
+		(property "MPN" "FH (Guangdong Fenghua Advanced Tech) RS-05K334JT"
 			(at 167.64 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C294705"
+			(at 167.64 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/279230-RS05K334JT/C294705"
+			(at 167.64 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5383,7 +5861,7 @@
 				)
 			)
 		)
-		(property "Value" "5V ext."
+		(property "Value" "HC-JXDZVC-3.5-2P"
 			(at 295.402 67.31 90)
 			(effects
 				(font
@@ -5391,7 +5869,7 @@
 				)
 			)
 		)
-		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MPT-0,5-2-2.54_1x02_P2.54mm_Horizontal"
+		(property "Footprint" "Connector_Phoenix_MC:PhoenixContact_MCV_1,5_2-G-3.5_1x02_P3.50mm_Vertical"
 			(at 288.29 71.12 0)
 			(effects
 				(font
@@ -5409,7 +5887,15 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "5V ext."
+			(at 295.402 61.722 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "Hong Cheng HC-JXDZVC-3.5-2P"
 			(at 288.29 71.12 0)
 			(effects
 				(font
@@ -5418,12 +5904,23 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Phoenix MPT 0,5/2-2,54"
+		(property "JLCPCB Part #" "C51927058"
 			(at 288.29 71.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/HongCheng-HC_JXDZVC_3_52P/C51927058"
+			(at 288.29 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5485,7 +5982,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "SS14"
 			(at 298.45 90.17 0)
 			(effects
 				(font
@@ -5494,12 +5991,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "SS14"
+		(property "MPN" "MDD(Microdiode Semiconductor) SS14"
 			(at 298.45 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C2480"
+			(at 298.45 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/MDD_Microdiode_Semiconductor-SS14/C2480"
+			(at 298.45 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5520,7 +6037,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 353.06 80.01 0)
+		(at 373.38 80.01 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5528,7 +6045,7 @@
 		(dnp no)
 		(uuid "cf4f5e92-789b-5898-8d5c-0fc9e5777cdd")
 		(property "Reference" "C3"
-			(at 355.6 78.74 0)
+			(at 375.92 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5536,8 +6053,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100n"
-			(at 355.6 81.28 0)
+		(property "Value" "CGA0805X7R104K250KT"
+			(at 375.92 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5546,7 +6063,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 353.06 80.01 0)
+			(at 373.38 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5555,7 +6072,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 353.06 80.01 0)
+			(at 373.38 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5563,8 +6080,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 353.06 80.01 0)
+		(property "Description" "100n"
+			(at 373.38 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5572,12 +6089,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "100 nF X7R 0805"
-			(at 353.06 80.01 0)
+		(property "MPN" "HRE CGA0805X7R104K250KT"
+			(at 373.38 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C36911366"
+			(at 373.38 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/HRE-CGA0805X7R104K250KT/C36911366"
+			(at 373.38 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5639,7 +6176,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "BC857C"
 			(at 213.36 83.82 0)
 			(effects
 				(font
@@ -5648,12 +6185,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "BC857C"
+		(property "MPN" "hongjiacheng BC857C"
 			(at 213.36 83.82 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C20069137"
+			(at 213.36 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/hongjiacheng-BC857C/C20069137"
+			(at 213.36 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5693,7 +6250,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100u 10V"
+		(property "Value" "VT1C101M0605"
 			(at 325.12 81.28 0)
 			(effects
 				(font
@@ -5720,7 +6277,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "100u 10V"
 			(at 322.58 80.01 0)
 			(effects
 				(font
@@ -5729,12 +6286,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "100 uF 10 V alu SMD 6,3 mm"
+		(property "MPN" "ROQANG VT1C101M0605"
 			(at 322.58 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C90273"
+			(at 322.58 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/ROQANG-VT1C101M0605/C90273"
+			(at 322.58 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5796,7 +6373,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "1N4148W"
 			(at 49.53 149.86 0)
 			(effects
 				(font
@@ -5805,12 +6382,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "1N4148W"
+		(property "MPN" "ST(Semtech) 1N4148W"
 			(at 49.53 149.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C81598"
+			(at 49.53 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/ST_Semtech-1N4148W/C81598"
+			(at 49.53 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5873,7 +6470,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "BC847C"
 			(at 80.01 115.57 0)
 			(effects
 				(font
@@ -5882,12 +6479,32 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "BC847C"
+		(property "MPN" "hongjiacheng BC847C"
 			(at 80.01 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C7420337"
+			(at 80.01 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/hongjiacheng-BC847C/C7420337"
+			(at 80.01 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -5904,6 +6521,296 @@
 			(project "carte_bsb_c3"
 				(path "/e870cb4c-d38d-5ec4-8d47-ef3c2646a16f"
 					(reference "Q1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(text "Fiches enfichables des borniers (cote cable) :\nhors carte, sans empreinte, commandees avec la carte"
+		(exclude_from_sim no)
+		(at 320.04 101.6 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "7ef32592-70fe-4e37-8c8b-52777eccd29b")
+	)
+	(symbol
+		(lib_id "alfea:Fiche_bornier")
+		(at 335.28 111.76 0)
+		(unit 1)
+		(exclude_from_sim yes)
+		(in_bom yes)
+		(on_board no)
+		(dnp no)
+		(uuid "7a6a0e62-2537-4e62-bb19-ae05006fc56b")
+		(property "Reference" "JJ1"
+			(at 328.93 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "HC-JXDZK-3.5-2P"
+			(at 341.63 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 335.28 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 335.28 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Fiche de J1 BSB (X86)"
+			(at 341.63 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "MPN" "Hong Cheng HC-JXDZK-3.5-2P"
+			(at 335.28 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C51927077"
+			(at 335.28 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/HongCheng-HC_JXDZK_3_52P/C51927077"
+			(at 335.28 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "carte_bsb_c3"
+				(path "/e870cb4c-d38d-5ec4-8d47-ef3c2646a16f"
+					(reference "JJ1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "alfea:Fiche_bornier")
+		(at 335.28 124.46 0)
+		(unit 1)
+		(exclude_from_sim yes)
+		(in_bom yes)
+		(on_board no)
+		(dnp no)
+		(uuid "83ed236b-e1e4-4341-901f-fdf4e782c41c")
+		(property "Reference" "JJ2"
+			(at 328.93 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "HC-JXDZK-3.5-2P"
+			(at 341.63 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 335.28 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 335.28 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Fiche de J2 5V ext."
+			(at 341.63 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "MPN" "Hong Cheng HC-JXDZK-3.5-2P"
+			(at 335.28 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C51927077"
+			(at 335.28 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/HongCheng-HC_JXDZK_3_52P/C51927077"
+			(at 335.28 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "carte_bsb_c3"
+				(path "/e870cb4c-d38d-5ec4-8d47-ef3c2646a16f"
+					(reference "JJ2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "alfea:Fiche_bornier")
+		(at 335.28 137.16 0)
+		(unit 1)
+		(exclude_from_sim yes)
+		(in_bom yes)
+		(on_board no)
+		(dnp no)
+		(uuid "e57159dd-e180-41af-a4e4-6923bbc55da5")
+		(property "Reference" "JJ3"
+			(at 328.93 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "MX2EDGK-2.54-03P-GN01-Cu-Y-A"
+			(at 341.63 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 335.28 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 335.28 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Fiche de J3 DHT22"
+			(at 341.63 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "MPN" "MAX MX2EDGK-2.54-03P-GN01-Cu-Y-A"
+			(at 335.28 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C5290395"
+			(at 335.28 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Product link" "https://jlcpcb.com/partdetail/MAX-MX2EDGK_2_54_03P_GN01_Cu_YA/C5290395"
+			(at 335.28 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "carte_bsb_c3"
+				(path "/e870cb4c-d38d-5ec4-8d47-ef3c2646a16f"
+					(reference "JJ3")
 					(unit 1)
 				)
 			)
