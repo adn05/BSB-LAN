@@ -55,11 +55,18 @@ class Cible:
         entete = dict(self.entete, **({'Content-Type': 'application/json'} if donnees else {}))
         req = urllib.request.Request(self.base + chemin, headers=entete,
                                      data=json.dumps(donnees).encode() if donnees is not None else None)
-        try:
-            with urllib.request.urlopen(req, timeout=delai) as r:
-                return r.status, r.read().decode('utf-8', 'replace')
-        except urllib.error.HTTPError as e:
-            return e.code, ''
+        fin = time.time() + 360          # redémarrage du SuperMini (flash, /JW) ; le pare-feu inter-VLAN peut
+                                         # bloquer le TCP plusieurs minutes après un redémarrage (journal J28)
+        while True:
+            try:
+                with urllib.request.urlopen(req, timeout=delai) as r:
+                    return r.status, r.read().decode('utf-8', 'replace')
+            except urllib.error.HTTPError as e:
+                return e.code, ''
+            except OSError:
+                if time.time() > fin:
+                    raise
+                time.sleep(3)
 
     def jq(self, lignes):
         _, corps = self.http('/JQ=' + ','.join(f'{x:g}' for x in lignes), delai=180)
@@ -234,17 +241,29 @@ def test_pannes(cible, chemin_panne):
 
 def test_ecriture(cible, mqtt, bus, decouverte):
     print('\n== Firmware alfea-ecriture, mode d\'écriture 0 (défaut) ==')
-    cible.http('/JW', {str(CF_WRITEMODE): '0'})
+    controle('SuperMini joignable et PAC identifiée', attendre_reprise(cible))
+    _, jl = cible.http('/JL', delai=120)
+    initial = next((v.get('value') for v in json.loads(jl[jl.index('{'):]).values() if v.get('parameter') == CF_WRITEMODE), None)
+    if initial not in ('0', '1', '2'):     # NVS jamais enregistrée (0xFF = 255) : doit valoir lecture seule
+        bus.repere()
+        tentatives_ecriture(cible, mqtt, decouverte)
+        trames, sets = bus.ecritures()
+        controle(f'mode initial {initial} (non enregistré) : aucune trame SET ni INF émise', not trames and not sets,
+                 '; '.join(sets))
+    code, lu = ecrire_mode(cible, 0)
+    controle('mode 0 par /JW, relu dans /JL', code == 200, f'HTTP {code}, mode relu {lu}')
     attendre_reprise(cible)
+    controle_discovery(mqtt, ecriture=False)
     bus.repere()
     tentatives_ecriture(cible, mqtt, decouverte)
     trames, sets = bus.ecritures()
     controle('mode 0 : aucune trame SET ni INF émise', not trames and not sets, '; '.join(sets))
 
     print('\n== Mode d\'écriture 1 : liste blanche ==')
-    code, corps = cible.http('/JW', {str(CF_WRITEMODE): '1'})
-    controle('passage en mode 1 par /JW', code == 200, f'HTTP {code}')
+    code, lu = ecrire_mode(cible, 1)
+    controle('passage en mode 1 par /JW, relu dans /JL', code == 200, f'HTTP {code}, mode relu {lu}')
     attendre_reprise(cible)
+    controle_discovery(mqtt, ecriture=True)
     cas = [('/S710=21.5', 710, '21.5'), ('/S1012=16.5', 1012, '16.5'), ('/S1610=50', 1610, '50'),
            ('/S700=3', 700, '3'), ('/S501=05:30-22:00', 501, '05:30-22:00'),
            ('/S527=07:00-09:00_17:00-22:30', 527, '07:00-09:00 17:00-22:30')]
@@ -263,7 +282,7 @@ def test_ecriture(cible, mqtt, bus, decouverte):
     _, sets = bus.ecritures()
     controle('MQTT 1010/set 19.5 : SET émis et relu', len(sets) == 1 and conforme('19.5', cible.jq([1010])['1010']),
              sets[0] if sets else 'aucun SET')
-    for chemin in ('/S6220=1', '/S8700=10', '/S8000=1', '/S3113.1=0', '/I700=1'):
+    for chemin in ('/S6220=1', '/S8700=10', '/S8000=1', '/S3113.1=0', '/I8700=10'):
         bus.repere()
         cible.http(chemin)
         time.sleep(1)
@@ -271,13 +290,46 @@ def test_ecriture(cible, mqtt, bus, decouverte):
         controle(f'{chemin} (hors liste blanche ou INF) refusé', not trames and not sets, '; '.join(sets))
 
     print('\n== Retour au mode 0 ==')
-    cible.http('/JW', {str(CF_WRITEMODE): '0'})
+    ecrire_mode(cible, 0)
     attendre_reprise(cible)
     bus.repere()
     cible.http('/S710=22')
     time.sleep(1)
     trames, sets = bus.ecritures()
     controle('mode 0 rétabli : /S710=22 refusé', not trames and not sets)
+    controle_discovery(mqtt, ecriture=False)
+
+
+def controle_discovery(mqtt, ecriture, attente=20):
+    """Discovery retenue sur le broker : JSON valide ; entités modifiables = lignes de la liste blanche (mode 1)
+    ou aucune (mode 0). La discovery est republiée au démarrage (MQTT_DISCOVERY_ON_BOOT) : on lui laisse le temps."""
+    time.sleep(attente)
+    blanche = vd.lire_plages(os.path.join(DEPOT, 'alfea', 'params', 'ecriture.txt'))
+    msgs = {t: c for t, c in mqtt.lire('homeassistant/+/BSB-LAN/+/config', 6).items() if c}
+    invalides, modif = [], set()
+    for t, c in msgs.items():
+        try:
+            json.loads(c)
+        except ValueError:
+            invalides.append(t.split('/')[3])
+            continue
+        if t.split('/')[1] in vd.MODIFIABLES:
+            modif.add(float(t.split('/')[3].split('-')[0]))
+    hors = sorted(l for l in modif if not any(a <= l <= b for a, b in blanche))
+    attendues = 29 if ecriture else 0              # 3 x 7 programmes, 3 modes, 5 consignes (ecriture.txt)
+    controle(f'discovery : {len(msgs)} entités, JSON valides', not invalides, ' '.join(invalides))
+    controle(f'discovery : {attendues} entités modifiables attendues, {len(modif)} publiées, aucune hors liste blanche',
+             len(modif) == attendues and not hors, ' '.join(f'{l:g}' for l in hors))
+
+
+def ecrire_mode(cible, mode):
+    """Mode d'écriture par /JW ({"Parameter": id, "Value": v}, comme /JS) ; relu dans /JL. -> (code, mode relu)"""
+    code, corps = cible.http('/JW', {'Parameter': CF_WRITEMODE, 'Value': str(mode)})
+    attendre_reprise(cible)
+    _, jl = cible.http('/JL', delai=120)
+    d = json.loads(jl[jl.index('{'):])
+    lu = next((v.get('value') for v in d.values() if v.get('parameter') == CF_WRITEMODE), None)
+    return (200 if code == 200 and lu == str(mode) else code), lu
 
 
 def attendre_reprise(cible, delai=90):
@@ -304,7 +356,12 @@ def main():
     a = ap.parse_args()
     cible, mqtt, bus = Cible(a.ip), Mqtt(), Bus(a.sim)
     scenario = json.load(open(a.scenario, encoding='utf-8'))
-    decouverte = [json.loads(c) for t, c in mqtt.lire('homeassistant/+/BSB-LAN/+/config', 5).items() if c]
+    decouverte = []
+    for c in mqtt.lire('homeassistant/+/BSB-LAN/+/config', 5).values():
+        try:
+            decouverte.append(json.loads(c))
+        except ValueError:
+            pass                                   # JSON invalide : signalé par controle_discovery()
     if a.phase == 'lecture':
         test_valeurs(cible, mqtt, scenario)
         test_lecture_seule(cible, mqtt, bus, decouverte)

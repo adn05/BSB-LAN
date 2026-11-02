@@ -131,7 +131,9 @@ class Regulateur:
         if typ == TYPE_SET:
             self.sets.append((e['line'], charge.hex(' ')))
             print(f'SET reçu : ligne {e["line"]:g} ({e["texte"]}) charge {charge.hex(" ")}', flush=True)
-            self.valeurs[e['line']] = ('raw', charge)
+            # SET : le 1er octet est un drapeau (01 = valeur fournie) ; dans une réponse ANS, 00 = valeur active.
+            # Les programmes horaires n'ont pas cet octet (BSB_LAN.ino:3369-3395).
+            self.valeurs[e['line']] = ('raw', charge if e['vt'] == 'VT_TIMEPROG' else b'\x00' + charge[1:])
             return trame(ADDR_HEIZ, src, TYPE_ACK, cmd)
         if typ == TYPE_QUR:
             v = self.valeurs.get(e['line'], '---')

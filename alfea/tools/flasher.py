@@ -36,6 +36,7 @@ IMAGES = {
     'pont': ('pont_bsb.ino', 'pont'),
     'pont-diag': ('pont_bsb.ino', 'pont'),
     'alfea': ('BSB_LAN.ino', 'alfea'),
+    'alfea-ecriture': ('BSB_LAN.ino', 'alfea'),
     'test-broches': ('test_broches.ino', 'alfea'),
     'test-broches-pont': ('test_broches.ino', 'pont'),
 }
