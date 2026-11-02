@@ -1,0 +1,77 @@
+# Thermostats Home Assistant des deux circuits de l'Alféa Extensa Duo A.I. (RVS21), pilotés par BSB-LAN en MQTT.
+# Paquet HA : copier ce fichier dans /config/packages/ puis ajouter à configuration.yaml :
+#   homeassistant:
+#     packages: !include_dir_named packages
+# Procédure, correspondances et limites : docs/claude/12_thermostat_home_assistant.md.
+#
+# Écriture : il faut le firmware alfea-ecriture ET le mode d'écriture 1 (/C ou /JW). Sinon BSB-LAN refuse les
+# commandes, sans trame SET ; HA n'étant pas optimiste, le thermostat reste à l'état réel publié par BSB-LAN.
+# Essai dans un HA jetable : python -I alfea/tools/test_thermostat_ha.py
+# Sujets : BSB-LAN/<appareil>/<catégorie>/<paramètre>/status|set (BSB_LAN/include/mqtt_handler.h:582).
+
+mqtt:
+  climate:
+    - name: "Thermostat CC1 salon cuisine"
+      unique_id: alfea_thermostat_cc1
+      device:
+        identifiers: ["BSB-LAN-DC067567DA2C"]   # appareil créé par la discovery de BSB-LAN
+      availability_topic: "BSB-LAN/status"
+      temperature_unit: "C"
+      precision: 0.1
+      temp_step: 0.5
+      min_temp: 12
+      max_temp: 26
+      # Température ambiante mesurée (8740) ; consigne = consigne de confort (710).
+      current_temperature_topic: "BSB-LAN/0/32/8740/status"
+      temperature_state_topic: "BSB-LAN/0/8/710/status"
+      temperature_command_topic: "BSB-LAN/0/8/710/set"
+      temperature_command_template: "{{ '%.1f' | format(value | float) }}"
+      # Mode de fonctionnement (700) : 0 protection, 1 automatique, 2 réduit, 3 confort.
+      modes: ["off", "auto", "heat"]
+      mode_state_topic: "BSB-LAN/0/8/700/status"
+      mode_state_template: >-
+        {{ {0: 'off', 1: 'auto', 2: 'heat', 3: 'heat'}.get(value.split(' - ')[0] | int(-1), 'off') }}
+      mode_command_topic: "BSB-LAN/0/8/700/set"
+      mode_command_template: "{{ {'off': 0, 'auto': 1, 'heat': 3}[value] }}"
+      preset_modes: ["eco", "comfort"]
+      preset_mode_state_topic: "BSB-LAN/0/8/700/status"
+      preset_mode_value_template: >-
+        {{ {2: 'eco', 3: 'comfort'}.get(value.split(' - ')[0] | int(-1), 'none') }}
+      preset_mode_command_topic: "BSB-LAN/0/8/700/set"
+      preset_mode_command_template: "{{ {'eco': 2, 'comfort': 3}[value] }}"
+      # État du circuit (8000) : régime de chauffe en cours -> heating, circuit arrêté -> off, sinon idle.
+      action_topic: "BSB-LAN/0/28/8000/status"
+      action_template: >-
+        {% set c = value.split(' - ')[0] | int(-1) %}{{ 'heating' if c in [103, 104, 105, 106, 111, 112, 113, 114, 116]
+        else ('off' if c in [25, 162] else 'idle') }}
+
+    - name: "Thermostat CC2 chambres"
+      unique_id: alfea_thermostat_cc2
+      device:
+        identifiers: ["BSB-LAN-DC067567DA2C"]
+      availability_topic: "BSB-LAN/status"
+      temperature_unit: "C"
+      precision: 0.1
+      temp_step: 0.5
+      min_temp: 12
+      max_temp: 26
+      current_temperature_topic: "BSB-LAN/0/32/8770/status"
+      temperature_state_topic: "BSB-LAN/0/10/1010/status"
+      temperature_command_topic: "BSB-LAN/0/10/1010/set"
+      temperature_command_template: "{{ '%.1f' | format(value | float) }}"
+      modes: ["off", "auto", "heat"]
+      mode_state_topic: "BSB-LAN/0/10/1000/status"
+      mode_state_template: >-
+        {{ {0: 'off', 1: 'auto', 2: 'heat', 3: 'heat'}.get(value.split(' - ')[0] | int(-1), 'off') }}
+      mode_command_topic: "BSB-LAN/0/10/1000/set"
+      mode_command_template: "{{ {'off': 0, 'auto': 1, 'heat': 3}[value] }}"
+      preset_modes: ["eco", "comfort"]
+      preset_mode_state_topic: "BSB-LAN/0/10/1000/status"
+      preset_mode_value_template: >-
+        {{ {2: 'eco', 3: 'comfort'}.get(value.split(' - ')[0] | int(-1), 'none') }}
+      preset_mode_command_topic: "BSB-LAN/0/10/1000/set"
+      preset_mode_command_template: "{{ {'eco': 2, 'comfort': 3}[value] }}"
+      action_topic: "BSB-LAN/0/29/8001/status"
+      action_template: >-
+        {% set c = value.split(' - ')[0] | int(-1) %}{{ 'heating' if c in [103, 104, 105, 106, 111, 112, 113, 114, 116]
+        else ('off' if c in [25, 162] else 'idle') }}

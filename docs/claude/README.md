@@ -19,6 +19,7 @@
 | 09 | [09_design_carte_interface.md](09_design_carte_interface.md) | 3 | carte porteuse SuperMini : schéma, calculs, protections, alimentation, BOM, mesure de X86 |
 | 09b | [09b_plaquette_essai.md](09b_plaquette_essai.md) | 4 | variante traversante sur plaquette à bandes : coupes, fils, implantation, contrôles |
 | 10 | [10_journal_implementation.md](10_journal_implementation.md) | 4 | journal des étapes E0-E10, décisions et écarts, rapport de taille, diff amont |
+| 12 | [12_thermostat_home_assistant.md](12_thermostat_home_assistant.md) | 4 | thermostats HA des circuits CC1 et CC2 (paquet MQTT `climate`), installation, limites, essais |
 | — | [README_docker.md](README_docker.md) | 4 | build firmware, carte KiCad, simulateur BSB, pile HA de test |
 
 ## GATE 1 — synthèse (fin des phases 1, 1 bis et 2)
