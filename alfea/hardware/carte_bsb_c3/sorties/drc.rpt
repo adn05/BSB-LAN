@@ -1,15 +1,11 @@
 ** Drc report for carte_bsb_c3.kicad_pcb **
-** Created on 2026-11-02T13:46:56+0100 **
+** Created on 2026-11-02T13:57:51+0100 **
 
-** Found 10 DRC violations **
+** Found 9 DRC violations **
 [silk_edge_clearance]: Sérigraphie tronquée par bord de PCB
     Règle: board setup constraints silk; warning
     @(162,0000 mm, 133,0000 mm): Segment sur Edge.Cuts
-    @(131,3500 mm, 133,3000 mm): Segment de J3 sur F.Silkscreen
-[silk_edge_clearance]: Sérigraphie tronquée par bord de PCB
-    Règle: board setup constraints silk; warning
-    @(162,0000 mm, 133,0000 mm): Segment sur Edge.Cuts
-    @(139,6700 mm, 126,8600 mm): Segment de J3 sur F.Silkscreen
+    @(140,8700 mm, 134,7600 mm): Rectangle de J3 sur F.Silkscreen
 [silk_edge_clearance]: Sérigraphie tronquée par bord de PCB
     Règle: board setup constraints silk; warning
     @(100,0000 mm, 100,0000 mm): Segment sur Edge.Cuts
@@ -74,8 +70,8 @@
     @(110,0000 mm, 111,4625 mm): Pad 1 [/BUS_P] de R2 sur F.Cu
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
-    @(110,0000 mm, 108,5375 mm): Pad 2 [/BUS_R2_OK1] de R2 sur F.Cu
-    @(120,0450 mm, 104,5000 mm): Pad 1 [/BUS_R2_OK1] de U1 sur F.Cu
+    @(110,0000 mm, 108,5375 mm): Pad 2 [/BUS_R2_U1] de R2 sur F.Cu
+    @(120,0450 mm, 104,5000 mm): Pad 1 [/BUS_R2_U1] de U1 sur F.Cu
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
     @(112,0625 mm, 121,9500 mm): Pad 2 [/BUS_N] de Q1 sur F.Cu
@@ -90,8 +86,8 @@
     @(113,0000 mm, 111,4375 mm): Pad 1 [/BUS_N] de D1 sur F.Cu
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
-    @(113,0000 mm, 109,5625 mm): Pad 2 [/BUS_OK1_D1] de D1 sur F.Cu
-    @(120,0450 mm, 107,0400 mm): Pad 2 [/BUS_OK1_D1] de U1 sur F.Cu
+    @(113,0000 mm, 109,5625 mm): Pad 2 [/BUS_U1_D1] de D1 sur F.Cu
+    @(120,0450 mm, 107,0400 mm): Pad 2 [/BUS_U1_D1] de U1 sur F.Cu
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
     @(131,9000 mm, 108,9875 mm): Pad 2 [/RX] de R4 sur F.Cu
@@ -118,7 +114,7 @@
     @(129,5750 mm, 107,0400 mm): Pad 5 [/+3V3] de U1 sur F.Cu
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
-    @(138,0500 mm, 130,0800 mm): Pad métallisé 1 [/+3V3] de J3
+    @(138,6100 mm, 130,8000 mm): Pad métallisé 1 [/+3V3] de J3
     @(142,5500 mm, 120,6000 mm): Pad 1 [/+3V3] de C3 sur F.Cu
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
@@ -130,12 +126,12 @@
     @(153,4200 mm, 108,8000 mm): Pad métallisé 3 [/+3V3] de J4
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
-    @(129,5750 mm, 104,5000 mm): Pad 6 [/OK1_B] de U1 sur F.Cu
-    @(131,9000 mm, 110,8125 mm): Pad 1 [/OK1_B] de R4 sur F.Cu
+    @(129,5750 mm, 104,5000 mm): Pad 6 [/U1_B] de U1 sur F.Cu
+    @(131,9000 mm, 110,8125 mm): Pad 1 [/U1_B] de R4 sur F.Cu
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
     @(129,5750 mm, 126,5400 mm): Pad 2 [/GND] de U2 sur F.Cu
-    @(132,9700 mm, 130,0800 mm): Pad métallisé 3 [/GND] de J3
+    @(133,6100 mm, 130,8000 mm): Pad métallisé 3 [/GND] de J3
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
     @(137,4500 mm, 103,4200 mm): Pad métallisé 2 [/GND] de J2
@@ -174,8 +170,8 @@
     @(133,6875 mm, 117,2000 mm): Pad 3 [/Q2_C] de Q2 sur F.Cu
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
-    @(129,5750 mm, 129,0800 mm): Pad 1 [/OK2_A] de U2 sur F.Cu
-    @(131,9000 mm, 119,8875 mm): Pad 2 [/OK2_A] de R3 sur F.Cu
+    @(129,5750 mm, 129,0800 mm): Pad 1 [/U2_A] de U2 sur F.Cu
+    @(131,9000 mm, 119,8875 mm): Pad 2 [/U2_A] de R3 sur F.Cu
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
     @(117,0000 mm, 121,9125 mm): Pad 1 [/BUS_Q1_B] de R1 sur F.Cu
@@ -190,8 +186,8 @@
     @(117,0000 mm, 121,9125 mm): Pad 1 [/BUS_Q1_B] de R1 sur F.Cu
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
-    @(117,0000 mm, 120,0875 mm): Pad 2 [/BUS_OK2_B] de R1 sur F.Cu
-    @(120,0450 mm, 129,0800 mm): Pad 6 [/BUS_OK2_B] de U2 sur F.Cu
+    @(117,0000 mm, 120,0875 mm): Pad 2 [/BUS_U2_B] de R1 sur F.Cu
+    @(120,0450 mm, 129,0800 mm): Pad 6 [/BUS_U2_B] de U2 sur F.Cu
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
     @(144,0000 mm, 115,4000 mm): Pad 1 [/+5V] de C1 sur F.Cu
@@ -211,7 +207,7 @@
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
     @(146,2875 mm, 120,6000 mm): Pad 1 [/DHT_DATA] de R9 sur F.Cu
-    @(135,5100 mm, 130,0800 mm): Pad métallisé 2 [/DHT_DATA] de J3
+    @(136,1100 mm, 130,8000 mm): Pad métallisé 2 [/DHT_DATA] de J3
 [unconnected_items]: Connexion manquante entre les éléments
     Forçage local; error
     @(149,9875 mm, 120,6000 mm): Pad 1 [/DHT_DATA] de R10 sur F.Cu

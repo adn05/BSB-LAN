@@ -1,0 +1,135 @@
+(footprint "JILN_JL15EDGVC-2.50-03P_1x03_P2.50mm_Vertical"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "Embase enfichable JILN JL15EDGVC-250xxG02, 3 points, pas 2,50 mm, verticale fermee ; fiche JILN : percage 1,4 mm, broches 0,8 x 0,8 mm, corps 2,5 x N + 1,8 = 9,3 mm x 8,1 mm, rangee a 3,85 mm du bord, hauteur 10,1 mm (LCSC C2908480)")
+	(tags "pluggable terminal block 2EDG 2.5mm vertical")
+	(property "Reference" "REF**"
+		(at 2.5 -5.35 0)
+		(layer "F.SilkS")
+		(uuid "944baa1c-c253-43f9-97c9-23480d0854b6")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "JILN_JL15EDGVC-2.50-03P_1x03_P2.50mm_Vertical"
+		(at 2.5 5.75 0)
+		(layer "F.Fab")
+		(uuid "183b6813-fdda-423c-a47b-9986ae0a6097")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" "https://www.lcsc.com/datasheet/C2908480.pdf"
+		(at 2.5 0 0)
+		(layer "F.Fab")
+		(uuid "30c55a14-5c99-475d-9beb-cc77dfa28fde")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(hide yes)
+		)
+	)
+	(property "Description" ""
+		(at 2.5 0 0)
+		(layer "F.Fab")
+		(uuid "dec9c9ac-8870-4a21-83ce-6852ae01aa0a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(hide yes)
+		)
+	)
+	(attr through_hole)
+	(fp_rect
+		(start -2.15 -3.85)
+		(end 7.15 4.25)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "db17a92c-50ff-4544-943c-8788cde16911")
+	)
+	(fp_rect
+		(start -2.26 -3.96)
+		(end 7.26 4.36)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "77f41b11-cc9b-47df-be07-5e6d6853db2b")
+	)
+	(fp_rect
+		(start -2.65 -4.35)
+		(end 7.65 4.75)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "ce7e4e41-8478-4072-b34c-9b8dc5a17a47")
+	)
+	(fp_line
+		(start -2.65 -4.45)
+		(end -1.65 -4.45)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "0366d405-2e45-40d6-801b-46941fe78399")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 2.5 0.2 0)
+		(layer "F.Fab")
+		(uuid "10fba593-d500-46a9-a9c6-3f4af1948601")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole roundrect
+		(at 0 0)
+		(size 2 2.6)
+		(drill 1.4)
+		(layers "*.Cu" "*.Mask")
+		(roundrect_rratio 0.15)
+		(remove_unused_layers no)
+		(uuid "487b8dc0-bf37-4030-9335-789cde1fe03c")
+	)
+	(pad "2" thru_hole oval
+		(at 2.5 0)
+		(size 2 2.6)
+		(drill 1.4)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "0e3af9c7-d8f1-4dbe-af12-84aa86dabb4b")
+	)
+	(pad "3" thru_hole oval
+		(at 5 0)
+		(size 2 2.6)
+		(drill 1.4)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "87899d23-6752-4f3a-852f-85feefae7d35")
+	)
+	(embedded_fonts no)
+)

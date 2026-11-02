@@ -176,7 +176,7 @@ Révision B, placement réel (rendu `alfea/hardware/carte_bsb_c3/sorties/pcb_des
 - Sens d'entrée des fils des borniers MPT (vers le bord de la carte) déduit du dessin de fabrication de l'empreinte KiCad **[À VÉRIFIER sur un bornier réel]**.
 
 - 2 couches, FR-4 1,6 mm, finition HASL ou ENIG.
-- Empreintes : CMS 0805 (1206 pour R2), 4N25 en **SMDIP-6** (4N25S-TA1, §7), BC847C/BC857C en SOT-23 (mêmes gains que les BC547C/BC557C : β 420 à 800), embases enfichables **3,5 mm pour J1 et J2**, 2,54 mm pour J3 (§7).
+- Empreintes : CMS 0805 (1206 pour R2), 4N25 en **SMDIP-6** (4N25S-TA1, §7), BC847C/BC857C en SOT-23 (mêmes gains que les BC547C/BC557C : β 420 à 800), embases enfichables **3,5 mm pour J1 et J2**, **2,5 mm pour J3** (§7).
 - Le SuperMini est monté sur **barrettes femelles** (remplaçable) : écartement des rangées **[À VÉRIFIER sur un exemplaire au pied à coulisse]**, 15,24 mm (0,6") attendu.
 - 4 trous M3 aux coins (entraxe 55,6 × 26,6 mm) ; boîtier de type 80 × 50 × 30 mm.
 
@@ -204,16 +204,16 @@ Références JLCPCB (assemblage) intégrées au schéma maître : pour chaque sy
 | C1 | 1 | 100 µF alu CMS 6,3 × 5,4 | VT1C101M0605 (ROQANG) | C90273 | conforme, 16 V au lieu de 10 V |
 | C2, C3 | 2 | 100 nF X7R 0805 25 V | CGA0805X7R104K250KT (HRE) | C36911366 | conforme |
 | J1, J2 | 2 | embase enfichable 2 pts, pas **3,5 mm**, verticale fermée | **HC-JXDZVC-3.5-2P** (Hong Cheng) | C51927058 | ✱ empreinte **MPT 2,54 mm → `PhoenixContact_MCV_1,5_2-G-3.5_1x02_P3.50mm_Vertical`** (décision de l'utilisateur). Perçage 1,2 mm [À VÉRIFIER : section des broches HC]. J2 n'avait pas de correspondance dans la BOM JLCPCB : même pièce que J1 |
-| J3 | 1 | embase enfichable 3 pts, pas **2,54 mm** | **DB2EVC-2.54-3P-GN** (DORABO) | C2927494 | ✱ JLCPCB proposait JL15EDGVC-25003G02, au pas de **2,5 mm** : il ne s'accouple pas à la fiche 2,54 mm choisie (JJ3). Empreinte MPT 2,54 mm conservée : même pas, perçage 1,1 mm ; **le corps de l'embase (verticale) diffère du bornier MPT** [À VÉRIFIER : encombrement et section des broches sur la fiche DORABO] |
+| J3 | 1 | embase enfichable 3 pts, pas **2,5 mm**, verticale fermée | **JL15EDGVC-25003G02** (JILN) | C2908480 | choix de l'utilisateur : la DB2EVC-2.54 (C2927494) n'est pas en stock. **Empreinte du projet** `alfea:JILN_JL15EDGVC-2.50-03P_1x03_P2.50mm_Vertical`, d'après la fiche JILN : perçage Ø 1,4 mm (broches 0,8 × 0,8 mm), corps 9,3 × 8,1 mm, rangée à 3,85 mm d'un bord, hauteur 10,1 mm [CONSTATÉ sur la fiche]. Pastilles 2 × 2,6 mm, soit 0,5 mm d'écart entre pastilles |
 | J4, J5 | 2 | barrette femelle 1 × 8, pas 2,54, h 8,5 mm | 22850108ANG1SYA01 (JILN) | C429957 | conforme. J5 n'avait pas de correspondance dans la BOM JLCPCB : même pièce que J4 |
 | JJ1, JJ2 | 2 | fiche 2 pts 3,5 mm (côté câble) pour J1, J2 | HC-JXDZK-3.5-2P (Hong Cheng) | C51927077 | symbole **sans empreinte** (hors carte, dans la BOM), bibliothèque du projet `alfea.kicad_sym` |
-| JJ3 | 1 | fiche 3 pts 2,54 mm (côté câble) pour J3 | MX2EDGK-2.54-03P-GN01-Cu-Y-A (MAX) | C5290395 | idem ; accouplement avec l'embase DORABO par la norme commune « 2EDG » [SUPPOSÉ] |
+| JJ3 | 1 | fiche 3 pts 2,5 mm (côté câble) pour J3 | MX2EDGKD-2.5-03P-GN01-Cu-A (MAX) | C48688174 | symbole sans empreinte. Stock non affiché par JLCPCB [À VÉRIFIER] ; accouplement avec l'embase JILN par le format commun « 15EDG 2,5 mm » [SUPPOSÉ]. La fiche JILN de la même série serait la plus sûre, mais je n'ai pas trouvé sa référence LCSC |
 | — | 1 | ESP32-C3 SuperMini (4 Mo, LDO ME6211 de préférence) | générique | — | enfiché sur J4, J5 |
 | — | 1 | capteur T/HR | **DHT22 / AM2302** | — | |
 | — | 0 | fiche pour X86 | **inutile** : X86 est un bornier à vis débrochable [CONSTATÉ sur la photo] ; les fils du bus se serrent sous ses vis 1 et 2 | — | |
 | — | 1 | chargeur USB 5 V ≥ 1 A + câble USB-C (ou Mean Well HDR-15-5) | | — | |
 
-Contrôles du schéma après intégration [CONSTATÉ, kicad-cli 9.0.5] : ERC **0** (toutes sévérités) ; netlist identique à la précédente, aux références U1/U2 près (seuls changent les noms automatiques des broches 3 non connectées). Les noms de nets `BUS_R2_OK1`, `OK1_B`, `OK2_A`… sont conservés pour ne pas renommer les nets du PCB.
+Contrôles du schéma après intégration [CONSTATÉ, kicad-cli 9.0.5] : ERC **0** (toutes sévérités) ; netlist identique à la précédente, aux références U1/U2 près (seuls changent les noms automatiques des broches 3 non connectées). Nets renommés comme les optocoupleurs (demande de l'utilisateur) : `BUS_R2_OK1` → `BUS_R2_U1`, `BUS_OK1_D1` → `BUS_U1_D1`, `BUS_OK2_B` → `BUS_U2_B`, `OK1_B` → `U1_B`, `OK2_A` → `U2_A`, dans le schéma, le PCB et `gen/carte.py` ; connexions inchangées [CONSTATÉ, comparaison des netlists].
 
 **PCB mis à jour depuis le schéma, sans routage** (demande de l'utilisateur), par l'API pcbnew de KiCad 9.0.5 :
 - **références, valeurs et champs** de toutes les empreintes ;
@@ -221,7 +221,7 @@ Contrôles du schéma après intégration [CONSTATÉ, kicad-cli 9.0.5] : ERC **0
 - **toutes les pistes et vias supprimées** (207 segments, 8 vias), contours de zone gardés et plan GND recalculé ;
 - **placement retouché** pour les nouvelles empreintes :
   - J2 (MCV 3,5 mm, pastille 1) en (133,95 ; 103,42) : le corps dépasse du bord haut d'environ 1,4 mm, du côté de l'entrée de la fiche ; le cuivre reste à 1,6 mm du bord ;
-  - J3 décalé de (+1,2 ; +0,7) mm ;
+  - J3 (JILN 2,5 mm, pastille 1) en (138,61 ; 130,8), à 180° : le corps dépasse du bord bas d'environ 1,7 mm ; le cuivre reste à 0,9 mm du bord ;
   - D3 décalé de −0,65 mm, R3, R4 et R6 de +0,45 mm ;
   - textes de sérigraphie CL-, « GND DAT 3V3 » et « J2 : 5V / GND » déplacés avec leur connecteur.
 
@@ -229,7 +229,7 @@ DRC avec parité [CONSTATÉ] :
 - 0 erreur d'empreinte (parité) ;
 - 0 erreur d'isolation, de chevauchement ou de court-circuit ;
 - **45 liaisons à router** ;
-- 10 avertissements « sérigraphie tronquée par le bord » (corps de J2 et de J3 en débord).
+- 9 avertissements « sérigraphie tronquée par le bord » (corps de J2 et de J3 en débord).
 
 Les fichiers `sorties/gerbers/` et `production/` correspondent à **l'ancien routage** : à refaire après routage. Ne pas lancer `docker/kicad/generer_carte.sh`, qui écrase le placement et lance Freerouting.
 
