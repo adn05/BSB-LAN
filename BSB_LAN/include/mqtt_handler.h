@@ -194,6 +194,9 @@ bool mqtt_send_discovery(bool create=true) {
     if (bus->getBusType() != BUS_PPS && line >= 15000 && line <= 16000) continue;
     if (line == 19999) continue;    // skip entry for unknown parameter
     if (line > 20999) break;
+#ifdef MQTT_DISCOVERY_SKIP
+    if (MQTT_DISCOVERY_SKIP(line)) continue;    // lines excluded by the configuration (e.g. unused virtual parameters)
+#endif
     if (LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS) {
       boolean isLogged = false;
       for (int i=0;i<numLogValues;i++) {

@@ -197,6 +197,10 @@ static_assert(sizeof(AP_PASSWORD) >= 9, "ALFEA_AP_PASSWORD : au moins 8 caractè
 // Le type d'entité (sensor, select, text...) dépend du mode d'écriture : chaque publication de discovery efface les
 // configurations retenues des autres types pour le même unique_id (sinon doublons périmés dans HA, journal J28).
 #define MQTT_DISCOVERY_CLEAN_TYPES
+// Discovery sans les lignes virtuelles ajoutées par BSB-LAN à la liste réduite : 10195-10199 (codes bruts),
+// 20000-20006 (durées internes), 20700-20899 (custom_floats/longs). Publiées à chaque démarrage, elles ne pouvaient
+// pas être supprimées dans HA (journal J29). Restent : la liste réduite (10020-10033 compris) et le DHT22 (20100-20199).
+#define MQTT_DISCOVERY_SKIP(line) ((line) >= 10100 && !((line) >= BSP_DHT22 && (line) < BSP_BME280))
 
 // Broker Mosquitto local en 1883 : TLS inutile (docs/claude/08 §1.2).
 #define NO_TLS
