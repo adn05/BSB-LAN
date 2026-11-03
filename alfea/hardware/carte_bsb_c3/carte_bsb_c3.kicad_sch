@@ -507,6 +507,177 @@
 			)
 			(embedded_fonts no)
 		)
+	(symbol "Connector_Generic:Conn_01x03"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x03"
+				(at 0 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Conn_01x03_1_1"
+				(rectangle
+					(start -1.27 3.81)
+					(end 1.27 -3.81)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(rectangle
+					(start -1.27 2.667)
+					(end 0 2.413)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 -2.413)
+					(end 0 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 2.54 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Connector_Generic:Conn_01x08"
 			(pin_names
 				(offset 1.016)
@@ -5669,7 +5840,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:Screw_Terminal_01x03")
+		(lib_id "Connector_Generic:Conn_01x03")
 		(at 212.09 180.34 270)
 		(unit 1)
 		(exclude_from_sim no)
@@ -5685,7 +5856,7 @@
 				)
 			)
 		)
-		(property "Value" "JL15EDGVC-25003G02"
+		(property "Value" "22850103ANG1SYA01"
 			(at 213.106 187.96 90)
 			(effects
 				(font
@@ -5693,7 +5864,7 @@
 				)
 			)
 		)
-		(property "Footprint" "alfea:JILN_JL15EDGVC-2.50-03P_1x03_P2.50mm_Vertical"
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical"
 			(at 212.09 180.34 0)
 			(effects
 				(font
@@ -5719,7 +5890,7 @@
 				)
 			)
 		)
-		(property "MPN" "JILN JL15EDGVC-25003G02"
+		(property "MPN" "JILN 22850103ANG1SYA01"
 			(at 212.09 180.34 0)
 			(effects
 				(font
@@ -5728,7 +5899,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C2908480"
+		(property "JLCPCB Part #" "C41431926"
 			(at 212.09 180.34 0)
 			(effects
 				(font
@@ -5738,7 +5909,7 @@
 				(hide yes)
 			)
 		)
-		(property "Product link" "https://jlcpcb.com/partdetail/JILN-JL15EDGVC25003G02/C2908480"
+		(property "Product link" "https://jlcpcb.com/partdetail/JILN-22850103ANG1SYA01/C41431926"
 			(at 212.09 180.34 0)
 			(effects
 				(font
@@ -6738,99 +6909,6 @@
 			(project "carte_bsb_c3"
 				(path "/e870cb4c-d38d-5ec4-8d47-ef3c2646a16f"
 					(reference "JJ2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "alfea:Fiche_bornier")
-		(at 335.28 137.16 0)
-		(unit 1)
-		(exclude_from_sim yes)
-		(in_bom yes)
-		(on_board no)
-		(dnp no)
-		(uuid "e57159dd-e180-41af-a4e4-6923bbc55da5")
-		(property "Reference" "JJ3"
-			(at 328.93 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "MX2EDGKD-2.5-03P-GN01-Cu-A"
-			(at 341.63 135.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 335.28 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 335.28 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Fiche de J3 DHT22"
-			(at 341.63 138.43 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "MPN" "MAX MX2EDGKD-2.5-03P-GN01-Cu-A"
-			(at 335.28 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB Part #" "C48688174"
-			(at 335.28 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Product link" "https://jlcpcb.com/partdetail/C48688174"
-			(at 335.28 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(instances
-			(project "carte_bsb_c3"
-				(path "/e870cb4c-d38d-5ec4-8d47-ef3c2646a16f"
-					(reference "JJ3")
 					(unit 1)
 				)
 			)

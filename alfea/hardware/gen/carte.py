@@ -64,8 +64,8 @@ COMPOSANTS = [
          mpn='barrette femelle 1x8 2,54 mm', sch=(345.44, 111.76), pcb=(158.5, 124.04, 270),
          pins={'1': 'DHT_IO', '2': 'RX', '3': 'TX'}, nc=['4', '5', '6', '7', '8']),
     # --- Entrée DHT22
-    dict(ref='J3', lib='Connector:Screw_Terminal_01x03', val='DHT22', fp='alfea:JILN_JL15EDGVC-2.50-03P_1x03_P2.50mm_Vertical',
-         mpn='JILN JL15EDGVC-25003G02', sch=(345.44, 152.4), pcb=(136.85, 129.38, 180), ref_at=(140.6, 131.4), pins={'1': '+3V3', '2': 'DHT_DATA', '3': 'GND'}),
+    dict(ref='J3', lib='Connector_Generic:Conn_01x03', val='22850103ANG1SYA01', fp='Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical',
+         mpn='JILN 22850103ANG1SYA01', sch=(345.44, 152.4), pcb=(136.85, 129.38, 180), ref_at=(140.6, 131.4), pins={'1': '+3V3', '2': 'DHT_DATA', '3': 'GND'}),
     dict(ref='R9', lib='Device:R', val='4k7', fp=R0805, mpn='4,7 kOhm 1 % 0805',
          sch=(271.78, 147.32), pcb=(147.2, 120.6, 0), pins={'1': 'DHT_DATA', '2': '+3V3'}),
     dict(ref='R10', lib='Device:R', val='100', fp=R0805, mpn='100 Ohm 0805',
