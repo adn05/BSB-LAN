@@ -1,7 +1,7 @@
 # 09 — Design de la carte d'interface BSB pour ESP32-C3 SuperMini
 
 > **Résumé**
-> Carte porteuse 2 couches de **62 × 33 mm** (révision B, §6) : J1 et le SuperMini sur le même axe, borniers à vis au pas de 2,54 mm, trous M3 aux 4 coins, transistors en SOT-23, composants passifs sous le module. Le SuperMini s'y enfiche (2 × 8 broches au pas de 2,54 mm). Elle reprend **la topologie éprouvée de l'adaptateur officiel V3** : 2 × 4N25, BC547/BC557, mêmes valeurs. Les **écarts sont limités et justifiés** : rappel de TX au démarrage, transistor de bus en gain C, TVS et PTC sur l'entrée, retrait de l'EEPROM, entrée DHT22 protégée, entrée 5 V avec diode anti-retour.
+> Carte porteuse 2 couches de **62 × 33 mm** (révision B, §6) : J1 et le SuperMini sur le même axe, borniers à vis au pas de 2,54 mm, trous M3 aux 4 coins, transistors en SOT-23, composants passifs sous le module. Le SuperMini s'y enfiche (2 × 8 broches au pas de 2,54 mm). Elle reprend **la topologie éprouvée de l'adaptateur officiel V3** : 2 × 4N25, BC547/BC557, mêmes valeurs. Les **écarts sont limités et justifiés** : rappel de TX au démarrage, transistor de bus en gain C, TVS sur l'entrée (PTC retirée, §7), R2 à 2 kΩ, retrait de l'EEPROM, entrée DHT22 protégée, entrée 5 V avec diode anti-retour.
 > **Isolation galvanique conservée** : rien n'est prélevé sur le bus pour l'ESP32. L'alimentation vient d'un **chargeur USB 5 V** (défaut, aucune intervention sur le 230 V) ou d'un module 5 V rail DIN (option).
 > Brochage : RX = GPIO6, TX = GPIO7, DHT22 = GPIO5, LED = GPIO8 (sur le SuperMini). **Projet KiCad 9 dans `alfea/hardware/carte_bsb_c3/`** : le schéma maître est celui retouché dans KiCad (émission conforme à V3, §2.3) ; PCB **routé par Freerouting 2.1.0**, plan de masse, Gerber ; ERC 0, DRC 0 (toutes sévérités), parité 0 (§9). Variante traversante pour plaquette à bandes : **09b**.
 > **Avant tout branchement**, X86 doit être mesuré (§8). Première mesure de l'utilisateur : **0 V entre 1, 2 et 3**, résultat à confirmer par une mesure témoin (§8).
@@ -19,9 +19,8 @@ flowchart LR
     CLM[CL-]
   end
   subgraph BUS["Côté bus (alimenté par le bus, ≈ 6 mA)"]
-    J1[J1 bornier 2 pts<br/>D2 dans le retour CL-] --> F1[F1 PTC 100 mA]
-    F1 --> TVS[D3 TVS SMAJ18CA]
-    TVS --> RXL[R2 1k5 + LED U1 + D1]
+    J1[J1 bornier 2 pts<br/>D2 dans le retour CL-] --> TVS[D3 TVS SMAJ18CA]
+    TVS --> RXL[R2 2k + LED U1 + D1]
     TVS --> Q1[Q1 BC847C<br/>tire le bus à 0]
   end
   subgraph MCU["Côté ESP32 (3,3 V du SuperMini)"]
@@ -40,26 +39,33 @@ Aucun conducteur ne traverse la frontière bus/ESP32 : les deux seuls chemins so
 
 ## 2. Schéma électrique détaillé (netlist)
 
-Nœuds côté bus [CONSTATÉ dans le schéma maître] : `CL_P_IN` (J1-1, avant F1), `BUS_P` (après F1), `BUS_N` (anode de D2), `CL_N_IN` (J1-2 = CL-, cathode de D2). Dans les tableaux, `BUS+` = `BUS_P` et `BUS-` = `BUS_N`. Nœuds côté ESP32 : `+3V3` et `GND` (broches du SuperMini), `+5V`.
+Nœuds côté bus [CONSTATÉ dans le schéma maître] : `BUS_P` (J1-1 = CL+ ; `CL_P_IN` a disparu avec F1, §7), `BUS_N` (anode de D2), `CL_N_IN` (J1-2 = CL-, cathode de D2). Dans les tableaux, `BUS+` = `BUS_P` et `BUS-` = `BUS_N`. Nœuds côté ESP32 : `+3V3` et `GND` (broches du SuperMini), `+5V`.
 
 ### 2.1 Entrée et protections (côté bus)
 | Réf. | Valeur | Connexion | Rôle |
 |---|---|---|---|
 | J1 | bornier à vis 2 pts, pas 2,54 | 1 = CL+, 2 = CL- | raccordement X86 |
-| F1 | PTC 0,10 A maintien | J1-1 → `BUS+` | limite le courant si erreur de câblage (ex. 24 V) **[écart : absent en V3]** |
+| ~~F1~~ | **supprimé** (choix de l'utilisateur, §7) | J1-1 directement sur `BUS+` | comme en V3 ; conséquence en cas d'erreur de câblage : §5 |
 | D2 | 1N4148W | anode `BUS-`, cathode `CL_N_IN` | **en série dans le retour CL-** : bloque tout l'étage bus (réception et émission) en cas d'inversion |
 | D3 | TVS bidirectionnelle SMAJ18CA (V_RWM 18 V, V_BR ≥ 20 V) | `BUS_P` ↔ `CL_N_IN` (en amont de D2) | surtensions et ESD ; bidirectionnelle pour tolérer une inversion de polarité **[écart]** |
 
 ### 2.2 Réception : bus → GPIO6 (identique à V3)
 | Réf. | Valeur | Connexion |
 |---|---|---|
-| R2 | 1,5 kΩ, 1206 (250 mW) | `BUS+` → U1 broche 1 (anode) |
+| R2 | **2 kΩ**, 1206 (250 mW) **[écart : 1,5 kΩ en V3]** | `BUS+` → U1 broche 1 (anode) |
 | U1 | 4N25 | 1 anode, 2 cathode → D1 anode ; 5 collecteur → `+3V3`, 4 émetteur → `RX` (GPIO6), 6 base → R4 |
 | D1 | LED rouge | D1 cathode → `BUS-` (témoin d'activité du bus) ; D2 (§2.1) est en série dans le retour |
 | R4 | 330 kΩ | U1-6 (base) → U1-4 (émetteur) : accélère le blocage |
 | R5 | 4,7 kΩ | `RX` → `GND` |
 
-Calcul (06 §3.1) : seuil ≈ 3,7 V aux bornes de X86 = Vf(U1) 1,2 + Vf(D1) 1,8 + Vf(D2) 0,7, inchangé par le déplacement de D2 dans le retour ; I_F = (V_bus − 3,7) / 1 500 = 6,2 mA à 13 V ; Ic nécessaire = 2,48 V / 4,7 kΩ = 0,53 mA ; marge ×1,2 à ×2,3 selon le CTR réel. P(R2) = (15 − 3,7) × 7,5 mA = **85 mW** au pire (bus à 15 V), d'où le boîtier 1206 (marge ×2,9).
+Calcul (06 §3.1) : seuil ≈ 3,7 V aux bornes de X86 = Vf(U1) 1,2 + Vf(D1) 1,8 + Vf(D2) 0,7, inchangé par le déplacement de D2 dans le retour ; Ic nécessaire = 2,48 V / 4,7 kΩ = 0,53 mA, soit I_F ≥ 0,53 / 0,20 = 2,65 mA au CTR minimal.
+
+| R2 | I_F à 12 V / 13 V / 15 V | Marge au CTR min. (12 → 15 V) | Bus minimal pour RX | P(R2) au pire (15 V) |
+|---|---|---|---|---|
+| 1,5 kΩ (V3) | 5,5 / 6,2 / 7,5 mA | ×2,1 → ×2,8 | 7,7 V | 85 mW |
+| **2 kΩ (retenu)** | 4,15 / 4,65 / 5,65 mA | **×1,57 → ×2,1** | **9,0 V** | **64 mW** (1206 : marge ×3,9) |
+
+2 kΩ est un **écart à V3** (choix de l'utilisateur : référence Basic C17944, 1,5 kΩ en 1206 n'existant qu'en Extended). Il charge moins le bus (4,65 mA au lieu de 6,2 mA à 13 V) et reste suffisant pour un niveau haut de 12 à 15 V. **Condition** : le niveau haut réel du bus, mesuré sur X86 (§8), doit dépasser **9 V** avec marge ; le CTR baisse aussi avec le vieillissement de la LED [SUPPOSÉ : −20 à −30 % sur la vie]. Au-dessous de 11 V, revenir à 1,5 kΩ.
 
 ### 2.3 Émission : GPIO7 → bus
 | Réf. | Valeur | Connexion |
@@ -87,17 +93,17 @@ Calculs (VCC = 3,3 V) :
 | J3 | bornier à vis 3 pts, pas 2,54 | 1 = `+3V3`, 2 = DATA, 3 = `GND` | capteur déporté |
 | R9 | 4,7 kΩ | DATA → `+3V3` | rappel du bus 1-fil (DHT22 : 4,7-10 kΩ) |
 | R10 | 100 Ω | DATA → GPIO5 | limite le courant d'une décharge ESD dans la GPIO |
-| D5 | PESD5V0S1BA | DATA ↔ `GND` | ESD sur câble externe |
+| D5 | **SMF5.0A** (TVS unidirectionnelle, cathode sur DATA) | DATA ↔ `GND` | ESD sur le câble du capteur |
 | C3 | 100 nF | `+3V3` ↔ `GND` près de J3 | découplage du capteur |
 
-Alimentation du DHT22 en 3,3 V : la datasheet AM2302 donne 3,3-6 V, avec une portée réduite à 3,3 V. On vise un **câble ≤ 3 m** [SUPPOSÉ : ordre de grandeur courant pour un DHT22 en 3,3 V, à valider sur site]. Ne pas l'alimenter en 5 V : DATA serait rappelée à 5 V et dépasserait la tension maximale de la GPIO (3,6 V).
+Alimentation du DHT22 en 3,3 V : la datasheet AM2302 donne 3,3-6 V, avec une portée réduite à 3,3 V. **Le capteur sera à une dizaine de centimètres** (information de l'utilisateur) : aucune contrainte de portée. D5 (SMF5.0A) : V_RWM 5 V, V_BR 6,4-7 V à 10 mA, V_C 9,2 V à 21,7 A, I_R ≤ 400 µA **à 5 V** [CONSTATÉ, fiche hongjiacheng rév. 2.2]. La fuite à 3,3 V n'est pas spécifiée ; à 0,5 × V_BR, elle est en principe de quelques µA, soit < 0,05 V de chute dans R9 [SUPPOSÉ]. **Contrôle sur la première carte** : V(DATA) au repos ≥ 3,1 V, capteur débranché ; sinon, ne pas monter D5 (câble de 10 cm, R10 et les diodes internes de l'ESP32-C3 suffisent). Ne pas l'alimenter en 5 V : DATA serait rappelée à 5 V et dépasserait la tension maximale de la GPIO (3,6 V).
 
 ### 2.5 Alimentation
 | Réf. | Valeur | Connexion |
 |---|---|---|
 | J2 | bornier à vis 2 pts, pas 2,54 | 5 V externe (option rail DIN) |
 | D4 | SS14 (Schottky 1 A, 40 V) | J2(+) → `+5V` (broche 5V du SuperMini) : empêche le 5 V de l'USB-C de remonter dans l'alimentation externe |
-| C1 | 100 µF, 10 V | `+5V` ↔ `GND` : réservoir pour les pointes d'émission WiFi (risque R4 de 07) |
+| C1 | **22 µF 25 V X5R, 1206** (céramique) | `+5V` ↔ `GND` : réservoir pour les pointes d'émission WiFi (risque R4 de 07) |
 | C2 | 100 nF X7R | `+5V` ↔ `GND` |
 
 Pas de condensateur ajouté sur le `+3V3` : la stabilité du LDO du SuperMini (ME6211 ou LP5907) avec une capacité de sortie supplémentaire n'est pas garantie [SUPPOSÉ].
@@ -139,15 +145,15 @@ Budget [SUPPOSÉ, ordres de grandeur de datasheet, à mesurer en T1] :
 | **Total sur 5 V** | **≈ 0,1 A (0,5 W)** | **≈ 0,36 A** |
 | Prélevé sur le bus (U1 + D1) | 6 mA | + courant de Q1 pendant nos bits à 0 |
 
-Un chargeur de 1 A donne une marge ×2,8 sur la pointe. Avec un LP5907 (250 mA, risque R4), C1 absorbe la pointe : ΔV ≈ I·Δt / C = 0,1 A × 1 ms / 100 µF = 1 V côté 5 V, ce qui reste au-dessus du seuil de chute du LDO (≈ 3,5 V) [SUPPOSÉ : durée de pointe de 1 ms]. Préférer les lots ME6211.
+Un chargeur de 1 A donne une marge ×2,8 sur la pointe. Avec un LP5907 (250 mA, risque R4), C1 ne fournit que la part de la pointe que le chargeur et le câble ne suivent pas. Avec C1 = 22 µF 25 V X5R, il reste ≈ 15 µF effectifs sous 5 V [SUPPOSÉ : courbe de polarisation Samsung à consulter], d'où ΔV ≈ 0,1 A × 50 µs / 15 µF ≈ **0,33 V** [SUPPOSÉ : transitoire de 50 µs]. L'ancien calcul (100 µF, 1 ms, 1 V) supposait que C1 fournissait toute la pointe pendant 1 ms ; avec 15 µF, ce même cas donnerait 6,7 V, donc il ne tient plus : **préférer les lots ME6211**, et mesurer la tension au SuperMini pendant l'émission en T1. Le 25 V donne une marge ×5 sur 5 V, utile au branchement à chaud de J2 (oscillation du câble sur une céramique, jusqu'à ≈ 2 × 5 V).
 
 ## 5. Isolation, protections, CEM, environnement
 
 | Sujet | Disposition |
 |---|---|
-| Isolation | les deux côtés sont en TBTS ; l'isolation est fonctionnelle (boucles de masse, surtensions de mode commun), pas de sécurité. **Distance ≥ 3 mm** entre cuivres bus et MCU, sous les 4N25 (rangées de pastilles à 9,53 mm en SMDIP-6, soit 7,5 mm entre bords de pastilles) ; fente de 1 mm optionnelle. Isolement du 4N25S-TA1 (Lite-On) : 2 500 V eff. |
+| Isolation | les deux côtés sont en TBTS ; l'isolation est fonctionnelle (boucles de masse, surtensions de mode commun), pas de sécurité. **Distance ≥ 3 mm** entre cuivres bus et MCU, sous les 4N25 (rangées de pastilles à 7,62 mm en DIP-6, pastilles de 1,6 mm, soit **6,0 mm entre bords de pastilles**) ; fente de 1 mm optionnelle. Isolement du LTV-4N25 (Lite-On) : 2 500 V eff. [CONSTATÉ, fiche Lite-On] |
 | Polarité | D2 en série dans le retour CL- + TVS bidirectionnelle : une inversion bloque tout l'étage bus, rien n'est détruit et rien ne fonctionne (V1 de 06). La LED D1 éteinte signale l'inversion |
-| Surtension, erreur de câblage | D3 écrête au-delà de 20 V ; F1 s'ouvre si la source débite (ex. borne 24 V). D3 est raccordée entre `BUS_P` et `CL_N_IN`, **en amont de D2** (décision de l'utilisateur, J23) : le courant de surtension ne traverse que F1 et D3 (13,8 A crête en 10/1000 µs), plus D2 (1N4148W, I_FSM de l'ordre de 2 A sur 1 µs [À VÉRIFIER]). Une inversion de polarité reste sans effet : D3 est bidirectionnelle et D2 bloque |
+| Surtension, erreur de câblage | D3 écrête au-delà de 20 V. **Sans F1** (choix de l'utilisateur, comme en V3) : sur une source raide (ex. borne 24 V), D3 conduit en continu, dépasse sa dissipation et **se met en court-circuit** (mode de défaillance usuel des TVS), ce qui protège le reste de la carte mais court-circuite le bus jusqu'au remplacement de D3 ; côté PAC, un court-circuit du bus est un état normal [SUPPOSÉ : source limitée, 06 Q5]. D3 est raccordée entre `BUS_P` et `CL_N_IN`, **en amont de D2** (décision de l'utilisateur, J23) : le courant de surtension ne traverse que D3 (13,8 A crête en 10/1000 µs), plus D2 (1N4148W, I_FSM de l'ordre de 2 A sur 1 µs [À VÉRIFIER]). Une inversion de polarité reste sans effet : D3 est bidirectionnelle et D2 bloque |
 | ESD | D3 côté bus, D5 côté DHT22 ; manipulation avec bracelet (V7 de 06) |
 | CEM | **aucun condensateur** entre CL+ et CL- (il déformerait les fronts et chargerait le bus) ; câble en paire torsadée, si possible blindée, avec le blindage à la masse **côté PAC seulement** [À VÉRIFIER : recommandation Siemens] ; éloigné des câbles du compresseur et de l'onduleur |
 | Environnement | chaufferie de 0 à 50 °C [SUPPOSÉ] : composants -40/+85 °C au minimum ; boîtier ABS avec presse-étoupes, hors des projections d'eau ; vernis de tropicalisation optionnel si condensation |
@@ -160,7 +166,7 @@ Révision B, placement réel (rendu `alfea/hardware/carte_bsb_c3/sorties/pcb_des
 ```
  62 mm
 ┌────────────────────────────────────────────────────────────┐
-│ o  F1  D3 │U1│ J2 (5 V, ouvert vers le haut)           o │
+│ o      D3 │U1│ J2 (5 V, ouvert vers le haut)           o │
 │   R2 D1 D2│   │ R4 R5 ┆      ═══════ J4 ═══════════        │
 │ J1 ◄──    │iso│ R6 R8 ┆antenne  C1   D4  C2   ──► USB      │ 33 mm
 │ (BSB)  Q1 │   │ Q2 R3 ┆       C3 R9 R10 D5   (SuperMini)   │
@@ -176,7 +182,7 @@ Révision B, placement réel (rendu `alfea/hardware/carte_bsb_c3/sorties/pcb_des
 - Sens d'entrée des fils des borniers MPT (vers le bord de la carte) déduit du dessin de fabrication de l'empreinte KiCad **[À VÉRIFIER sur un bornier réel]**.
 
 - 2 couches, FR-4 1,6 mm, finition HASL ou ENIG.
-- Empreintes : CMS 0805 (1206 pour R2), 4N25 en **SMDIP-6** (4N25S-TA1, §7), BC847C/BC857C en SOT-23 (mêmes gains que les BC547C/BC557C : β 420 à 800), embases enfichables **3,5 mm pour J1 et J2**, **2,5 mm pour J3** (§7).
+- Empreintes : CMS 0805 (1206 pour R2), 4N25 en **DIP-6 traversant** (LTV-4N25, §7), BC847C/BC857C en SOT-23 (mêmes gains que les BC547C/BC557C : β 420 à 800), embases enfichables **3,5 mm pour J1 et J2**, **2,5 mm pour J3** (§7).
 - Le SuperMini est monté sur **barrettes femelles** (remplaçable) : écartement des rangées **[À VÉRIFIER sur un exemplaire au pied à coulisse]**, 15,24 mm (0,6") attendu.
 - 4 trous M3 aux coins (entraxe 55,6 × 26,6 mm) ; boîtier de type 80 × 50 × 30 mm.
 
@@ -186,22 +192,22 @@ Références JLCPCB (assemblage) intégrées au schéma maître : pour chaque sy
 
 | Réf. | Qté | Désignation | Part # (fabricant) | JLCPCB | Contrôle empreinte / compatibilité |
 |---|---|---|---|---|---|
-| U1, U2 | 2 | optocoupleur 4N25, CMS | **4N25S-TA1** (Lite-On) | C143074 | ✱ empreinte **DIP-6 → SMDIP-6_W9.53mm** (choix de l'utilisateur : garder le CMS). Pastilles à ±4,765 mm, 2 × 1,78 mm : les pattes « S » (envergure ≈ 10,16 mm) y reposent [À VÉRIFIER : empreinte recommandée de la fiche Lite-On]. Isolement 2,5 kV eff. au lieu de 5 kV (Vishay) : sans effet en TBTS (§5). CTR ≥ 20 %, comme les calculs de §2 |
+| U1, U2 | 2 | optocoupleur 4N25, **traversant DIP-6** | **LTV-4N25** (Lite-On) | C118160 | ✱ choix de l'utilisateur (2026-11-03) : les pièces traversantes ne paient pas le forfait « Extended » mais un forfait unique de soudure (information de l'utilisateur). Empreinte `Package_DIP:DIP-6_W7.62mm`. Même fiche Lite-On que le 4N25S-TA1, donc même puce et même brochage (1 A, 2 K, 3 NC, 4 E, 5 C, 6 B) ; CTR ≥ 20 % à 10 mA, 2 500 V eff. [CONSTATÉ]. Stock JLCPCB : 394 (le 2026-11-03) |
 | Q1 | 1 | NPN gain C, SOT-23 | BC847C (hongjiacheng) | C7420337 | conforme (β 420-800) |
 | Q2 | 1 | PNP gain C, SOT-23 | BC857C (hongjiacheng) | C20069137 | conforme |
 | D1 | 1 | LED rouge 0805 | NCD0805R1 (NationStar) | C84256 | conforme (Vf 1,6-2,6 V : seuil RX de §2.2 entre 3,5 et 4,5 V [SUPPOSÉ]) |
 | D2 | 1 | diode signal SOD-123 | 1N4148W (Semtech) | C81598 | conforme |
 | D3 | 1 | TVS bidirectionnelle 400 W 18 V, SMA | SMAJ18CA (hongjiacheng) | C19077539 | conforme (V_BR 20 V, V_C 29,2 V) |
 | D4 | 1 | Schottky 1 A 40 V, SMA | SS14 (MDD) | C2480 | conforme |
-| D5 | 1 | ESD 5 V bidirectionnelle, SOD-323 | PESD5V0S1BA (TECH PUBLIC) | C2827694 | conforme |
-| F1 | 1 | PTC 0,10 A maintien, 60 V, 1812 | **MF-MSMF010-2** (Bourns) | C12430 | ✱ JLCPCB proposait MF-USMF010-2, en **1210** : incompatible avec l'empreinte 1812. Retour à la référence d'origine |
-| R1, R4, R7 | 3 | 330 kΩ 0805 | RS-05K334JT (Fenghua) | C294705 | 5 % au lieu de 1 % : sans effet (résistances base-émetteur des 4N25 et de Q1) |
-| R2 | 1 | 1,5 kΩ 1206 250 mW | 1206W4F1501T5E (Uniroyal) | C26030 | conforme (85 mW au pire, §2.2) |
+| D5 | 1 | TVS unidirectionnelle 200 W, V_RWM 5 V, SOD-123FL | **SMF5.0A** (hongjiacheng) | C19077497 | ✱ Extended **Preferred** (pas de forfait). Empreinte `Diode_SMD:D_SOD-123F`, cathode (bande) sur DATA ; symbole `Diode:SMF5V0A`. Fuite à 3,3 V à contrôler (§2.4) |
+| ~~F1~~ | 0 | — | — | — | ✱ **supprimé** (choix de l'utilisateur) : aucune PTC n'est en Basic ou Preferred chez JLCPCB. J1-1 directement sur `BUS_P` ; conséquences en §5 |
+| R1, R4, R7 | 3 | 330 kΩ 0805 1 % | **0805W8F3303T5E** (Uniroyal) | C17629 | ✱ Extended **Preferred** (pas de forfait), même empreinte |
+| R2 | 1 | **2 kΩ** 1206 250 mW | **1206W4F2001T5E** (Uniroyal) | C17944 | ✱ Basic ; **écart à V3** (1,5 kΩ), marges en §2.2 (64 mW au pire) |
 | R3 | 1 | 300 Ω 0805 | 0805W8F3000T5E | C17617 | conforme |
 | R5, R6, R9 | 3 | 4,7 kΩ 0805 | 0805W8F4701T5E | C17673 | conforme |
 | R8 | 1 | 10 kΩ 0805 | 0805W8F1002T5E | C17414 | conforme |
 | R10 | 1 | 100 Ω 0805 | 0805W8F1000T5E | C17408 | conforme |
-| C1 | 1 | 100 µF alu CMS 6,3 × 5,4 | VT1C101M0605 (ROQANG) | C90273 | conforme, 16 V au lieu de 10 V |
+| C1 | 1 | **22 µF 25 V X5R, 1206** | **CL31A226KAHNNNE** (Samsung) | C12891 | ✱ Basic. Empreinte `Capacitor_SMD:C_1206_3216Metric` (au lieu de l'électrolytique 6,3 × 5,4), symbole non polarisé ; ≈ 15 µF effectifs sous 5 V [SUPPOSÉ], conséquences en §4 |
 | C2, C3 | 2 | 100 nF X7R 0805 25 V | CGA0805X7R104K250KT (HRE) | C36911366 | conforme |
 | J1, J2 | 2 | embase enfichable 2 pts, pas **3,5 mm**, verticale fermée | **HC-JXDZVC-3.5-2P** (Hong Cheng) | C51927058 | ✱ empreinte **MPT 2,54 mm → `PhoenixContact_MCV_1,5_2-G-3.5_1x02_P3.50mm_Vertical`** (décision de l'utilisateur). Perçage 1,2 mm [À VÉRIFIER : section des broches HC]. J2 n'avait pas de correspondance dans la BOM JLCPCB : même pièce que J1 |
 | J3 | 1 | embase enfichable 3 pts, pas **2,5 mm**, verticale fermée | **JL15EDGVC-25003G02** (JILN) | C2908480 | choix de l'utilisateur : la DB2EVC-2.54 (C2927494) n'est pas en stock. **Empreinte du projet** `alfea:JILN_JL15EDGVC-2.50-03P_1x03_P2.50mm_Vertical`, d'après la fiche JILN : perçage Ø 1,4 mm (broches 0,8 × 0,8 mm), corps 9,3 × 8,1 mm, rangée à 3,85 mm d'un bord, hauteur 10,1 mm [CONSTATÉ sur la fiche]. Pastilles 2 × 2,6 mm, soit 0,5 mm d'écart entre pastilles |
@@ -212,6 +218,8 @@ Références JLCPCB (assemblage) intégrées au schéma maître : pour chaque sy
 | — | 1 | capteur T/HR | **DHT22 / AM2302** | — | |
 | — | 0 | fiche pour X86 | **inutile** : X86 est un bornier à vis débrochable [CONSTATÉ sur la photo] ; les fils du bus se serrent sous ses vis 1 et 2 | — | |
 | — | 1 | chargeur USB 5 V ≥ 1 A + câble USB-C (ou Mean Well HDR-15-5) | | — | |
+
+**Frais d'assemblage JLCPCB** [CONSTATÉ dans `sorties/bom-JLCPCB Assembly Order.xls` et la recherche de pièces JLCPCB, 2026-11-03] : chaque référence **Extended** distincte est facturée une fois par commande. Les références **Basic** et les Extended **« Preferred »** ne le sont pas, ce qui explique que les frais ne soient pas systématiques. Les pièces **traversantes** ne paient pas ce forfait, mais un forfait unique de soudure (information de l'utilisateur). Avant les choix du 2026-11-03, 10 références CMS Extended étaient facturées ; après : **C2/C3** (CGA0805X7R104K250KT) seulement. C49678 (Basic, 100 nF 50 V) est disponible, même empreinte, si l'on veut le supprimer. Les fiches JJ1 à JJ3 ne sont pas montées : JLCPCB ne livre pas de pièces en vrac, donc les retirer de la BOM d'assemblage et les commander chez LCSC.
 
 Contrôles du schéma après intégration [CONSTATÉ, kicad-cli 9.0.5] : ERC **0** (toutes sévérités) ; netlist identique à la précédente, aux références U1/U2 près (seuls changent les noms automatiques des broches 3 non connectées). Nets renommés comme les optocoupleurs (demande de l'utilisateur) : `BUS_R2_OK1` → `BUS_R2_U1`, `BUS_OK1_D1` → `BUS_U1_D1`, `BUS_OK2_B` → `BUS_U2_B`, `OK1_B` → `U1_B`, `OK2_A` → `U2_A`, dans le schéma, le PCB et `gen/carte.py` ; connexions inchangées [CONSTATÉ, comparaison des netlists].
 
@@ -233,7 +241,12 @@ DRC avec parité [CONSTATÉ] :
 
 Les fichiers `sorties/gerbers/` et `production/` correspondent à **l'ancien routage** : à refaire après routage. Ne pas lancer `docker/kicad/generer_carte.sh`, qui écrase le placement et lance Freerouting.
 
-Écarts à l'adaptateur officiel V3 (règle 00 §2.4), récapitulatif : **R8** (sûreté au démarrage), **Q1 en gain C** (marge de descente du bus), **D3 et F1** (protections demandées par la mission), **suppression de la 24LC32** (inutile sur ESP32, 06 §2.4), **ajouts DHT22 et entrée 5 V** (périmètre MCU, sans effet sur le bus). Les valeurs des composants côté bus sont inchangées.
+**Choix de BOM du 2026-11-03** (C1, D5, R1/R4/R7, R2, U1/U2, suppression de F1) : appliqués au **schéma maître seulement**. ERC **0** ; la netlist ne change que par la fusion de `CL_P_IN` dans `BUS_P` (J1-1 sur `BUS_P`) [CONSTATÉ, comparaison des netlists]. **Le PCB n'est pas modifié** : l'utilisateur a commencé le routage (fichier non committé). Le report se fait dans KiCad par « Mettre à jour le PCB depuis le schéma » (F8), qui :
+- remplace les empreintes de **C1** (CP_Elec 6,3 × 5,4 → 1206), **D5** (SOD-323 → SOD-123F), **U1 et U2** (SMDIP-6 → DIP-6 traversant : rangées à ±3,81 mm au lieu de ±4,765 mm, pistes à reprendre) ;
+- supprime **F1** : ses pistes restent orphelines, et J1-1 rejoint `BUS_P` par le chevelu ;
+- met à jour les valeurs et les champs des autres composants, sans toucher au routage.
+
+Écarts à l'adaptateur officiel V3 (règle 00 §2.4), récapitulatif : **R8** (sûreté au démarrage), **Q1 en gain C** (marge de descente du bus), **D3** (protection demandée par la mission ; F1 retirée par l'utilisateur), **R2 à 2 kΩ** (§2.2), **suppression de la 24LC32** (inutile sur ESP32, 06 §2.4), **ajouts DHT22 et entrée 5 V** (périmètre MCU, sans effet sur le bus). Les valeurs des composants côté bus sont inchangées.
 
 ## 8. Mesure de X86 avant branchement (prérequis GATE 3)
 

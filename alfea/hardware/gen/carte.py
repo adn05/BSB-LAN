@@ -9,7 +9,7 @@ et affectation broche -> net. Les broches listées dans `nc` sont non connectée
 PROJET = 'carte_bsb_c3'
 
 # Nets côté bus : BUS_*, côté ESP32 : le reste. Aucun net ne traverse la frontière.
-NETS_BUS = {'CL_P_IN', 'CL_N_IN', 'BUS_P', 'BUS_N', 'BUS_R2_U1', 'BUS_U1_D1', 'BUS_U2_B', 'BUS_Q1_B'}
+NETS_BUS = {'CL_N_IN', 'BUS_P', 'BUS_N', 'BUS_R2_U1', 'BUS_U1_D1', 'BUS_U2_B', 'BUS_Q1_B'}
 
 R0805 = 'Resistor_SMD:R_0805_2012Metric'
 C0805 = 'Capacitor_SMD:C_0805_2012Metric'
@@ -18,23 +18,22 @@ COMPOSANTS = [
     # --- Entrée bus et protections (côté bus)
     dict(ref='J1', lib='Connector:Screw_Terminal_01x02', val='BSB (X86)', fp='Connector_Phoenix_MC:PhoenixContact_MCV_1,5_2-G-3.5_1x02_P3.50mm_Vertical',
          mpn='Hong Cheng HC-JXDZVC-3.5-2P', sch=(30.48, 63.5), pcb=(103.62, 117.7, 90),
-         pins={'1': 'CL_P_IN', '2': 'CL_N_IN'}),
-    dict(ref='F1', lib='Device:Polyfuse', val='PTC 0,1 A', fp='Fuse:Fuse_1812_4532Metric', mpn='Bourns MF-MSMF010-2',
-         sch=(55.88, 50.8), pcb=(110.5, 104.0, 0), pins={'1': 'CL_P_IN', '2': 'BUS_P'}),
+         pins={'1': 'BUS_P', '2': 'CL_N_IN'}),
+    # F1 (PTC) supprimé : J1-1 directement sur BUS_P (choix de l'utilisateur, 09 §7)
     dict(ref='D3', lib='Device:D_TVS', val='SMAJ18CA', fp='Diode_SMD:D_SMA', mpn='Littelfuse SMAJ18CA',
          sch=(76.2, 73.66), pcb=(117.5, 106.0, 90), pins={'1': 'BUS_P', '2': 'CL_N_IN'}),
     # --- Réception : bus -> U1 (côté bus)
-    dict(ref='R2', lib='Device:R', val='1k5 1206', fp='Resistor_SMD:R_1206_3216Metric', mpn='1,5 kOhm 1 % 1206',
+    dict(ref='R2', lib='Device:R', val='2k', fp='Resistor_SMD:R_1206_3216Metric', mpn='UNI-ROYAL 1206W4F2001T5E',
          sch=(99.06, 50.8), pcb=(110.0, 110.0, 90), pins={'1': 'BUS_P', '2': 'BUS_R2_U1'}),
     dict(ref='D1', lib='Device:LED', val='rouge', fp='LED_SMD:LED_0805_2012Metric', mpn='LED rouge 0805',
          sch=(114.3, 81.28), pcb=(113.0, 110.5, 90), pins={'1': 'BUS_N', '2': 'BUS_U1_D1'}),
     dict(ref='D2', lib='Device:D', val='1N4148W', fp='Diode_SMD:D_SOD-123', mpn='1N4148W',
          sch=(114.3, 96.52), pcb=(116.5, 113.0, 90), pins={'1': 'CL_N_IN', '2': 'BUS_N'}),
-    dict(ref='U1', lib='Isolator:4N25', val='4N25', fp='Package_DIP:SMDIP-6_W9.53mm', mpn='Lite-On 4N25S-TA1',
+    dict(ref='U1', lib='Isolator:4N25', val='LTV-4N25', fp='Package_DIP:DIP-6_W7.62mm', mpn='Lite-On LTV-4N25',
          sch=(144.78, 55.88), pcb=(121.0, 104.5, 0),
          pins={'1': 'BUS_R2_U1', '2': 'BUS_U1_D1', '4': 'RX', '5': '+3V3', '6': 'U1_B'}, nc=['3']),
     # --- Réception côté ESP32
-    dict(ref='R4', lib='Device:R', val='330k', fp=R0805, mpn='330 kOhm 1 % 0805',
+    dict(ref='R4', lib='Device:R', val='330k', fp=R0805, mpn='UNI-ROYAL 0805W8F3303T5E',
          sch=(180.34, 45.72), pcb=(131.45, 109.9, 90), pins={'1': 'U1_B', '2': 'RX'}),
     dict(ref='R5', lib='Device:R', val='4k7', fp=R0805, mpn='4,7 kOhm 1 % 0805',
          sch=(195.58, 66.04), pcb=(134.05, 109.9, 90), pins={'1': 'RX', '2': 'GND'}),
@@ -47,13 +46,13 @@ COMPOSANTS = [
          sch=(200.66, 137.16), pcb=(132.75, 117.2, 0), pins={'3': 'Q2_C', '1': 'Q2_B', '2': '+3V3'}),
     dict(ref='R3', lib='Device:R', val='300', fp=R0805, mpn='300 Ohm 1 % 0805',
          sch=(180.34, 152.4), pcb=(131.45, 120.8, 90), pins={'1': 'Q2_C', '2': 'U2_A'}),
-    dict(ref='U2', lib='Isolator:4N25', val='4N25', fp='Package_DIP:SMDIP-6_W9.53mm', mpn='Lite-On 4N25S-TA1',
+    dict(ref='U2', lib='Isolator:4N25', val='LTV-4N25', fp='Package_DIP:DIP-6_W7.62mm', mpn='Lite-On LTV-4N25',
          sch=(144.78, 137.16), pcb=(128.62, 129.08, 180),
          pins={'1': 'U2_A', '2': 'GND', '4': 'BUS_Q1_B', '5': 'BUS_P', '6': 'BUS_U2_B'}, nc=['3']),
     # --- Émission côté bus
-    dict(ref='R1', lib='Device:R', val='330k', fp=R0805, mpn='330 kOhm 1 % 0805',
+    dict(ref='R1', lib='Device:R', val='330k', fp=R0805, mpn='UNI-ROYAL 0805W8F3303T5E',
          sch=(114.3, 124.46), pcb=(117.0, 121.0, 90), pins={'1': 'BUS_Q1_B', '2': 'BUS_U2_B'}),
-    dict(ref='R7', lib='Device:R', val='330k', fp=R0805, mpn='330 kOhm 1 % 0805',
+    dict(ref='R7', lib='Device:R', val='330k', fp=R0805, mpn='UNI-ROYAL 0805W8F3303T5E',
          sch=(99.06, 152.4), pcb=(113.0, 126.0, 90), pins={'1': 'BUS_Q1_B', '2': 'BUS_N'}),
     dict(ref='Q1', lib='Transistor_BJT:BC847', val='BC847C', fp='Package_TO_SOT_SMD:SOT-23', mpn='BC847C',
          sch=(76.2, 137.16), pcb=(113.0, 121.0, 0), pins={'3': 'BUS_P', '1': 'BUS_Q1_B', '2': 'BUS_N'}),
@@ -71,7 +70,7 @@ COMPOSANTS = [
          sch=(271.78, 147.32), pcb=(147.2, 120.6, 0), pins={'1': 'DHT_DATA', '2': '+3V3'}),
     dict(ref='R10', lib='Device:R', val='100', fp=R0805, mpn='100 Ohm 0805',
          sch=(287.02, 147.32), pcb=(150.9, 120.6, 0), pins={'1': 'DHT_DATA', '2': 'DHT_IO'}),
-    dict(ref='D5', lib='Device:D_TVS', val='PESD5V0S1BA', fp='Diode_SMD:D_SOD-323', mpn='Nexperia PESD5V0S1BA',
+    dict(ref='D5', lib='Diode:SMF5V0A', val='SMF5.0A', fp='Diode_SMD:D_SOD-123F', mpn='hongjiacheng SMF5.0A',
          sch=(279.4, 170.18), pcb=(154.6, 120.6, 0), pins={'1': 'DHT_DATA', '2': 'GND'}),
     dict(ref='C3', lib='Device:C', val='100n', fp=C0805, mpn='100 nF X7R 0805',
          sch=(256.54, 170.18), pcb=(143.5, 120.6, 0), pins={'1': '+3V3', '2': 'GND'}),
@@ -80,7 +79,7 @@ COMPOSANTS = [
          mpn='Hong Cheng HC-JXDZVC-3.5-2P', sch=(254.0, 30.48), pcb=(131.7, 103.62, 0), ref_at=(137.6, 103.6), pins={'1': '5V_IN', '2': 'GND'}),
     dict(ref='D4', lib='Device:D_Schottky', val='SS14', fp='Diode_SMD:D_SMA', mpn='SS14',
          sch=(279.4, 27.94), pcb=(154.3, 115.9, 90), pins={'1': '+5V', '2': '5V_IN'}),
-    dict(ref='C1', lib='Device:C_Polarized', val='100u 10V', fp='Capacitor_SMD:CP_Elec_6.3x5.4', mpn='100 uF 10 V alu SMD 6,3 mm',
+    dict(ref='C1', lib='Device:C', val='22u 25V', fp='Capacitor_SMD:C_1206_3216Metric', mpn='Samsung CL31A226KAHNNNE',
          sch=(299.72, 40.64), pcb=(146.8, 115.4, 0), pins={'1': '+5V', '2': 'GND'}),
     dict(ref='C2', lib='Device:C', val='100n', fp=C0805, mpn='100 nF X7R 0805',
          sch=(314.96, 40.64), pcb=(157.5, 115.9, 90), pins={'1': '+5V', '2': 'GND'}),
@@ -103,8 +102,8 @@ ANTENNE = (135.6, 106.0, 139.8, 124.0)
 
 NOTES = [
     ((25.4, 22.86), 'COTE BUS (alimente par le bus, ~6 mA)  |  isolation optique U1/U2  |  COTE ESP32 (3,3 V du SuperMini)'),
-    ((25.4, 27.94), 'Topologie de l adaptateur officiel V3, ecarts : R8, Q1/Q2 gain C en SOT-23, D3, F1, entree DHT22, entree 5 V (docs/claude/09).'),
-    ((25.4, 210.82), 'RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/1500 = 6,2 mA a 13 V ; TX : I_F(U2) = 6,3 mA, Ib(Q1) ~34 uA -> 14 mA (BC847C).'),
+    ((25.4, 27.94), 'Topologie de l adaptateur officiel V3, ecarts : R8, Q1/Q2 gain C en SOT-23, D3, entree DHT22, entree 5 V (docs/claude/09).'),
+    ((25.4, 210.82), 'RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/2000 = 4,65 mA a 13 V ; TX : I_F(U2) = 6,3 mA, Ib(Q1) ~34 uA -> 14 mA (BC847C).'),
     ((25.4, 215.9), 'R8 maintient Q2 bloque quand GPIO7 est en haute impedance (reset, bootloader) : le bus n est pas tire a 0 au demarrage.'),
     ((25.4, 220.98), 'Brochage du SuperMini et entraxe des rangees (15,24 mm) a verifier sur un exemplaire avant fabrication.'),
 ]

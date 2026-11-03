@@ -17,7 +17,7 @@ GARDE = 0.25                   # mm : écart cuivre-cuivre
 # classe : (largeur mm, nets). 0,3 mm en cuivre 35 µm : ~1 A pour +10 °C (IPC-2221, couche externe),
 # pour ~0,5 A crête du SuperMini en émission WiFi ; 0,4 mm pour le bus (robustesse face aux surtensions).
 CLASSES = {
-    'Bus': (0.4, {'CL_P_IN', 'CL_N_IN', 'BUS_P', 'BUS_N'}),
+    'Bus': (0.4, {'CL_N_IN', 'BUS_P', 'BUS_N'}),
     'Alim': (0.3, {'5V_IN', '+5V', 'GND'}),
 }
 

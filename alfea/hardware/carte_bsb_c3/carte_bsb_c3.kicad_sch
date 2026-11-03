@@ -2047,6 +2047,144 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Diode:SMF5V0A"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "SMF5V0A"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Diode_SMD:D_SMF"
+				(at 0 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://www.vishay.com/doc?85881"
+				(at -1.27 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "200W unidirectional Transil Transient Voltage Suppressor, 5Vrwm, SMF"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "diode TVS voltage suppressor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "D*SMF*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "SMF5V0A_0_1"
+				(polyline
+					(pts
+						(xy -0.762 1.27) (xy -1.27 1.27) (xy -1.27 -1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SMF5V0A_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "A1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Isolator:4N25"
 			(pin_names
 				(offset 1.016)
@@ -2812,7 +2950,7 @@
 		)
 		(uuid "0595e781-aa98-5ee1-b800-8c3c486034df")
 	)
-	(text "RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/1500 = 6,2 mA a 13 V ; TX : I_F(U2) = 6,3 mA, U2+Q1 en Darlington, I_E(U2) >= 1,3 mA -> Q1 sature, V(BUS_P) ~0,85 V (~1,6 V aux bornes avec D2). D3 entre BUS_P et CL_N_IN, en amont de D2."
+	(text "RX : seuil ~3,7 V, I_F = (V_bus - 3,7)/2000 = 4,65 mA a 13 V ; TX : I_F(U2) = 6,3 mA, U2+Q1 en Darlington, I_E(U2) >= 1,3 mA -> Q1 sature, V(BUS_P) ~0,85 V (~1,6 V aux bornes avec D2). D3 entre BUS_P et CL_N_IN, en amont de D2."
 		(exclude_from_sim no)
 		(at 45.974 215.138 0)
 		(effects
@@ -2933,7 +3071,7 @@
 		)
 		(uuid "8fed91f8-652d-5daa-95ae-3eaf56222dd2")
 	)
-	(text "Topologie de l adaptateur officiel V3, ecarts : R8, Q1/Q2 gain C en SOT-23, D3, F1, entree DHT22, entree 5 V (docs/claude/09)."
+	(text "Topologie de l adaptateur officiel V3, ecarts : R8, Q1/Q2 gain C en SOT-23, D3, entree DHT22, entree 5 V (docs/claude/09)."
 		(exclude_from_sim no)
 		(at 112.522 34.798 0)
 		(effects
@@ -3162,16 +3300,6 @@
 		)
 		(uuid "2d2121ba-3747-5e98-bac2-9d1948355957")
 	)
-	(label "CL_P_IN"
-		(at 45.72 96.52 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "30b3ed2e-f215-562a-8b4d-12d80d74a6e5")
-	)
 	(label "GND"
 		(at 373.38 83.82 270)
 		(effects
@@ -3232,7 +3360,7 @@
 		)
 		(uuid "4d97b387-6518-5161-85b1-fe55cc041893")
 	)
-	(label "CL_P_IN"
+	(label "BUS_P"
 		(at 33.02 114.3 0)
 		(effects
 			(font
@@ -3401,16 +3529,6 @@
 			(justify left)
 		)
 		(uuid "87a4e4c3-8331-517c-a065-275f54c299e5")
-	)
-	(label "BUS_P"
-		(at 53.34 96.52 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "87feccd5-cc70-5fd8-a9a0-8548e03694f7")
 	)
 	(label "+3V3"
 		(at 297.18 134.62 0)
@@ -4260,7 +4378,7 @@
 				)
 			)
 		)
-		(property "Value" "4N25S-TA1"
+		(property "Value" "LTV-4N25"
 			(at 138.43 133.35 0)
 			(effects
 				(font
@@ -4268,7 +4386,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_DIP:SMDIP-6_W9.53mm"
+		(property "Footprint" "Package_DIP:DIP-6_W7.62mm"
 			(at 138.43 125.73 0)
 			(effects
 				(font
@@ -4295,7 +4413,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Lite-On 4N25S-TA1"
+		(property "MPN" "Lite-On LTV-4N25"
 			(at 138.43 125.73 0)
 			(effects
 				(font
@@ -4304,7 +4422,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C143074"
+		(property "JLCPCB Part #" "C118160"
 			(at 138.43 125.73 0)
 			(effects
 				(font
@@ -4314,7 +4432,7 @@
 				(hide yes)
 			)
 		)
-		(property "Product link" "https://jlcpcb.com/partdetail/LiteOn-4N25STA1/C143074"
+		(property "Product link" "https://jlcpcb.com/partdetail/LiteOn-LTV4N25/C118160"
 			(at 138.43 125.73 0)
 			(effects
 				(font
@@ -4450,7 +4568,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:D_TVS")
+		(lib_id "Diode:SMF5V0A")
 		(at 190.5 162.56 180)
 		(unit 1)
 		(exclude_from_sim no)
@@ -4466,7 +4584,7 @@
 				)
 			)
 		)
-		(property "Value" "PESD5V0S1BA"
+		(property "Value" "SMF5.0A"
 			(at 190.5 169.926 0)
 			(effects
 				(font
@@ -4474,7 +4592,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_SOD-323"
+		(property "Footprint" "Diode_SMD:D_SOD-123F"
 			(at 190.5 162.56 0)
 			(effects
 				(font
@@ -4492,7 +4610,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "PESD5V0S1BA"
+		(property "Description" "TVS unidirectionnelle 200 W, V_RWM 5 V, V_BR 6,4-7 V, SOD-123FL"
 			(at 190.5 162.56 0)
 			(effects
 				(font
@@ -4501,7 +4619,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "TECH PUBLIC PESD5V0S1BA"
+		(property "MPN" "hongjiacheng SMF5.0A"
 			(at 190.5 162.56 0)
 			(effects
 				(font
@@ -4510,7 +4628,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C2827694"
+		(property "JLCPCB Part #" "C19077497"
 			(at 190.5 162.56 0)
 			(effects
 				(font
@@ -4520,7 +4638,7 @@
 				(hide yes)
 			)
 		)
-		(property "Product link" "https://jlcpcb.com/partdetail/TECHPUBLIC-PESD5V0S1BA/C2827694"
+		(property "Product link" "https://jlcpcb.com/partdetail/hongjiacheng-SMF50A/C19077497"
 			(at 190.5 162.56 0)
 			(effects
 				(font
@@ -4854,104 +4972,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:Polyfuse")
-		(at 49.53 96.52 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "64606797-56ac-5065-8d03-2cdaaba3656b")
-		(property "Reference" "F1"
-			(at 50.292 89.916 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "MF-MSMF010-2"
-			(at 53.34 92.456 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Fuse:Fuse_1812_4532Metric"
-			(at 49.53 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 49.53 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "PTC 0,1 A"
-			(at 49.53 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "BOURNS MF-MSMF010-2"
-			(at 49.53 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB Part #" "C12430"
-			(at 49.53 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Product link" "https://jlcpcb.com/partdetail/MF-MSMF010-2/C12430"
-			(at 49.53 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "a2f3178e-1508-5d9e-aa32-e4c8e211019f")
-		)
-		(pin "2"
-			(uuid "b4023990-9c82-502c-bca1-aa0156000753")
-		)
-		(instances
-			(project "carte_bsb_c3"
-				(path "/e870cb4c-d38d-5ec4-8d47-ef3c2646a16f"
-					(reference "F1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 102.87 85.09 90)
 		(unit 1)
@@ -4996,7 +5016,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Résistance 330 kΩ ±5 % 125 mW 0805"
+		(property "Description" "Résistance 330 kΩ ±1 % 125 mW 0805"
 			(at 102.87 85.09 0)
 			(effects
 				(font
@@ -5005,7 +5025,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "FH (Guangdong Fenghua Advanced Tech) RS-05K334JT"
+		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 0805W8F3303T5E"
 			(at 102.87 85.09 0)
 			(effects
 				(font
@@ -5014,7 +5034,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C294705"
+		(property "JLCPCB Part #" "C17629"
 			(at 102.87 85.09 0)
 			(effects
 				(font
@@ -5024,7 +5044,7 @@
 				(hide yes)
 			)
 		)
-		(property "Product link" "https://jlcpcb.com/partdetail/279230-RS05K334JT/C294705"
+		(property "Product link" "https://jlcpcb.com/partdetail/18317-0805W8F3303T5E/C17629"
 			(at 102.87 85.09 0)
 			(effects
 				(font
@@ -5165,7 +5185,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1k5"
+		(property "Value" "2k"
 			(at 76.708 93.218 90)
 			(effects
 				(font
@@ -5192,7 +5212,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Résistance 1,5 kΩ ±1 % 250 mW 1206"
+		(property "Description" "Résistance 2 kΩ ±1 % 250 mW 1206"
 			(at 73.66 96.52 0)
 			(effects
 				(font
@@ -5201,7 +5221,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 1206W4F1501T5E"
+		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 1206W4F2001T5E"
 			(at 73.66 96.52 0)
 			(effects
 				(font
@@ -5210,7 +5230,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C26030"
+		(property "JLCPCB Part #" "C17944"
 			(at 73.66 96.52 0)
 			(effects
 				(font
@@ -5220,7 +5240,7 @@
 				(hide yes)
 			)
 		)
-		(property "Product link" "https://jlcpcb.com/partdetail/26773-1206W4F1501T5E/C26030"
+		(property "Product link" "https://jlcpcb.com/partdetail/18632-1206W4F2001T5E/C17944"
 			(at 73.66 96.52 0)
 			(effects
 				(font
@@ -5290,7 +5310,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Résistance 330 kΩ ±5 % 125 mW 0805"
+		(property "Description" "Résistance 330 kΩ ±1 % 125 mW 0805"
 			(at 73.66 138.43 0)
 			(effects
 				(font
@@ -5299,7 +5319,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "FH (Guangdong Fenghua Advanced Tech) RS-05K334JT"
+		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 0805W8F3303T5E"
 			(at 73.66 138.43 0)
 			(effects
 				(font
@@ -5308,7 +5328,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C294705"
+		(property "JLCPCB Part #" "C17629"
 			(at 73.66 138.43 0)
 			(effects
 				(font
@@ -5318,7 +5338,7 @@
 				(hide yes)
 			)
 		)
-		(property "Product link" "https://jlcpcb.com/partdetail/279230-RS05K334JT/C294705"
+		(property "Product link" "https://jlcpcb.com/partdetail/18317-0805W8F3303T5E/C17629"
 			(at 73.66 138.43 0)
 			(effects
 				(font
@@ -5557,7 +5577,7 @@
 				)
 			)
 		)
-		(property "Value" "4N25S-TA1"
+		(property "Value" "LTV-4N25"
 			(at 138.43 104.14 0)
 			(effects
 				(font
@@ -5565,7 +5585,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_DIP:SMDIP-6_W9.53mm"
+		(property "Footprint" "Package_DIP:DIP-6_W7.62mm"
 			(at 138.43 96.52 0)
 			(effects
 				(font
@@ -5592,7 +5612,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "Lite-On 4N25S-TA1"
+		(property "MPN" "Lite-On LTV-4N25"
 			(at 138.43 96.52 0)
 			(effects
 				(font
@@ -5601,7 +5621,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C143074"
+		(property "JLCPCB Part #" "C118160"
 			(at 138.43 96.52 0)
 			(effects
 				(font
@@ -5611,7 +5631,7 @@
 				(hide yes)
 			)
 		)
-		(property "Product link" "https://jlcpcb.com/partdetail/LiteOn-4N25STA1/C143074"
+		(property "Product link" "https://jlcpcb.com/partdetail/LiteOn-LTV4N25/C118160"
 			(at 138.43 96.52 0)
 			(effects
 				(font
@@ -5791,7 +5811,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Résistance 330 kΩ ±5 % 125 mW 0805"
+		(property "Description" "Résistance 330 kΩ ±1 % 125 mW 0805"
 			(at 167.64 123.19 0)
 			(effects
 				(font
@@ -5800,7 +5820,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "FH (Guangdong Fenghua Advanced Tech) RS-05K334JT"
+		(property "MPN" "UNI-ROYAL(Uniroyal Elec) 0805W8F3303T5E"
 			(at 167.64 123.19 0)
 			(effects
 				(font
@@ -5809,7 +5829,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C294705"
+		(property "JLCPCB Part #" "C17629"
 			(at 167.64 123.19 0)
 			(effects
 				(font
@@ -5819,7 +5839,7 @@
 				(hide yes)
 			)
 		)
-		(property "Product link" "https://jlcpcb.com/partdetail/279230-RS05K334JT/C294705"
+		(property "Product link" "https://jlcpcb.com/partdetail/18317-0805W8F3303T5E/C17629"
 			(at 167.64 123.19 0)
 			(effects
 				(font
@@ -6233,7 +6253,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C_Polarized")
+		(lib_id "Device:C")
 		(at 322.58 80.01 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -6250,7 +6270,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100u 16V"
+		(property "Value" "22u 25V"
 			(at 325.12 81.28 0)
 			(effects
 				(font
@@ -6259,7 +6279,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:CP_Elec_6.3x5.4"
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
 			(at 322.58 80.01 0)
 			(effects
 				(font
@@ -6277,7 +6297,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Condensateur alu 100 µF 16 V ±20 %, 105 °C, 6,3 × 5,4 mm"
+		(property "Description" "Condensateur 22 µF 25 V X5R ±10 % 1206"
 			(at 322.58 80.01 0)
 			(effects
 				(font
@@ -6286,7 +6306,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "ROQANG VT1C101M0605"
+		(property "MPN" "Samsung Electro-Mechanics CL31A226KAHNNNE"
 			(at 322.58 80.01 0)
 			(effects
 				(font
@@ -6295,7 +6315,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C90273"
+		(property "JLCPCB Part #" "C12891"
 			(at 322.58 80.01 0)
 			(effects
 				(font
@@ -6305,7 +6325,7 @@
 				(hide yes)
 			)
 		)
-		(property "Product link" "https://jlcpcb.com/partdetail/ROQANG-VT1C101M0605/C90273"
+		(property "Product link" "https://jlcpcb.com/partdetail/13537-CL31A226KAHNNNE/C12891"
 			(at 322.58 80.01 0)
 			(effects
 				(font

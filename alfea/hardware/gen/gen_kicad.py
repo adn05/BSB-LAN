@@ -47,7 +47,7 @@ def r(v):
 
 # ----------------------------------------------------------------------------- schéma
 VERTICAUX = {'Device:R', 'Device:C', 'Device:C_Polarized', 'Device:Polyfuse'}
-HORIZONTAUX = {'Device:D', 'Device:LED', 'Device:D_TVS', 'Device:D_Schottky'}
+HORIZONTAUX = {'Device:D', 'Device:LED', 'Device:D_TVS', 'Device:D_Schottky', 'Diode:SMF5V0A'}
 
 
 def pos_ref(lib, x, y):
