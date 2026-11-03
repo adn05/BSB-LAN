@@ -8,7 +8,7 @@
 		(title "Interface BSB isolée pour ESP32-C3 SuperMini (Alféa Extensa Duo A.I.)")
 		(rev "A")
 		(company "branche alfea-extensa")
-		(comment 1 "Schéma maître (édité dans KiCad) ; toute modification de net est à reporter dans alfea/hardware/gen/carte.py")
+		(comment 1 "Schéma maître et PCB édités dans KiCad ; contrôles : docker/kicad/controler_carte.sh")
 		(comment 2 "Connexions par étiquettes de net ; topologie adaptateur BSB-LAN V3 (docs/claude/06 et 09)")
 	)
 	(lib_symbols
@@ -4685,7 +4685,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Condensateur 100 nF 25 V X7R ±10 % 0805"
+		(property "Description" "Condensateur 100 nF 50 V X7R ±10 % 0805"
 			(at 345.44 80.01 0)
 			(effects
 				(font
@@ -4694,7 +4694,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "HRE CGA0805X7R104K250KT"
+		(property "MPN" "YAGEO CC0805KRX7R9BB104"
 			(at 345.44 80.01 0)
 			(effects
 				(font
@@ -4703,7 +4703,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C36911366"
+		(property "JLCPCB Part #" "C49678"
 			(at 345.44 80.01 0)
 			(effects
 				(font
@@ -4713,7 +4713,7 @@
 				(hide yes)
 			)
 		)
-		(property "Product link" "https://jlcpcb.com/partdetail/HRE-CGA0805X7R104K250KT/C36911366"
+		(property "Product link" "https://jlcpcb.com/partdetail/YAGEO-CC0805KRX7R9BB104/C49678"
 			(at 345.44 80.01 0)
 			(effects
 				(font
@@ -6271,7 +6271,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Condensateur 100 nF 25 V X7R ±10 % 0805"
+		(property "Description" "Condensateur 100 nF 50 V X7R ±10 % 0805"
 			(at 373.38 80.01 0)
 			(effects
 				(font
@@ -6280,7 +6280,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "HRE CGA0805X7R104K250KT"
+		(property "MPN" "YAGEO CC0805KRX7R9BB104"
 			(at 373.38 80.01 0)
 			(effects
 				(font
@@ -6289,7 +6289,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Part #" "C36911366"
+		(property "JLCPCB Part #" "C49678"
 			(at 373.38 80.01 0)
 			(effects
 				(font
@@ -6299,7 +6299,7 @@
 				(hide yes)
 			)
 		)
-		(property "Product link" "https://jlcpcb.com/partdetail/HRE-CGA0805X7R104K250KT/C36911366"
+		(property "Product link" "https://jlcpcb.com/partdetail/YAGEO-CC0805KRX7R9BB104/C49678"
 			(at 373.38 80.01 0)
 			(effects
 				(font

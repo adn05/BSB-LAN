@@ -105,7 +105,7 @@ Réponses de l'utilisateur (après la synthèse ci-dessous) :
 - **Diff sur le code amont** : 27 lignes ajoutées, 4 supprimées, dans `BSB_LAN/BSB_LAN.ino` seulement. Le reste est dans `alfea/`, `docker/` et `docs/claude/`.
 - **E6 et E7 écartées après mesure** : environ 4 points de partition, pour des gardes sur une centaine de sites (10 J14).
 - **Validé sans matériel** : builds amont et Alféa, simulateur (autotest 13/13 sur trames réelles), pile Mosquitto + HA 2026.10.4, vérificateur de discovery.
-- **Carte** : schéma maître retouché par l'utilisateur (émission V3), révision B 62 × 33 mm **routée par Freerouting** (DRC 0 toutes sévérités, Gerber). Variante sur plaquette d'essai supprimée (demande de l'utilisateur, 2026-11-03).
+- **Carte** : schéma maître retouché par l'utilisateur (émission V3), 66 × 33 mm **placée et routée par l'utilisateur** (DRC 0 toutes sévérités, parité 0, isolation ≥ 5,2 mm), contrôlée par `docker/kicad/controler_carte.sh`. Générateur, Freerouting et variante sur plaquette d'essai supprimés (2026-11-03).
 - **Pont de test** : firmware `pont_bsb` pour la NodeMCU ESP-C3-32S-Kit (ET câblé du bus, 10 J18-J19).
 
 ### Avant la GATE 3 (de votre côté)

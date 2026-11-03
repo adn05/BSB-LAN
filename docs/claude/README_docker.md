@@ -1,7 +1,7 @@
 # Environnements Docker
 
 > **Résumé**
-> Tout se construit dans des conteneurs aux versions figées : le firmware avec **arduino-cli 1.3.1 + core esp32 3.3.12** (`docker/compiler.sh`), la carte avec **KiCad 9.0.6** (`docker/kicad/generer_carte.sh`).
+> Tout se construit dans des conteneurs aux versions figées : le firmware avec **arduino-cli 1.3.1 + core esp32 3.3.12** (`docker/compiler.sh`), les contrôles de la carte avec **KiCad 9.0.6** (`docker/kicad/controler_carte.sh`).
 > Aucun outil à installer sur le poste à part Docker. L'arbre `BSB_LAN/` n'est jamais modifié par un build : chaque compilation travaille sur une copie.
 > Sorties dans `alfea/build/` (ignoré par git) et `alfea/hardware/carte_bsb_c3/sorties/` (versionné).
 
@@ -33,8 +33,7 @@ Le premier build télécharge environ 600 Mo, dont la chaîne RISC-V ; le Docker
 
 ## 2. Carte d'interface
 
-`sh docker/kicad/generer_carte.sh` (≈ 1 min) :
-- **carte CMS** : PCB placé à partir de `alfea/hardware/gen/carte.py`, routage par **Freerouting 2.1.0** (`eclipse-temurin:21-jre`, jar officiel à sha256 vérifié, mis en cache dans `alfea/build/outils/`), plan de masse, puis ERC, DRC avec parité et exports (PDF, BOM, SVG, rendus, Gerber). Le schéma maître, édité dans KiCad, n'est jamais écrasé. Détails : 09 §9.
+`sh docker/kicad/controler_carte.sh` (≈ 20 s, `kicad/kicad:9.0.6`) : ERC et DRC avec parité (toutes sévérités, échec au moindre écart), puis exports (PDF, BOM complète et BOM d'assemblage JLCPCB, positions CPL, SVG, rendus). Le script **ne modifie jamais** le schéma ni le PCB, routé à la main, et ne génère pas les Gerber. Détails : 09 §9.
 
 ## 3. Simulateur de régulateur BSB (test sans PAC)
 

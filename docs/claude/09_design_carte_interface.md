@@ -1,9 +1,9 @@
 # 09 — Design de la carte d'interface BSB pour ESP32-C3 SuperMini
 
 > **Résumé**
-> Carte porteuse 2 couches de **62 × 33 mm** (révision B, §6) : J1 et le SuperMini sur le même axe, borniers à vis au pas de 2,54 mm, trous M3 aux 4 coins, transistors en SOT-23, composants passifs sous le module. Le SuperMini s'y enfiche (2 × 8 broches au pas de 2,54 mm). Elle reprend **la topologie éprouvée de l'adaptateur officiel V3** : 2 × 4N25, BC547/BC557, mêmes valeurs. Les **écarts sont limités et justifiés** : rappel de TX au démarrage, transistor de bus en gain C, TVS sur l'entrée (PTC retirée, §7), R2 à 2 kΩ, retrait de l'EEPROM, entrée DHT22 protégée, entrée 5 V avec diode anti-retour.
+> Carte porteuse 2 couches de **66 × 33 mm** (§6), **placée et routée à la main par l'utilisateur** : J1 et le SuperMini sur le même axe, borniers enfichables au pas de 3,5 mm, barrette pour le DHT22, 4N25 en DIP-6, trous M3 aux 4 coins, transistors en SOT-23, composants passifs sous le module. Le SuperMini s'y enfiche (2 × 8 broches au pas de 2,54 mm). Elle reprend **la topologie éprouvée de l'adaptateur officiel V3** : 2 × 4N25, BC547/BC557, mêmes valeurs. Les **écarts sont limités et justifiés** : rappel de TX au démarrage, transistor de bus en gain C, TVS sur l'entrée (PTC retirée, §7), R2 à 2 kΩ, retrait de l'EEPROM, entrée DHT22 protégée, entrée 5 V avec diode anti-retour.
 > **Isolation galvanique conservée** : rien n'est prélevé sur le bus pour l'ESP32. L'alimentation vient d'un **chargeur USB 5 V** (défaut, aucune intervention sur le 230 V) ou d'un module 5 V rail DIN (option).
-> Brochage : RX = GPIO6, TX = GPIO7, DHT22 = GPIO5, LED = GPIO8 (sur le SuperMini). **Projet KiCad 9 dans `alfea/hardware/carte_bsb_c3/`** : le schéma maître est celui retouché dans KiCad (émission conforme à V3, §2.3) ; PCB **routé par Freerouting 2.1.0**, plan de masse, Gerber ; ERC 0, DRC 0 (toutes sévérités), parité 0 (§9).
+> Brochage : RX = GPIO6, TX = GPIO7, DHT22 = GPIO5, LED = GPIO8 (sur le SuperMini). **Projet KiCad 9 dans `alfea/hardware/carte_bsb_c3/`** : le schéma maître est celui retouché dans KiCad (émission conforme à V3, §2.3) ; PCB routé par l'utilisateur, plan de masse côté ESP32 ; ERC 0, DRC 0 (toutes sévérités), parité 0, isolation bus/ESP32 ≥ 5,2 mm (§7, §9). Gerber produits par l'utilisateur.
 > **Avant tout branchement**, X86 doit être mesuré (§8). Première mesure de l'utilisateur : **0 V entre 1, 2 et 3**, résultat à confirmer par une mesure témoin (§8).
 
 Conventions : **[CONSTATÉ]**, **[SUPPOSÉ]**, **[À VÉRIFIER]**. Les calculs reprennent les valeurs de 06 §3 (4N25 : CTR ≥ 20 % à 10 mA, Vf 1,2 V ; C3 : V_IH ≥ 2,48 V, V_IL ≤ 0,83 V).
@@ -161,7 +161,7 @@ Un chargeur de 1 A donne une marge ×2,8 sur la pointe. Avec un LP5907 (250 mA, 
 
 ## 6. Format de la carte
 
-Révision B, placement réel (rendu `alfea/hardware/carte_bsb_c3/sorties/pcb_dessus.png`) :
+**Le croquis ci-dessous date de la révision B initiale (62 × 33 mm, routage automatique).** La carte actuelle (66 × 33 mm, placée et routée par l'utilisateur le 2026-11-03) est visible sur le rendu `alfea/hardware/carte_bsb_c3/sorties/pcb_dessus.png`. Ses principes sont les mêmes : bus à gauche, bande d'isolation, SuperMini à droite, USB vers le bord droit.
 
 ```
  62 mm
@@ -208,7 +208,7 @@ Références JLCPCB (assemblage) intégrées au schéma maître : pour chaque sy
 | R8 | 1 | 10 kΩ 0805 | 0805W8F1002T5E | C17414 | conforme |
 | R10 | 1 | 100 Ω 0805 | 0805W8F1000T5E | C17408 | conforme |
 | C1 | 1 | **22 µF 25 V X5R, 1206** | **CL31A226KAHNNNE** (Samsung) | C12891 | ✱ Basic. Empreinte `Capacitor_SMD:C_1206_3216Metric` (au lieu de l'électrolytique 6,3 × 5,4), symbole non polarisé ; ≈ 15 µF effectifs sous 5 V [SUPPOSÉ], conséquences en §4 |
-| C2, C3 | 2 | 100 nF X7R 0805 25 V | CGA0805X7R104K250KT (HRE) | C36911366 | conforme |
+| C2, C3 | 2 | 100 nF X7R 0805 **50 V** | **CC0805KRX7R9BB104** (Yageo) | C49678 | ✱ Basic (choix de l'utilisateur), même empreinte, 50 V au lieu de 25 V |
 | J1, J2 | 2 | embase enfichable 2 pts, pas **3,5 mm**, verticale fermée | **HC-JXDZVC-3.5-2P** (Hong Cheng) | C51927058 | ✱ empreinte **MPT 2,54 mm → `PhoenixContact_MCV_1,5_2-G-3.5_1x02_P3.50mm_Vertical`** (décision de l'utilisateur). Perçage 1,2 mm [À VÉRIFIER : section des broches HC]. J2 n'avait pas de correspondance dans la BOM JLCPCB : même pièce que J1 |
 | J3 | 1 | barrette femelle 1 × 3, pas 2,54, h 8,5 mm, traversante | **22850103ANG1SYA01** (JILN) | C41431926 | ✱ choix de l'utilisateur (option A du 2026-11-03) : l'embase JILN 2,5 mm (C2908480) n'avait que **6 pièces en stock**, soit tout juste 5 cartes + 1 de perte. Ici, 1 239 en stock. Le capteur est à ≈ 10 cm, donc le verrouillage n'est pas nécessaire. Même gamme que J4/J5, empreinte `PinSocket_1x03_P2.54mm_Vertical`, symbole `Conn_01x03`. Brochage 1 = 3V3, 2 = DATA, 3 = GND, conforme à la plupart des modules AM2302 à 3 broches (+, out, −) [À VÉRIFIER sur la sérigraphie du module] ; un DHT22 nu (4 broches) se branche par câble |
 | J4, J5 | 2 | barrette femelle 1 × 8, pas 2,54, h 8,5 mm | 22850108ANG1SYA01 (JILN) | C429957 | conforme. J5 n'avait pas de correspondance dans la BOM JLCPCB : même pièce que J4 |
@@ -218,33 +218,17 @@ Références JLCPCB (assemblage) intégrées au schéma maître : pour chaque sy
 | — | 0 | fiche pour X86 | **inutile** : X86 est un bornier à vis débrochable [CONSTATÉ sur la photo] ; les fils du bus se serrent sous ses vis 1 et 2 | — | |
 | — | 1 | chargeur USB 5 V ≥ 1 A + câble USB-C (ou Mean Well HDR-15-5) | | — | |
 
-**Frais d'assemblage JLCPCB** [CONSTATÉ dans `sorties/bom-JLCPCB Assembly Order.xls` et la recherche de pièces JLCPCB, 2026-11-03] : chaque référence **Extended** distincte est facturée une fois par commande. Les références **Basic** et les Extended **« Preferred »** ne le sont pas, ce qui explique que les frais ne soient pas systématiques. Les pièces **traversantes** ne paient pas ce forfait, mais un forfait unique de soudure (information de l'utilisateur). Avant les choix du 2026-11-03, 10 références CMS Extended étaient facturées ; après : **C2/C3** (CGA0805X7R104K250KT) seulement. C49678 (Basic, 100 nF 50 V) est disponible, même empreinte, si l'on veut le supprimer. Les fiches JJ1 et JJ2 ne sont pas montées (JJ3 supprimée avec le passage de J3 en barrette) : JLCPCB ne livre pas de pièces en vrac, donc les retirer de la BOM d'assemblage et les commander chez LCSC.
+**Frais d'assemblage JLCPCB** [CONSTATÉ dans `sorties/bom-JLCPCB Assembly Order.xls` et la recherche de pièces JLCPCB, 2026-11-03] : chaque référence **Extended** distincte est facturée une fois par commande. Les références **Basic** et les Extended **« Preferred »** ne le sont pas, ce qui explique que les frais ne soient pas systématiques. Les pièces **traversantes** ne paient pas ce forfait, mais un forfait unique de soudure (information de l'utilisateur). Avant les choix du 2026-11-03, 10 références CMS Extended étaient facturées ; après : **aucune** (C2/C3 passés en C49678, Basic). Les fiches JJ1 et JJ2 ne sont pas montées (JJ3 supprimée avec le passage de J3 en barrette) : JLCPCB ne livre pas de pièces en vrac : elles sont retirées de la BOM d'assemblage `sorties/bom_jlcpcb.csv` (elles restent dans `sorties/bom.csv`) et se commandent chez LCSC.
 
 Contrôles du schéma après intégration [CONSTATÉ, kicad-cli 9.0.5] : ERC **0** (toutes sévérités) ; netlist identique à la précédente, aux références U1/U2 près (seuls changent les noms automatiques des broches 3 non connectées). Nets renommés comme les optocoupleurs (demande de l'utilisateur) : `BUS_R2_OK1` → `BUS_R2_U1`, `BUS_OK1_D1` → `BUS_U1_D1`, `BUS_OK2_B` → `BUS_U2_B`, `OK1_B` → `U1_B`, `OK2_A` → `U2_A`, dans le schéma, le PCB et `gen/carte.py` ; connexions inchangées [CONSTATÉ, comparaison des netlists].
 
-**PCB mis à jour depuis le schéma, sans routage** (demande de l'utilisateur), par l'API pcbnew de KiCad 9.0.5 :
-- **références, valeurs et champs** de toutes les empreintes ;
-- **J1, J2, U1 et U2 remplacées** : même orientation, centre des pastilles conservé, nets recopiés par numéro de pastille ;
-- **toutes les pistes et vias supprimées** (207 segments, 8 vias), contours de zone gardés et plan GND recalculé ;
-- **placement retouché** pour les nouvelles empreintes :
-  - J2 (MCV 3,5 mm, pastille 1) en (133,95 ; 103,42) : le corps dépasse du bord haut d'environ 1,4 mm, du côté de l'entrée de la fiche ; le cuivre reste à 1,6 mm du bord ;
-  - J3 (JILN 2,5 mm, pastille 1) en (138,61 ; 130,8), à 180° : le corps dépasse du bord bas d'environ 1,7 mm ; le cuivre reste à 0,9 mm du bord. **Depuis remplacée par une barrette 1 × 3** (§7, choix du 2026-11-03), qui ne déborde plus ;
-  - D3 décalé de −0,65 mm, R3, R4 et R6 de +0,45 mm ;
-  - textes de sérigraphie CL-, « GND DAT 3V3 » et « J2 : 5V / GND » déplacés avec leur connecteur.
+**PCB placé et routé par l'utilisateur** (2026-11-03, après « Mettre à jour le PCB depuis le schéma ») : contour 66 × 33 mm, 119 segments en 0,4 mm, 18 vias de 0,8/0,4 mm, plan GND sur les deux faces, côté ESP32 seulement. Contrôles [CONSTATÉ, kicad-cli 9.0.5 puis `kicad/kicad:9.0.6`] :
+- DRC avec parité, toutes sévérités : **0** violation, **0** pastille non connectée, **0** écart avec le schéma ;
+- **isolation bus/ESP32 ≥ 5,2 mm** sur les deux couches (objectif ≥ 3 mm, §5). Mesure : DRC sur une copie, avec une règle d'isolation entre les nets `BUS_*`/`CL_N_IN` et les nets côté ESP32, relevée par pas de 1 mm (0 violation à 5 mm, 12 à 6 mm ; minimum de 5,2 mm entre `BUS_P` et le plan GND) ;
+- bande d'isolation (x = 122,1 à 126,7 mm) interdite aux pistes, aux vias et au cuivre ; zone sans cuivre ni via sous l'antenne (x = 142,0 à 149,5 mm, y = 106,9 à 126,2 mm) ; D3 au plus près de J1 ;
+- pistes de 0,4 mm partout : très au-dessus du besoin (quelques mA sur le bus, ≈ 0,36 A crête sur le 5 V, pour ≈ 1 A admissible à +10 °C en 35 µm, IPC-2221).
 
-DRC avec parité [CONSTATÉ] :
-- 0 erreur d'empreinte (parité) ;
-- 0 erreur d'isolation, de chevauchement ou de court-circuit ;
-- **45 liaisons à router** ;
-- 9 avertissements « sérigraphie tronquée par le bord » (corps de J2 et de J3 en débord).
-
-Les fichiers `sorties/gerbers/` et `production/` correspondent à **l'ancien routage** : à refaire après routage. Ne pas lancer `docker/kicad/generer_carte.sh`, qui écrase le placement et lance Freerouting.
-
-**Choix de BOM du 2026-11-03** (C1, D5, R1/R4/R7, R2, U1/U2, suppression de F1) : appliqués au **schéma maître seulement**. ERC **0** ; la netlist ne change que par la fusion de `CL_P_IN` dans `BUS_P` (J1-1 sur `BUS_P`) [CONSTATÉ, comparaison des netlists]. **Le PCB n'est pas modifié** : l'utilisateur a commencé le routage (fichier non committé). Le report se fait dans KiCad par « Mettre à jour le PCB depuis le schéma » (F8), qui :
-- remplace les empreintes de **C1** (CP_Elec 6,3 × 5,4 → 1206), **D5** (SOD-323 → SOD-123F), **U1 et U2** (SMDIP-6 → DIP-6 traversant : rangées à ±3,81 mm au lieu de ±4,765 mm, pistes à reprendre) ;
-- remplace l'empreinte de **J3** (JILN 2,5 mm → barrette 1 × 3 au pas de 2,54 : 3 pastilles à reprendre) ;
-- supprime **F1** : ses pistes restent orphelines, et J1-1 rejoint `BUS_P` par le chevelu ;
-- met à jour les valeurs et les champs des autres composants, sans toucher au routage.
+**Retouches de sérigraphie** (demande de l'utilisateur ; cuivre inchangé, vérifié par comparaison des pistes, des vias et des pastilles) : « J2 : 5V / GND » remplacé par « GND » et « 5V » sous chaque borne de J2 ; « ESP32-C3 » décalé hors du contour de D4 ; références J2 et J3 rapprochées de leur connecteur, J4 et J5 placées entre les barrettes.
 
 Écarts à l'adaptateur officiel V3 (règle 00 §2.4), récapitulatif : **R8** (sûreté au démarrage), **Q1 en gain C** (marge de descente du bus), **D3** (protection demandée par la mission ; F1 retirée par l'utilisateur), **R2 à 2 kΩ** (§2.2), **suppression de la 24LC32** (inutile sur ESP32, 06 §2.4), **ajouts DHT22 et entrée 5 V** (périmètre MCU, sans effet sur le bus). Les valeurs des composants côté bus sont inchangées.
 
@@ -269,35 +253,24 @@ Les fichiers `sorties/gerbers/` et `production/` correspondent à **l'ancien rou
 
 Ces mesures fixent la tension nominale de D3 et le sens de raccordement de J1 (CL+ sur J1-1).
 
-## 9. Fichiers KiCad et régénération
+## 9. Fichiers KiCad et contrôles
 
 | Fichier | Rôle |
 |---|---|
-| `alfea/hardware/carte_bsb_c3/carte_bsb_c3.kicad_sch`, `.kicad_pro` | **schéma maître**, édité dans KiCad (retouches de l'utilisateur, commit e0b21e1d). Le générateur ne l'écrase jamais (sauf `gen_kicad.py --schema` sur un dossier vide) |
-| `alfea/hardware/gen/carte.py` | placement du PCB, empreintes, références fabricant et affectation broche → net. Il doit refléter le schéma maître, ce que vérifie la **parité du DRC** |
-| `alfea/hardware/gen/gen_kicad.py` | PCB placé (contour, trous, zones interdites d'isolation et d'antenne) |
-| `alfea/hardware/gen/specctra.py` | classes de nets, export DSN, import du routage, nettoyage, plan de masse |
-| `alfea/hardware/carte_bsb_c3/sorties/` | `schema.pdf`, `assemblage.pdf`, `bom.csv`, `pcb.svg`, `pcb_dessus.png`, `pcb_dessous.png`, `gerbers/` (Gerber et perçage), `erc.rpt`, `drc.rpt` |
-| `docker/kicad/generer_carte.sh` | régénère et contrôle la carte |
+| `alfea/hardware/carte_bsb_c3/carte_bsb_c3.kicad_sch`, `.kicad_pro` | **schéma maître**, édité dans KiCad |
+| `alfea/hardware/carte_bsb_c3/carte_bsb_c3.kicad_pcb` | **PCB placé et routé à la main** par l'utilisateur |
+| `alfea/hardware/carte_bsb_c3/alfea.kicad_sym`, `sym-lib-table` | symbole sans broche des fiches JJ1 et JJ2 (hors carte) |
+| `alfea/hardware/carte_bsb_c3/sorties/` | `erc.rpt`, `drc.rpt`, `schema.pdf`, `assemblage.pdf`, `bom.csv` (complète), `bom_jlcpcb.csv` (BOM d'assemblage, sans JJ), `positions.csv` (CPL au format JLCPCB), `pcb.svg`, `pcb_dessus.png`, `pcb_dessous.png` |
+| `docker/kicad/controler_carte.sh` | contrôles et sorties, **sans jamais modifier le schéma ni le PCB** |
 
-**Régénérer** : `sh docker/kicad/generer_carte.sh` depuis la racine du dépôt (≈ 1 min). Étapes :
-1. placement du PCB (`kicad/kicad:9.0.6`), le `.kicad_pro` de KiCad étant sauvegardé puis restauré ;
-2. export Specctra avec les classes de nets ;
-3. **Freerouting 2.1.0** dans `eclipse-temurin:21-jre`, en mono-fil et 100 passes. Le jar officiel est téléchargé une fois dans `alfea/build/outils/` (ignoré par git), avec un sha256 vérifié à chaque usage : `2c07d58f75dac03782664081e7a58b41c25400d871a9fcf166a2ea6fe60d5def` ;
-4. import, suppression des segments en double ou en impasse (laissés par l'optimiseur), plan GND en face arrière côté ESP32, hors bande d'isolation et hors zone antenne ;
-5. ERC, DRC avec parité (toutes sévérités, échec au moindre avertissement), exports.
+**Contrôler** : `sh docker/kicad/controler_carte.sh` depuis la racine du dépôt (≈ 20 s, image `kicad/kicad:9.0.6`). Le script lance l'ERC et le DRC avec parité, toutes sévérités, et **échoue au moindre écart**, puis produit les exports. **Les Gerber ne sont pas générés** (demande de l'utilisateur, qui les produit lui-même).
 
-**Classes de nets** : bus (`CL_P_IN`, `CL_N_IN`, `BUS_P`, `BUS_N`) 0,4 mm ; alimentation (`5V_IN`, `+5V`, `GND`) 0,3 mm, soit ≈ 1 A pour +10 °C en couche externe 35 µm (IPC-2221), pour ≈ 0,5 A crête du SuperMini ; signaux et `+3V3` 0,25 mm ; garde 0,25 mm ; vias 0,8/0,4 mm.
+`positions.csv` est l'export `kicad-cli pcb export pos` (face avant, mm), avec l'en-tête renommé pour JLCPCB (`Designator, Val, Package, Mid X, Mid Y, Rotation, Layer`). Les coordonnées sont celles de KiCad (Y négatif). Les rotations de référence de JLCPCB diffèrent parfois de celles de KiCad (SOT-23, SOD, DIP) : **contrôler l'aperçu de placement de JLCPCB** avant de valider [À VÉRIFIER].
 
-**Contrôles** [MESURÉ, 2026-11-01] :
-- schéma maître : ERC **0**, toutes sévérités ;
-- netlist du schéma maître comparée à `carte.py` : 0 écart. Vos modifications touchent 5 nets côté bus et aucun côté ESP32 ;
-- PCB routé : **0 connexion manquante**, DRC **0**, avertissements compris, parité **0** ; 198 segments, 4 vias.
-
-Le routage automatique n'est pas reproductible à l'identique d'un passage à l'autre : nombre de vias et tracé varient, mais les contrôles restent à 0. **C'est une proposition de routage** : à relire dans KiCad avant commande, en particulier le cheminement des nets du bus et la continuité du plan de masse sous le SuperMini.
+**Historique** : jusqu'au 2026-11-03, le PCB était placé par un générateur Python (`alfea/hardware/gen/`) et routé par Freerouting 2.1.0 (`docker/kicad/generer_carte.sh`). Le routage étant désormais manuel, ces outils ont été supprimés à la demande de l'utilisateur, comme la variante sur plaquette d'essai (ancienne doc 09b). Ils restent dans l'historique git.
 
 **Avant fabrication, à vérifier sur un exemplaire** :
 - le brochage du SuperMini (5V, GND, 3V3, GPIO4-0 d'un côté ; GPIO5-10, 20, 21 de l'autre) et l'entraxe des rangées (15,24 mm) ;
-- le sens du connecteur USB (vers la droite, débordant du bord) ;
+- le sens du connecteur USB (vers la droite, au bord de la carte) ;
 - la position de l'antenne céramique, qui doit tomber dans la zone sans cuivre ;
-- le sens d'entrée des fils des borniers MPT.
+- le brochage du module AM2302 sur J3 (1 = 3V3, 2 = DATA, 3 = GND).
