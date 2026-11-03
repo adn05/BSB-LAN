@@ -178,7 +178,7 @@ Un chargeur de 1 A donne une marge ×2,8 sur la pointe. Avec un LP5907 (250 mA, 
 - SuperMini à l'horizontale sur ses barrettes : **C1, D4, C2, C3, R9, R10 et D5 sont sous le module**. Ces composants CMS bas (≤ 5,4 mm pour C1) passent sous la carte, que les barrettes surélèvent d'environ 8,5 mm [À VÉRIFIER selon les barrettes].
 - Bande d'isolation de 3 mm (zone interdite au cuivre, x = 123,4 à 126,4 mm) entre les deux rangées de broches des 4N25.
 - Zone sans cuivre de 4,2 × 18 mm sous l'antenne, qui se trouve à l'extrémité du module opposée à l'USB. Les pistes vers les barrettes passent au-dessus ou au-dessous de cette zone.
-- Références des CMS passifs sur le plan d'assemblage (`sorties/assemblage.pdf`, couche F.Fab), faute de place en sérigraphie. Les bornes sont repérées en sérigraphie : CL+/CL-, 5V/GND, GND/DAT/3V3.
+- **Repères de tous les composants en sérigraphie** (demande de l'utilisateur, 2026-11-03) : texte horizontal de 0,8 mm (trait de 0,12 mm), placé dans l'axe du composant (dessus, dessous, gauche ou droite), au plus près, sans recouvrir pastilles, vias, contours ni autres textes. Tous les textes de sérigraphie sont horizontaux. Les bornes sont repérées : CL+/CL- (J1), GND/5V (J2), GND/DAT/3V3 (J3).
 - Sens d'entrée des fils des borniers MPT (vers le bord de la carte) déduit du dessin de fabrication de l'empreinte KiCad **[À VÉRIFIER sur un bornier réel]**.
 
 - 2 couches, FR-4 1,6 mm, finition HASL ou ENIG.
@@ -228,7 +228,7 @@ Contrôles du schéma après intégration [CONSTATÉ, kicad-cli 9.0.5] : ERC **0
 - bande d'isolation (x = 122,1 à 126,7 mm) interdite aux pistes, aux vias et au cuivre ; zone sans cuivre ni via sous l'antenne (x = 142,0 à 149,5 mm, y = 106,9 à 126,2 mm) ; D3 au plus près de J1 ;
 - pistes de 0,4 mm partout : très au-dessus du besoin (quelques mA sur le bus, ≈ 0,36 A crête sur le 5 V, pour ≈ 1 A admissible à +10 °C en 35 µm, IPC-2221).
 
-**Retouches de sérigraphie** (demande de l'utilisateur ; cuivre inchangé, vérifié par comparaison des pistes, des vias et des pastilles) : « J2 : 5V / GND » remplacé par « GND » et « 5V » sous chaque borne de J2 ; « ESP32-C3 » décalé hors du contour de D4 ; références J2 et J3 rapprochées de leur connecteur, J4 et J5 placées entre les barrettes.
+**Retouches de sérigraphie** (demande de l'utilisateur ; cuivre inchangé, vérifié par comparaison des pistes, des vias et des pastilles) : « J2 : 5V / GND » remplacé par « GND » et « 5V » sous chaque borne de J2 ; « ESP32-C3 » décalé hors du contour de D4 ; références J2 et J3 rapprochées de leur connecteur, J4 et J5 placées entre les barrettes. Puis **repères de tous les composants** ajoutés en sérigraphie, tous les textes horizontaux, titre décalé de 0,6 mm pour R9 (§6) ; DRC 0 toutes sévérités (aucun recouvrement de sérigraphie), cuivre identique [CONSTATÉ].
 
 Écarts à l'adaptateur officiel V3 (règle 00 §2.4), récapitulatif : **R8** (sûreté au démarrage), **Q1 en gain C** (marge de descente du bus), **D3** (protection demandée par la mission ; F1 retirée par l'utilisateur), **R2 à 2 kΩ** (§2.2), **suppression de la 24LC32** (inutile sur ESP32, 06 §2.4), **ajouts DHT22 et entrée 5 V** (périmètre MCU, sans effet sur le bus). Les valeurs des composants côté bus sont inchangées.
 
