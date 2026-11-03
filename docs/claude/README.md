@@ -17,7 +17,6 @@
 | 08 | [08_plan_migration.md](08_plan_migration.md) | 3 | réduction par gardes `NO_…`, étapes et commits, build, secrets, paramètres HA, tests, risques |
 | 08a | [08a_analyse_liste_parametres.md](08a_analyse_liste_parametres.md) | 3 | analyse de la liste 211/127 contre un dump `/QD`, incohérences, nouvelle liste générée |
 | 09 | [09_design_carte_interface.md](09_design_carte_interface.md) | 3 | carte porteuse SuperMini : schéma, calculs, protections, alimentation, BOM, mesure de X86 |
-| 09b | [09b_plaquette_essai.md](09b_plaquette_essai.md) | 4 | variante traversante sur plaquette à bandes : coupes, fils, implantation, contrôles |
 | 10 | [10_journal_implementation.md](10_journal_implementation.md) | 4 | journal des étapes E0-E10, décisions et écarts, rapport de taille, diff amont |
 | 12 | [12_thermostat_home_assistant.md](12_thermostat_home_assistant.md) | 4 | thermostats HA des circuits CC1 et CC2 (paquet MQTT `climate`), installation, limites, essais |
 | — | [README_docker.md](README_docker.md) | 4 | build firmware, carte KiCad, simulateur BSB, pile HA de test |
@@ -106,10 +105,10 @@ Réponses de l'utilisateur (après la synthèse ci-dessous) :
 - **Diff sur le code amont** : 27 lignes ajoutées, 4 supprimées, dans `BSB_LAN/BSB_LAN.ino` seulement. Le reste est dans `alfea/`, `docker/` et `docs/claude/`.
 - **E6 et E7 écartées après mesure** : environ 4 points de partition, pour des gardes sur une centaine de sites (10 J14).
 - **Validé sans matériel** : builds amont et Alféa, simulateur (autotest 13/13 sur trames réelles), pile Mosquitto + HA 2026.10.4, vérificateur de discovery.
-- **Carte** : schéma maître retouché par l'utilisateur (émission V3), révision B 62 × 33 mm **routée par Freerouting** (DRC 0 toutes sévérités, Gerber) ; **variante traversante** sur plaquette à bandes (09b, DRC 0).
+- **Carte** : schéma maître retouché par l'utilisateur (émission V3), révision B 62 × 33 mm **routée par Freerouting** (DRC 0 toutes sévérités, Gerber). Variante sur plaquette d'essai supprimée (demande de l'utilisateur, 2026-11-03).
 - **Pont de test** : firmware `pont_bsb` pour la NodeMCU ESP-C3-32S-Kit (ET câblé du bus, 10 J18-J19).
 
 ### Avant la GATE 3 (de votre côté)
-1. Banc T1/T2 : SuperMini + NodeMCU ESP-C3-32S-Kit en pont (README_docker §3), puis la plaquette (09b) ou la carte CMS fabriquée.
+1. Banc T1/T2 : SuperMini + NodeMCU ESP-C3-32S-Kit en pont (README_docker §3), puis la carte CMS fabriquée.
 2. **Refaire la mesure de X86** avec la mesure témoin (09 §8) : la première a donné 0 V partout. Photo reçue.
 3. ~~Fichier `alfea/config/alfea_secrets.h`~~ : créé (firmware compilé avec, 71 %). L'utilisateur MQTT est resté `bsblan` : à créer tel quel dans l'add-on Mosquitto.

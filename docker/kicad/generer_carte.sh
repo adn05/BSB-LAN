@@ -1,11 +1,10 @@
 #!/bin/sh
-# Régénère et contrôle les deux variantes de la carte d'interface dans des conteneurs aux versions figées.
+# Régénère et contrôle la carte d'interface dans des conteneurs aux versions figées.
 # Usage, depuis la racine du dépôt : sh docker/kicad/generer_carte.sh
-# Documentation : docs/claude/09_design_carte_interface.md §9 et docs/claude/09b_plaquette_essai.md.
+# Documentation : docs/claude/09_design_carte_interface.md §9.
 #
 # - Le schéma maître est alfea/hardware/carte_bsb_c3/carte_bsb_c3.kicad_sch, édité dans KiCad : il n'est jamais écrasé.
 # - Carte CMS : placement (gen_kicad.py), routage Freerouting 2.1.0 (jar officiel, sha256 vérifié), plan de masse, contrôles.
-# - Variante traversante : dérivée du schéma maître (gen_plaquette.py), plaquette à bandes, contrôles.
 set -eu
 KICAD=kicad/kicad:9.0.6
 JAVA=eclipse-temurin:21-jre
@@ -57,15 +56,4 @@ docker run --rm -v "$(W "$HW"):/hw" -w /hw/$CMS $KICAD sh -c '
   kicad-cli pcb render --side bottom --width 1600 --height 1000 --quality basic -o sorties/pcb_dessous.png carte_bsb_c3.kicad_pcb
 '
 
-# --- Variante traversante (plaquette à bandes)
-THT=carte_bsb_c3_tht
-docker run --rm -v "$(W "$HW"):/hw" -w /hw/gen $KICAD sh -c "
-  set -e
-  python3 gen_plaquette.py /hw/$CMS/$CMS.kicad_sch /hw/$THT
-  cd /hw/$THT
-  kicad-cli sch erc --severity-all --exit-code-violations -o sorties/erc.rpt $THT.kicad_sch
-  kicad-cli pcb drc --schematic-parity --severity-all --exit-code-violations -o sorties/drc.rpt $THT.kicad_pcb
-  kicad-cli sch export pdf -o sorties/schema.pdf $THT.kicad_sch
-  kicad-cli sch export bom --fields 'Reference,Value,Footprint,MPN,\${QUANTITY}' --group-by Value,Footprint,MPN --exclude-dnp -o sorties/bom.csv $THT.kicad_sch
-"
-echo "Cartes régénérées et contrôlées (rapports dans */sorties/)."
+echo "Carte régénérée et contrôlée (rapports dans alfea/hardware/carte_bsb_c3/sorties/)."

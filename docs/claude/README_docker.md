@@ -34,8 +34,7 @@ Le premier build télécharge environ 600 Mo, dont la chaîne RISC-V ; le Docker
 ## 2. Carte d'interface
 
 `sh docker/kicad/generer_carte.sh` (≈ 1 min) :
-- **carte CMS** : PCB placé à partir de `alfea/hardware/gen/carte.py`, routage par **Freerouting 2.1.0** (`eclipse-temurin:21-jre`, jar officiel à sha256 vérifié, mis en cache dans `alfea/build/outils/`), plan de masse, puis ERC, DRC avec parité et exports (PDF, BOM, SVG, rendus, Gerber). Le schéma maître, édité dans KiCad, n'est jamais écrasé. Détails : 09 §9 ;
-- **variante traversante** (plaquette à bandes) dérivée du schéma maître, avec ses contrôles et ses plans de montage. Détails : 09b.
+- **carte CMS** : PCB placé à partir de `alfea/hardware/gen/carte.py`, routage par **Freerouting 2.1.0** (`eclipse-temurin:21-jre`, jar officiel à sha256 vérifié, mis en cache dans `alfea/build/outils/`), plan de masse, puis ERC, DRC avec parité et exports (PDF, BOM, SVG, rendus, Gerber). Le schéma maître, édité dans KiCad, n'est jamais écrasé. Détails : 09 §9.
 
 ## 3. Simulateur de régulateur BSB (test sans PAC)
 

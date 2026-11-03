@@ -3,7 +3,7 @@
 > **Résumé**
 > Carte porteuse 2 couches de **62 × 33 mm** (révision B, §6) : J1 et le SuperMini sur le même axe, borniers à vis au pas de 2,54 mm, trous M3 aux 4 coins, transistors en SOT-23, composants passifs sous le module. Le SuperMini s'y enfiche (2 × 8 broches au pas de 2,54 mm). Elle reprend **la topologie éprouvée de l'adaptateur officiel V3** : 2 × 4N25, BC547/BC557, mêmes valeurs. Les **écarts sont limités et justifiés** : rappel de TX au démarrage, transistor de bus en gain C, TVS sur l'entrée (PTC retirée, §7), R2 à 2 kΩ, retrait de l'EEPROM, entrée DHT22 protégée, entrée 5 V avec diode anti-retour.
 > **Isolation galvanique conservée** : rien n'est prélevé sur le bus pour l'ESP32. L'alimentation vient d'un **chargeur USB 5 V** (défaut, aucune intervention sur le 230 V) ou d'un module 5 V rail DIN (option).
-> Brochage : RX = GPIO6, TX = GPIO7, DHT22 = GPIO5, LED = GPIO8 (sur le SuperMini). **Projet KiCad 9 dans `alfea/hardware/carte_bsb_c3/`** : le schéma maître est celui retouché dans KiCad (émission conforme à V3, §2.3) ; PCB **routé par Freerouting 2.1.0**, plan de masse, Gerber ; ERC 0, DRC 0 (toutes sévérités), parité 0 (§9). Variante traversante pour plaquette à bandes : **09b**.
+> Brochage : RX = GPIO6, TX = GPIO7, DHT22 = GPIO5, LED = GPIO8 (sur le SuperMini). **Projet KiCad 9 dans `alfea/hardware/carte_bsb_c3/`** : le schéma maître est celui retouché dans KiCad (émission conforme à V3, §2.3) ; PCB **routé par Freerouting 2.1.0**, plan de masse, Gerber ; ERC 0, DRC 0 (toutes sévérités), parité 0 (§9).
 > **Avant tout branchement**, X86 doit être mesuré (§8). Première mesure de l'utilisateur : **0 V entre 1, 2 et 3**, résultat à confirmer par une mesure témoin (§8).
 
 Conventions : **[CONSTATÉ]**, **[SUPPOSÉ]**, **[À VÉRIFIER]**. Les calculs reprennent les valeurs de 06 §3 (4N25 : CTR ≥ 20 % à 10 mA, Vf 1,2 V ; C3 : V_IH ≥ 2,48 V, V_IL ≤ 0,83 V).
@@ -277,9 +277,8 @@ Ces mesures fixent la tension nominale de D3 et le sens de raccordement de J1 (C
 | `alfea/hardware/gen/carte.py` | placement du PCB, empreintes, références fabricant et affectation broche → net. Il doit refléter le schéma maître, ce que vérifie la **parité du DRC** |
 | `alfea/hardware/gen/gen_kicad.py` | PCB placé (contour, trous, zones interdites d'isolation et d'antenne) |
 | `alfea/hardware/gen/specctra.py` | classes de nets, export DSN, import du routage, nettoyage, plan de masse |
-| `alfea/hardware/gen/plaquette.py`, `gen_plaquette.py` | variante traversante (09b) |
 | `alfea/hardware/carte_bsb_c3/sorties/` | `schema.pdf`, `assemblage.pdf`, `bom.csv`, `pcb.svg`, `pcb_dessus.png`, `pcb_dessous.png`, `gerbers/` (Gerber et perçage), `erc.rpt`, `drc.rpt` |
-| `docker/kicad/generer_carte.sh` | régénère et contrôle les deux variantes |
+| `docker/kicad/generer_carte.sh` | régénère et contrôle la carte |
 
 **Régénérer** : `sh docker/kicad/generer_carte.sh` depuis la racine du dépôt (≈ 1 min). Étapes :
 1. placement du PCB (`kicad/kicad:9.0.6`), le `.kicad_pro` de KiCad étant sauvegardé puis restauré ;
