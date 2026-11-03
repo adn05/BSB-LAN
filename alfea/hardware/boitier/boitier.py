@@ -4,8 +4,9 @@ Deux pièces séparées par un plan de joint horizontal, à la hauteur de l'axe 
 COUVERCLE profond. Toutes les ouvertures (USB-C, câbles) sont à cheval sur le joint, moitié dans chaque
 pièce : le câble est pincé entre les deux. Pas d'insert : les trous de fixation sont des avant-trous
 Ø 2,5 taraudés par la vis M3 elle-même.
-- carte : 4 vis M3 x 8 dans les entretoises du fond ;
-- couvercle : 4 vis M3 x 25 par le dessus, dans 4 colonnes d'angle extérieures.
+- carte : 4 vis M3 x 8 (ou x 6) dans les entretoises du fond ;
+- couvercle : 4 vis M3 x 8 (ou x 6) dans 4 colonnes d'angle extérieures, têtes noyées dans un lamage
+  qui descend jusqu'à SERRAGE mm au-dessus du joint.
 
 Repère (mm) : X le long de la carte (0 = bord gauche, côté J1), Y en largeur (0 = bord avant, côté J3),
 Z vertical (0 = dessous du fond). Carte KiCad : X = x - 100, Y = 133 - y.
@@ -28,8 +29,11 @@ H_INT = 36.0                                        # du dessus du fond au desso
 ENTRETOISE_H, ENTRETOISE_D = 6.0, 7.0               # sous la carte (pattes traversantes : 1,8 mm)
 AVANT_TROU = 2.5                                    # avant-trou M3 taraudé par la vis (PETG ; 2,6 si le vissage force trop)
 VIS_D = 3.4                                         # passage M3
-VIS_CARTE, VIS_COUV = 8.0, 25.0                     # longueurs des vis M3
-COLONNE_D = 9.0                                     # colonnes d'angle (extérieures, centrées sur les coins)
+VIS_CARTE, VIS_COUV = 8.0, 8.0                      # longueurs des vis M3 (M3 x 6 accepté : FILET_MIN)
+FILET_MIN = 4.0                                     # filet minimal exigé avec une M3 x 6
+SERRAGE = 2.0                                      # épaisseur serrée sous la tête, dans le couvercle
+LAMAGE_D = 6.2                                     # logement de tête M3 (ISO 4762 Ø 5,5 ; ISO 7380 Ø 5,7)
+COLONNE_D = 10.0                                    # colonnes d'angle (extérieures, centrées sur les coins)
 LEVRE_H, LEVRE_EP, LEVRE_JEU = 2.0, 1.0, 0.2        # emboîtement au joint : lèvre intérieure du fond, jeu dans le couvercle
 OREILLE_L, OREILLE_R, OREILLE_EP, OREILLE_TROU = 12.0, 8.0, 3.0, 4.5   # pattes murales à bout arrondi, passage M4
 
@@ -40,10 +44,12 @@ Z_TOTAL = Z_HAUT + COUV
 IX0, IX1 = -JEU_G, CARTE_X + JEU_D                  # cavité
 IY0, IY1 = -JEU_AV, CARTE_Y + JEU_AR
 EX0, EX1, EY0, EY1 = IX0 - PAROI, IX1 + PAROI, IY0 - PAROI, IY1 + PAROI
-COINS = [(EX0, EY0), (EX1, EY0), (EX0, EY1), (EX1, EY1)]
+DECAL_COLONNE = 0.5                                  # centres des colonnes, décalés vers l extérieur des angles
+COINS = [(EX0 - DECAL_COLONNE, EY0 - DECAL_COLONNE), (EX1 + DECAL_COLONNE, EY0 - DECAL_COLONNE),
+         (EX0 - DECAL_COLONNE, EY1 + DECAL_COLONNE), (EX1 + DECAL_COLONNE, EY1 + DECAL_COLONNE)]
 
 # Ouvertures, toutes centrées sur le plan de joint
-USB_Y, USB_L, USB_H = 16.47, 13.0, 9.0              # USB-C du SuperMini, paroi droite
+USB_Y, USB_L, USB_H, USB_R = 16.47, 13.0, 9.0, 3.0  # USB-C du SuperMini, paroi droite, coins arrondis R 3
 SUPERMINI_DESSOUS = Z_DESSUS_CARTE + 8.6 + 2.5      # barrette femelle 8,6 mm + entretoise des picots 2,5 mm [SUPPOSÉ]
 USB_Z = SUPERMINI_DESSOUS + 1.0 + 1.6               # axe de l'USB-C (circuit 1 mm, prise de 3,2 mm de haut)
 Z_JOINT = USB_Z                                     # plan de joint fond / couvercle
@@ -70,7 +76,9 @@ def anneau(ext, inte, z0, z1):
 
 def ouvertures():
     """Volumes retirés des deux pièces, à cheval sur le plan de joint (lèvre comprise)."""
-    o = [boite(IX1 - 1.5, EX1 + 0.5, USB_Y - USB_L / 2, USB_Y + USB_L / 2, Z_JOINT - USB_H / 2, Z_JOINT + USB_H / 2)]
+    usb = (cq.Workplane('YZ', origin=(IX1 - 1.5, USB_Y, Z_JOINT)).rect(USB_L, USB_H).extrude(EX1 + 0.5 - (IX1 - 1.5))
+           .edges('|X').fillet(USB_R).val())
+    o = [usb]
     for c in [CABLE_J1, CABLE_DHT] + ([CABLE_J2] if OUVERTURE_J2 else []):
         r, long = c['d'] / 2, PAROI + 2.0
         if c['paroi'] == 'gauche':
@@ -101,7 +109,7 @@ def fond():
     for x, y in TROUS:
         s = s.fuse(cyl(ENTRETOISE_D / 2, (x, y, FOND - 0.01), (0, 0, 1), ENTRETOISE_H + 0.01))
         s = s.cut(cyl(AVANT_TROU / 2, (x, y, 0.6), (0, 0, 1), Z_CARTE))          # vis de la carte
-    prof = VIS_COUV - (Z_TOTAL - Z_JOINT) + 2.0                                   # filet utile + 2 mm de dégagement
+    prof = VIS_COUV - SERRAGE + 2.0                                               # filet utile + 2 mm de dégagement
     for x, y in COINS:
         s = s.cut(cyl(AVANT_TROU / 2, (x, y, Z_JOINT - prof), (0, 0, 1), prof + 1))
     s = s.fuse(oreille('gauche')).fuse(oreille('droite'))
@@ -115,6 +123,7 @@ def couvercle():
     for x, y in COINS:
         s = s.fuse(cyl(COLONNE_D / 2, (x, y, Z_JOINT), (0, 0, 1), Z_TOTAL - Z_JOINT))
         s = s.cut(cyl(VIS_D / 2, (x, y, Z_JOINT - 1), (0, 0, 1), Z_TOTAL - Z_JOINT + 2))
+        s = s.cut(cyl(LAMAGE_D / 2, (x, y, Z_JOINT + SERRAGE), (0, 0, 1), Z_TOTAL - Z_JOINT))   # tête noyée
     # logement de la lèvre du fond (après les colonnes, qui débordent dans les angles de la cavité) :
     # paroi intérieure du couvercle reculée de LEVRE_JEU sur la hauteur de la lèvre
     s = s.cut(anneau(LEVRE_JEU, -LEVRE_EP - 0.5, Z_JOINT - 1, Z_JOINT + LEVRE_H + LEVRE_JEU))
@@ -199,12 +208,13 @@ def main():
     jeu = f.intersect(c).Volume()
     print(f'fond / couvercle : {jeu:.3f} mm3 en commun')
     ok = ok and jeu < 1e-3
-    filet_couv = VIS_COUV - (Z_TOTAL - Z_JOINT)
+    filet_couv = VIS_COUV - SERRAGE
     print('dimensions extérieures (hors pattes et colonnes) : %.1f x %.1f x %.1f mm' % (EX1 - EX0, EY1 - EY0, Z_TOTAL))
     print('plan de joint à Z = %.1f mm : fond %.1f mm, couvercle %.1f mm de haut' % (Z_JOINT, Z_JOINT, Z_TOTAL - Z_JOINT))
     print('vis de la carte M3 x %.0f : %.1f mm de filet ; vis du couvercle M3 x %.0f : %.1f mm de filet' % (
         VIS_CARTE, VIS_CARTE - CARTE_EP, VIS_COUV, filet_couv))
-    ok = ok and filet_couv >= 6.0 and VIS_CARTE - CARTE_EP <= Z_CARTE - 0.6
+    print('avec des M3 x 6 : %.1f mm de filet pour la carte, %.1f mm pour le couvercle' % (6 - CARTE_EP, 6 - SERRAGE))
+    ok = ok and min(6 - CARTE_EP, 6 - SERRAGE) >= FILET_MIN and VIS_CARTE - CARTE_EP <= Z_CARTE - 0.6
 
     for nom, solide in (('boitier_fond', f), ('boitier_couvercle', c)):
         cq.exporters.export(cq.Workplane().add(solide), str(sortie / f'{nom}.step'))
