@@ -182,7 +182,7 @@ Révision B, placement réel (rendu `alfea/hardware/carte_bsb_c3/sorties/pcb_des
 
 ## 7. Nomenclature (BOM)
 
-Références JLCPCB (assemblage) intégrées au schéma maître : pour chaque symbole, **Value = « Part # » du fabricant** (colonne « Comment » de JLCPCB), plus les champs `JLCPCB Part #` et `Product link`. Le champ `MPN` donne le fabricant et sa référence, et `Description` reprend l'ancienne valeur (fonction ou valeur électrique ; elle est visible sur les connecteurs). Source : `sorties/bom-JLCPCB Assembly Order.xls`, rapprochement JLCPCB du 2026-11-02. Les lignes marquées ✱ s'en écartent.
+Références JLCPCB (assemblage) intégrées au schéma maître : pour chaque symbole, **Value = « Part # » du fabricant** (colonne « Comment » de JLCPCB), **sauf les résistances et condensateurs, dont Value donne la valeur électrique** (`330k`, `100n`… : demande de l'utilisateur, pour la lisibilité du schéma ; leur `Description` donne tolérance, puissance ou tension, et boîtier). S'y ajoutent les champs `JLCPCB Part #` et `Product link`. Le champ `MPN` donne le fabricant et sa référence ; pour les autres composants, `Description` reprend l'ancienne valeur (fonction ou valeur électrique ; elle est visible sur les connecteurs). JLCPCB rapproche les lignes par la colonne `JLCPCB Part #` : une colonne « Comment » différente du Part # ne provoque qu'un avertissement. Source : `sorties/bom-JLCPCB Assembly Order.xls`, rapprochement JLCPCB du 2026-11-02. Les lignes marquées ✱ s'en écartent.
 
 | Réf. | Qté | Désignation | Part # (fabricant) | JLCPCB | Contrôle empreinte / compatibilité |
 |---|---|---|---|---|---|

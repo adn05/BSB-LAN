@@ -3952,7 +3952,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "0805W8F1002T5E"
+		(property "Value" "10k"
 			(at 236.22 81.28 0)
 			(effects
 				(font
@@ -3979,7 +3979,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "10k"
+		(property "Description" "Résistance 10 kΩ ±1 % 125 mW 0805"
 			(at 234.95 83.82 0)
 			(effects
 				(font
@@ -4163,7 +4163,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "0805W8F1000T5E"
+		(property "Value" "100"
 			(at 209.55 143.51 0)
 			(effects
 				(font
@@ -4190,7 +4190,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "100"
+		(property "Description" "Résistance 100 Ω ±1 % 125 mW 0805"
 			(at 212.09 144.78 0)
 			(effects
 				(font
@@ -4369,7 +4369,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "CGA0805X7R104K250KT"
+		(property "Value" "100n"
 			(at 347.98 81.28 0)
 			(effects
 				(font
@@ -4396,7 +4396,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "100n"
+		(property "Description" "Condensateur 100 nF 25 V X7R ±10 % 0805"
 			(at 345.44 80.01 0)
 			(effects
 				(font
@@ -4659,7 +4659,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "0805W8F4701T5E"
+		(property "Value" "4k7"
 			(at 170.18 139.7 0)
 			(effects
 				(font
@@ -4686,7 +4686,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "4k7"
+		(property "Description" "Résistance 4,7 kΩ ±1 % 125 mW 0805"
 			(at 167.64 138.43 0)
 			(effects
 				(font
@@ -4969,7 +4969,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "RS-05K334JT"
+		(property "Value" "330k"
 			(at 104.521 82.423 90)
 			(effects
 				(font
@@ -4996,7 +4996,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "330k"
+		(property "Description" "Résistance 330 kΩ ±5 % 125 mW 0805"
 			(at 102.87 85.09 0)
 			(effects
 				(font
@@ -5067,7 +5067,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "0805W8F3000T5E"
+		(property "Value" "300"
 			(at 180.086 91.186 90)
 			(effects
 				(font
@@ -5094,7 +5094,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "300"
+		(property "Description" "Résistance 300 Ω ±1 % 125 mW 0805"
 			(at 181.61 93.98 0)
 			(effects
 				(font
@@ -5165,7 +5165,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1206W4F1501T5E"
+		(property "Value" "1k5"
 			(at 76.708 93.218 90)
 			(effects
 				(font
@@ -5192,7 +5192,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "1k5 1206"
+		(property "Description" "Résistance 1,5 kΩ ±1 % 250 mW 1206"
 			(at 73.66 96.52 0)
 			(effects
 				(font
@@ -5263,7 +5263,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "RS-05K334JT"
+		(property "Value" "330k"
 			(at 71.501 136.017 90)
 			(effects
 				(font
@@ -5290,7 +5290,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "330k"
+		(property "Description" "Résistance 330 kΩ ±5 % 125 mW 0805"
 			(at 73.66 138.43 0)
 			(effects
 				(font
@@ -5361,7 +5361,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "0805W8F4701T5E"
+		(property "Value" "4k7"
 			(at 233.934 94.234 90)
 			(effects
 				(font
@@ -5388,7 +5388,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "4k7"
+		(property "Description" "Résistance 4,7 kΩ ±1 % 125 mW 0805"
 			(at 234.95 97.79 0)
 			(effects
 				(font
@@ -5459,7 +5459,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "0805W8F4701T5E"
+		(property "Value" "4k7"
 			(at 233.68 160.02 90)
 			(effects
 				(font
@@ -5486,7 +5486,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "4k7"
+		(property "Description" "Résistance 4,7 kΩ ±1 % 125 mW 0805"
 			(at 232.41 162.56 0)
 			(effects
 				(font
@@ -5764,7 +5764,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "RS-05K334JT"
+		(property "Value" "330k"
 			(at 170.434 125.222 0)
 			(effects
 				(font
@@ -5791,7 +5791,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "330k"
+		(property "Description" "Résistance 330 kΩ ±5 % 125 mW 0805"
 			(at 167.64 123.19 0)
 			(effects
 				(font
@@ -6053,7 +6053,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "CGA0805X7R104K250KT"
+		(property "Value" "100n"
 			(at 375.92 81.28 0)
 			(effects
 				(font
@@ -6080,7 +6080,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "100n"
+		(property "Description" "Condensateur 100 nF 25 V X7R ±10 % 0805"
 			(at 373.38 80.01 0)
 			(effects
 				(font
@@ -6250,7 +6250,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "VT1C101M0605"
+		(property "Value" "100u 16V"
 			(at 325.12 81.28 0)
 			(effects
 				(font
@@ -6277,7 +6277,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "100u 10V"
+		(property "Description" "Condensateur alu 100 µF 16 V ±20 %, 105 °C, 6,3 × 5,4 mm"
 			(at 322.58 80.01 0)
 			(effects
 				(font
