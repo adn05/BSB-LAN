@@ -1,8 +1,11 @@
 """Boîtier imprimable en 3D de la carte d'interface BSB (docs/claude/13_boitier_3d.md).
 
-Deux pièces : un FOND qui porte la carte sur 4 entretoises (inserts M3 à chaud) et un COUVERCLE dont
-4 colonnes viennent plaquer la carte. Une vis M3 x 40 par coin traverse couvercle, colonne et carte,
-et se visse dans l'insert de l'entretoise : 4 vis tiennent à la fois la carte et le couvercle.
+Deux pièces séparées par un plan de joint horizontal, à la hauteur de l'axe de l'USB-C : un FOND et un
+COUVERCLE profond. Toutes les ouvertures (USB-C, câbles) sont à cheval sur le joint, moitié dans chaque
+pièce : le câble est pincé entre les deux. Pas d'insert : les trous de fixation sont des avant-trous
+Ø 2,5 taraudés par la vis M3 elle-même.
+- carte : 4 vis M3 x 8 dans les entretoises du fond ;
+- couvercle : 4 vis M3 x 25 par le dessus, dans 4 colonnes d'angle extérieures.
 
 Repère (mm) : X le long de la carte (0 = bord gauche, côté J1), Y en largeur (0 = bord avant, côté J3),
 Z vertical (0 = dessous du fond). Carte KiCad : X = x - 100, Y = 133 - y.
@@ -19,31 +22,35 @@ V = cq.Vector
 # ---------------------------------------------------------------- paramètres (mm)
 CARTE_X, CARTE_Y, CARTE_EP = 66.0, 33.0, 1.6          # contour Edge.Cuts du PCB
 TROUS = [(3.2, 3.2), (62.787, 3.213), (3.2, 29.8), (62.787, 29.813)]   # trous M3 H1..H4
-JEU_G, JEU_D, JEU_AV, JEU_AR = 10.0, 1.0, 1.0, 3.0  # carte -> paroi intérieure (gauche : écrou du presse-étoupe de J1)
+JEU_G, JEU_D, JEU_AV, JEU_AR = 4.0, 1.0, 1.0, 3.0   # carte -> paroi intérieure (arrière : débord possible de la fiche J2)
 PAROI, FOND, COUV = 2.4, 2.4, 2.4                   # épaisseurs (6 lignes de 0,4 mm)
 H_INT = 36.0                                        # du dessus du fond au dessous du couvercle
 ENTRETOISE_H, ENTRETOISE_D = 6.0, 7.0               # sous la carte (pattes traversantes : 1,8 mm)
-INSERT_D, INSERT_P = 4.0, 6.0                       # insert à chaud M3 x 5,7 (type Ruthex) : Ø du trou, profondeur
+AVANT_TROU = 2.5                                    # avant-trou M3 taraudé par la vis (PETG ; 2,6 si le vissage force trop)
 VIS_D = 3.4                                         # passage M3
-COLONNE_D = 6.5                                     # colonnes du couvercle, en appui autour des trous
-LEVRE_H, LEVRE_EP, LEVRE_JEU = 3.0, 1.2, 0.25       # lèvre de centrage du couvercle
-OREILLE_L, OREILLE_EP, OREILLE_TROU = 10.0, 3.0, 4.5   # pattes de fixation murale (vis Ø 4)
+VIS_CARTE, VIS_COUV = 8.0, 25.0                     # longueurs des vis M3
+COLONNE_D = 9.0                                     # colonnes d'angle (extérieures, centrées sur les coins)
+LEVRE_H, LEVRE_EP, LEVRE_JEU = 2.0, 1.0, 0.2        # emboîtement au joint : lèvre intérieure du fond, jeu dans le couvercle
+OREILLE_L, OREILLE_R, OREILLE_EP, OREILLE_TROU = 12.0, 8.0, 3.0, 4.5   # pattes murales à bout arrondi, passage M4
 
 Z_CARTE = FOND + ENTRETOISE_H                       # dessous de la carte
 Z_DESSUS_CARTE = Z_CARTE + CARTE_EP
-Z_HAUT = FOND + H_INT                               # dessus des parois = dessous du couvercle
+Z_HAUT = FOND + H_INT                               # dessous du couvercle
+Z_TOTAL = Z_HAUT + COUV
 IX0, IX1 = -JEU_G, CARTE_X + JEU_D                  # cavité
 IY0, IY1 = -JEU_AV, CARTE_Y + JEU_AR
 EX0, EX1, EY0, EY1 = IX0 - PAROI, IX1 + PAROI, IY0 - PAROI, IY1 + PAROI
+COINS = [(EX0, EY0), (EX1, EY0), (EX0, EY1), (EX1, EY1)]
 
-# Ouvertures (positions déduites du PCB : voir la doc 13 §2)
-USB_Y, USB_L = 16.47, 13.0                          # USB-C du SuperMini, paroi droite
+# Ouvertures, toutes centrées sur le plan de joint
+USB_Y, USB_L, USB_H = 16.47, 13.0, 9.0              # USB-C du SuperMini, paroi droite
 SUPERMINI_DESSOUS = Z_DESSUS_CARTE + 8.6 + 2.5      # barrette femelle 8,6 mm + entretoise des picots 2,5 mm [SUPPOSÉ]
 USB_Z = SUPERMINI_DESSOUS + 1.0 + 1.6               # axe de l'USB-C (circuit 1 mm, prise de 3,2 mm de haut)
-USB_H = 9.0
-PE_J1 = dict(y=16.48, z=FOND + 20.0, d=12.2)        # presse-étoupe M12 x 1,5 du bus (J1), paroi gauche
-PE_DHT = dict(x=52.0, z=FOND + 24.0, d=8.2)         # presse-étoupe M8 x 1,25 du DHT22, paroi avant
-PE_J2 = dict(x=50.0, z=FOND + 24.0, d=8.2, voile=0.6)  # M8 de l'entrée 5 V (J2), paroi arrière, opercule à percer
+Z_JOINT = USB_Z                                     # plan de joint fond / couvercle
+CABLE_J1 = dict(paroi='gauche', pos=16.48, d=7.0)   # bus BSB (paire de fils ou câble Ø ≤ 6)
+CABLE_DHT = dict(paroi='avant', pos=37.1, d=5.5)    # câble du DHT22, en face de J3
+CABLE_J2 = dict(paroi='arriere', pos=37.15, d=7.0)  # entrée 5 V externe (J2), seulement si OUVERTURE_J2
+OUVERTURE_J2 = False                                # alimentation par l'USB-C par défaut
 LED_D1 = dict(x=15.03, y=5.76, d=3.2)               # fenêtre au-dessus de la LED de bus D1 (guide de lumière Ø 3)
 
 
@@ -55,45 +62,73 @@ def cyl(r, p, d, h):
     return cq.Solid.makeCylinder(r, h, V(*p), V(*d))
 
 
+def anneau(ext, inte, z0, z1):
+    """Anneau suivant la cavité ; ext et inte : décalages depuis la paroi intérieure (positif vers l'extérieur)."""
+    return boite(IX0 - ext, IX1 + ext, IY0 - ext, IY1 + ext, z0, z1).cut(
+        boite(IX0 - inte, IX1 + inte, IY0 - inte, IY1 + inte, z0 - 1, z1 + 1))
+
+
+def ouvertures():
+    """Volumes retirés des deux pièces, à cheval sur le plan de joint (lèvre comprise)."""
+    o = [boite(IX1 - 1.5, EX1 + 0.5, USB_Y - USB_L / 2, USB_Y + USB_L / 2, Z_JOINT - USB_H / 2, Z_JOINT + USB_H / 2)]
+    for c in [CABLE_J1, CABLE_DHT] + ([CABLE_J2] if OUVERTURE_J2 else []):
+        r, long = c['d'] / 2, PAROI + 2.0
+        if c['paroi'] == 'gauche':
+            o.append(cyl(r, (EX0 - 0.5, c['pos'], Z_JOINT), (1, 0, 0), long))
+        elif c['paroi'] == 'avant':
+            o.append(cyl(r, (c['pos'], EY0 - 0.5, Z_JOINT), (0, 1, 0), long))
+        else:
+            o.append(cyl(r, (c['pos'], IY1 - 1.5, Z_JOINT), (0, 1, 0), long))
+    return o
+
+
+def oreille(cote):
+    """Patte murale à bout arrondi (rayon OREILLE_R), trou de passage M4."""
+    yc = (EY0 + EY1) / 2
+    sens = -1 if cote == 'gauche' else 1
+    x_paroi = EX0 if cote == 'gauche' else EX1
+    xc = x_paroi + sens * OREILLE_L
+    corps = boite(min(x_paroi, xc), max(x_paroi, xc), yc - OREILLE_R, yc + OREILLE_R, 0, OREILLE_EP)
+    corps = corps.fuse(cyl(OREILLE_R, (xc, yc, 0), (0, 0, 1), OREILLE_EP))
+    return corps.cut(cyl(OREILLE_TROU / 2, (xc, yc, -1), (0, 0, 1), OREILLE_EP + 2)).clean()
+
+
 def fond():
-    s = boite(EX0, EX1, EY0, EY1, 0, Z_HAUT).cut(boite(IX0, IX1, IY0, IY1, FOND, Z_HAUT + 1))
+    s = boite(EX0, EX1, EY0, EY1, 0, Z_JOINT).cut(boite(IX0, IX1, IY0, IY1, FOND, Z_JOINT + 1))
+    s = s.fuse(anneau(0.01, -LEVRE_EP, Z_JOINT - 1, Z_JOINT + LEVRE_H))          # lèvre intérieure au-dessus du joint
+    for x, y in COINS:
+        s = s.fuse(cyl(COLONNE_D / 2, (x, y, 0), (0, 0, 1), Z_JOINT))
     for x, y in TROUS:
         s = s.fuse(cyl(ENTRETOISE_D / 2, (x, y, FOND - 0.01), (0, 0, 1), ENTRETOISE_H + 0.01))
-        s = s.cut(cyl(INSERT_D / 2, (x, y, Z_CARTE - INSERT_P), (0, 0, 1), INSERT_P + 0.1))
-        s = s.cut(cyl(VIS_D / 2 - 0.2, (x, y, 0.6), (0, 0, 1), Z_CARTE))   # logement de la pointe de vis
-    # pattes de fixation murale, à gauche et à droite
-    for xa, xb, xt in ((EX0 - OREILLE_L, EX0 + 0.01, EX0 - OREILLE_L / 2), (EX1 - 0.01, EX1 + OREILLE_L, EX1 + OREILLE_L / 2)):
-        yc = (EY0 + EY1) / 2
-        s = s.fuse(boite(xa, xb, yc - 8, yc + 8, 0, OREILLE_EP))
-        s = s.cut(cyl(OREILLE_TROU / 2, (xt, yc, -1), (0, 0, 1), OREILLE_EP + 2))
-    # ouvertures
-    s = s.cut(boite(IX1 - 0.5, EX1 + 0.5, USB_Y - USB_L / 2, USB_Y + USB_L / 2, USB_Z - USB_H / 2, USB_Z + USB_H / 2))
-    s = s.cut(cyl(PE_J1['d'] / 2, (EX0 - 0.5, PE_J1['y'], PE_J1['z']), (1, 0, 0), PAROI + 1))
-    s = s.cut(cyl(PE_DHT['d'] / 2, (PE_DHT['x'], EY0 - 0.5, PE_DHT['z']), (0, 1, 0), PAROI + 1))
-    # opercule : trou M8 fermé par un voile de 0,6 mm au milieu de la paroi, à percer si J2 sert
-    s = s.cut(cyl(PE_J2['d'] / 2, (PE_J2['x'], IY1 - 0.5, PE_J2['z']), (0, 1, 0), 0.5 + (PAROI - PE_J2['voile']) / 2))
-    s = s.cut(cyl(PE_J2['d'] / 2, (PE_J2['x'], IY1 + (PAROI + PE_J2['voile']) / 2, PE_J2['z']), (0, 1, 0), PAROI))
-    return s
+        s = s.cut(cyl(AVANT_TROU / 2, (x, y, 0.6), (0, 0, 1), Z_CARTE))          # vis de la carte
+    prof = VIS_COUV - (Z_TOTAL - Z_JOINT) + 2.0                                   # filet utile + 2 mm de dégagement
+    for x, y in COINS:
+        s = s.cut(cyl(AVANT_TROU / 2, (x, y, Z_JOINT - prof), (0, 0, 1), prof + 1))
+    s = s.fuse(oreille('gauche')).fuse(oreille('droite'))
+    for o in ouvertures():
+        s = s.cut(o)
+    return s.clean()
 
 
 def couvercle():
-    s = boite(EX0, EX1, EY0, EY1, Z_HAUT, Z_HAUT + COUV)
-    j = LEVRE_JEU
-    levre = boite(IX0 + j, IX1 - j, IY0 + j, IY1 - j, Z_HAUT - LEVRE_H, Z_HAUT + 0.01).cut(
-        boite(IX0 + j + LEVRE_EP, IX1 - j - LEVRE_EP, IY0 + j + LEVRE_EP, IY1 - j - LEVRE_EP, Z_HAUT - LEVRE_H - 1, Z_HAUT + 1))
-    s = s.fuse(levre)
-    for x, y in TROUS:
-        s = s.fuse(cyl(COLONNE_D / 2, (x, y, Z_DESSUS_CARTE), (0, 0, 1), Z_HAUT - Z_DESSUS_CARTE + 0.01))
-        s = s.cut(cyl(VIS_D / 2, (x, y, Z_DESSUS_CARTE - 1), (0, 0, 1), Z_HAUT + COUV))
+    s = boite(EX0, EX1, EY0, EY1, Z_JOINT, Z_TOTAL).cut(boite(IX0, IX1, IY0, IY1, Z_JOINT - 1, Z_HAUT))
+    for x, y in COINS:
+        s = s.fuse(cyl(COLONNE_D / 2, (x, y, Z_JOINT), (0, 0, 1), Z_TOTAL - Z_JOINT))
+        s = s.cut(cyl(VIS_D / 2, (x, y, Z_JOINT - 1), (0, 0, 1), Z_TOTAL - Z_JOINT + 2))
+    # logement de la lèvre du fond (après les colonnes, qui débordent dans les angles de la cavité) :
+    # paroi intérieure du couvercle reculée de LEVRE_JEU sur la hauteur de la lèvre
+    s = s.cut(anneau(LEVRE_JEU, -LEVRE_EP - 0.5, Z_JOINT - 1, Z_JOINT + LEVRE_H + LEVRE_JEU))
     s = s.cut(cyl(LED_D1['d'] / 2, (LED_D1['x'], LED_D1['y'], Z_HAUT - 1), (0, 0, 1), COUV + 2))
-    return s
+    for o in ouvertures():
+        s = s.cut(o)
+    return s.clean()
 
 
 def fantomes():
     """Encombrements simplifiés, pour le contrôle d'interférence et l'assemblage (non imprimés)."""
     t = Z_DESSUS_CARTE
     sm_x0 = 143.6 - 100                              # SuperMini 22,5 x 18 mm, USB-C au bord droit [SUPPOSÉ]
-    return {
+    g = {
         'J1 embase + fiche': boite(0.47, 8.81, 133 - 121.24, 133 - 111.76, t, t + 19.0),   # fiche enfichée : ≈ 19 mm [SUPPOSÉ]
         'J2 embase + fiche': boite(132.43 - 100, 141.91 - 100, 133 - 108.37, 133 - 100.03, t, t + 19.0),
         'J3 + connecteur Dupont': boite(33.3, 40.95, 133 - 129.9, 133 - 127.36, t, t + 8.6 + 14.0),
@@ -103,6 +138,9 @@ def fantomes():
         'U1, U2': boite(120.41 - 100, 128.30 - 100, 133 - 128.23, 133 - 104.73, t, t + 3.8),
         'pattes sous la carte': boite(7.0, 59.0, 0.5, 32.5, Z_CARTE - 1.9, Z_CARTE),   # hors entretoises
     }
+    for k, (x, y) in enumerate(TROUS):                # têtes des vis de la carte (M3 tête cylindrique Ø 5,5 x 3)
+        g[f'tête de vis H{k + 1}'] = cyl(2.75, (x, y, t), (0, 0, 1), 3.0)
+    return g
 
 
 def apercu(pieces, chemin):
@@ -113,8 +151,8 @@ def apercu(pieces, chemin):
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d.art3d import Poly3DCollection
     coupe_av = boite(EX0 - 30, EX1 + 30, EY0 - 30, USB_Y, -5, 100)       # moitié avant retirée (coupe en Y = axe USB/J1)
-    vues = (('Assemblage, couvercle soulevé de 30 mm', 25, -60, 30, False),
-            ('Coupe au niveau de l USB-C et de J1', 18, -75, 0, True),
+    vues = (('Assemblage, couvercle soulevé de 25 mm', 25, -60, 25, False),
+            ('Coupe au niveau de l USB-C et de J1', 12, -80, 0, True),
             ('Fond, carte et encombrements, vue de dessus', 89, -90, None, False))
     fig = plt.figure(figsize=(16, 6), dpi=110)
     lumiere = np.array([0.3, -0.5, 0.8]); lumiere /= np.linalg.norm(lumiere)
@@ -139,8 +177,8 @@ def apercu(pieces, chemin):
                 e = 0.35 + 0.65 * abs(np.dot(n / nn, lumiere))
                 polys.append(t); couleurs.append(tuple(min(1, c * e) for c in couleur))
         ax.add_collection3d(Poly3DCollection(polys, facecolors=couleurs, edgecolors='none'))
-        ax.set_xlim(EX0 - 12, EX1 + 12); ax.set_ylim(EY0 - 22, EY1 + 22); ax.set_zlim(0, 75 if eclate else 50)
-        ax.set_box_aspect((EX1 - EX0 + 24, EY1 - EY0 + 44, 75 if eclate else 50))
+        ax.set_xlim(EX0 - 22, EX1 + 22); ax.set_ylim(EY0 - 22, EY1 + 22); ax.set_zlim(0, 70 if eclate else 45)
+        ax.set_box_aspect((EX1 - EX0 + 44, EY1 - EY0 + 44, 70 if eclate else 45))
         ax.view_init(elev=elev, azim=azim); ax.set_title(titre); ax.set_axis_off()
     fig.tight_layout(); fig.savefig(chemin); plt.close(fig)
 
@@ -155,14 +193,18 @@ def main():
     ok = True
     for nom, g in list(fantomes().items()) + [('carte', carte)]:
         for piece, solide in (('fond', f), ('couvercle', c)):
-            v = g.intersect(solide).Volume()        # appuis de la carte sur entretoises et colonnes : contact, volume nul
+            v = g.intersect(solide).Volume()        # appui de la carte sur les entretoises : contact, volume nul
             if v > 1e-3:
                 print(f'INTERFÉRENCE {nom} / {piece} : {v:.2f} mm3'); ok = False
     jeu = f.intersect(c).Volume()
     print(f'fond / couvercle : {jeu:.3f} mm3 en commun')
     ok = ok and jeu < 1e-3
-    print('dimensions extérieures (hors pattes) : %.1f x %.1f x %.1f mm' % (EX1 - EX0, EY1 - EY0, Z_HAUT + COUV))
-    print('vis : M3 x %.0f (tête sur le couvercle, %.1f mm dans l insert)' % (40, 40 - (Z_HAUT + COUV - Z_CARTE)))
+    filet_couv = VIS_COUV - (Z_TOTAL - Z_JOINT)
+    print('dimensions extérieures (hors pattes et colonnes) : %.1f x %.1f x %.1f mm' % (EX1 - EX0, EY1 - EY0, Z_TOTAL))
+    print('plan de joint à Z = %.1f mm : fond %.1f mm, couvercle %.1f mm de haut' % (Z_JOINT, Z_JOINT, Z_TOTAL - Z_JOINT))
+    print('vis de la carte M3 x %.0f : %.1f mm de filet ; vis du couvercle M3 x %.0f : %.1f mm de filet' % (
+        VIS_CARTE, VIS_CARTE - CARTE_EP, VIS_COUV, filet_couv))
+    ok = ok and filet_couv >= 6.0 and VIS_CARTE - CARTE_EP <= Z_CARTE - 0.6
 
     for nom, solide in (('boitier_fond', f), ('boitier_couvercle', c)):
         cq.exporters.export(cq.Workplane().add(solide), str(sortie / f'{nom}.step'))
