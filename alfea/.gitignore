@@ -10,5 +10,6 @@ _autosave-*
 build/
 # Secrets locaux (modèle versionné : config/alfea_secrets.h.example)
 config/alfea_secrets.h
-# Sorties du plugin Fabrication Toolkit (Gerber, BOM et CPL produits par l utilisateur)
+# Plugin Fabrication Toolkit : sorties (Gerber, BOM et CPL produits par l utilisateur) et réglages
 hardware/carte_bsb_c3/production/
+hardware/carte_bsb_c3/fabrication-toolkit-options.json
