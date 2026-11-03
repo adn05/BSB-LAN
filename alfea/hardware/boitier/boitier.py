@@ -54,7 +54,8 @@ SUPERMINI_DESSOUS = Z_DESSUS_CARTE + 8.6 + 2.5      # barrette femelle 8,6 mm + 
 USB_Z = SUPERMINI_DESSOUS + 1.0 + 1.6               # axe de l'USB-C (circuit 1 mm, prise de 3,2 mm de haut)
 Z_JOINT = USB_Z                                     # plan de joint fond / couvercle
 CABLE_J1 = dict(paroi='gauche', pos=16.48, d=7.0)   # bus BSB (paire de fils ou câble Ø ≤ 6)
-CABLE_DHT = dict(paroi='avant', pos=37.1, d=5.5)    # câble du DHT22, en face de J3
+SORTIE_DHT = dict(x=37.11, y=4.37, l=9.0, h=4.0)  # câble du DHT22 : lumière oblongue dans le dessus, au-dessus de J3,
+                                                   # assez large pour passer le connecteur Dupont 3 points (7,6 x 2,5)
 CABLE_J2 = dict(paroi='arriere', pos=37.15, d=7.0)  # entrée 5 V externe (J2), seulement si OUVERTURE_J2
 OUVERTURE_J2 = False                                # alimentation par l'USB-C par défaut
 LED_D1 = dict(x=15.03, y=5.76, d=3.2)               # fenêtre au-dessus de la LED de bus D1 (guide de lumière Ø 3)
@@ -79,7 +80,7 @@ def ouvertures():
     usb = (cq.Workplane('YZ', origin=(IX1 - 1.5, USB_Y, Z_JOINT)).rect(USB_L, USB_H).extrude(EX1 + 0.5 - (IX1 - 1.5))
            .edges('|X').fillet(USB_R).val())
     o = [usb]
-    for c in [CABLE_J1, CABLE_DHT] + ([CABLE_J2] if OUVERTURE_J2 else []):
+    for c in [CABLE_J1] + ([CABLE_J2] if OUVERTURE_J2 else []):
         r, long = c['d'] / 2, PAROI + 2.0
         if c['paroi'] == 'gauche':
             o.append(cyl(r, (EX0 - 0.5, c['pos'], Z_JOINT), (1, 0, 0), long))
@@ -128,6 +129,8 @@ def couvercle():
     # paroi intérieure du couvercle reculée de LEVRE_JEU sur la hauteur de la lèvre
     s = s.cut(anneau(LEVRE_JEU, -LEVRE_EP - 0.5, Z_JOINT - 1, Z_JOINT + LEVRE_H + LEVRE_JEU))
     s = s.cut(cyl(LED_D1['d'] / 2, (LED_D1['x'], LED_D1['y'], Z_HAUT - 1), (0, 0, 1), COUV + 2))
+    d = SORTIE_DHT
+    s = s.cut(cq.Workplane('XY', origin=(d['x'], d['y'], Z_HAUT - 1)).slot2D(d['l'], d['h']).extrude(COUV + 2).val())
     for o in ouvertures():
         s = s.cut(o)
     return s.clean()
@@ -141,6 +144,7 @@ def fantomes():
         'J1 embase + fiche': boite(0.47, 8.81, 133 - 121.24, 133 - 111.76, t, t + 19.0),   # fiche enfichée : ≈ 19 mm [SUPPOSÉ]
         'J2 embase + fiche': boite(132.43 - 100, 141.91 - 100, 133 - 108.37, 133 - 100.03, t, t + 19.0),
         'J3 + connecteur Dupont': boite(33.3, 40.95, 133 - 129.9, 133 - 127.36, t, t + 8.6 + 14.0),
+        'câble du DHT22 (Ø 3,5)': cyl(1.75, (SORTIE_DHT['x'], SORTIE_DHT['y'], t + 8.6 + 14.0), (0, 0, 1), Z_TOTAL - t + 10),
         'J4, J5 barrettes': boite(44.72, 65.04, 133 - 125.42, 133 - 107.63, t, t + 8.6),
         'SuperMini': boite(sm_x0, sm_x0 + 22.5, 133 - 125.5, 133 - 107.5, SUPERMINI_DESSOUS, SUPERMINI_DESSOUS + 1.0),
         'USB-C': boite(66.6 - 7.4, 66.6, USB_Y - 4.5, USB_Y + 4.5, SUPERMINI_DESSOUS + 1.0, SUPERMINI_DESSOUS + 4.2),

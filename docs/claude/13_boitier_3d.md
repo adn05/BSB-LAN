@@ -2,7 +2,7 @@
 
 > **Résumé**
 > Boîtier en **deux pièces** (fond et couvercle profond), **75,8 × 41,8 × 40,8 mm** hors pattes murales, généré par un script CadQuery paramétrique (`alfea/hardware/boitier/boitier.py`) dans Docker. Fichiers à imprimer : `alfea/hardware/boitier/sorties/boitier_fond.stl` et `boitier_couvercle.stl` (STEP à côté).
-> **Ouvertures sur le plan de joint**, moitié dans chaque pièce : USB-C (droite), câble du bus (gauche), câble du DHT22 (avant). Pas de presse-étoupe ni d'insert : **vis M3 × 8 (ou M3 × 6) partout**, 4 pour la carte et 4 pour le couvercle, taraudées directement dans des avant-trous Ø 2,5 ; têtes du couvercle **noyées** dans des lamages. Deux pattes murales à bout arrondi, passage M4.
+> **Ouvertures sur le plan de joint**, moitié dans chaque pièce : USB-C (droite), câble du bus (gauche). Le câble du **DHT22 sort par le dessus**, au-dessus de J3. Pas de presse-étoupe ni d'insert : **vis M3 × 8 (ou M3 × 6) partout**, 4 pour la carte et 4 pour le couvercle, taraudées directement dans des avant-trous Ø 2,5 ; têtes du couvercle **noyées** dans des lamages. Deux pattes murales à bout arrondi, passage M4.
 > Contrôle automatique : aucune interférence entre les pièces, la carte et l'encombrement des connecteurs [CONSTATÉ]. Plusieurs cotes reposent sur des hypothèses à mesurer sur le matériel (§5).
 
 Conventions : **[CONSTATÉ]**, **[SUPPOSÉ]**, **[À VÉRIFIER]**. Repère : X le long de la carte (0 = bord gauche, côté J1), Y en largeur (0 = bord avant, côté J3), Z vertical (0 = dessous du fond). Carte KiCad : X = x − 100, Y = 133 − y.
@@ -23,13 +23,13 @@ Conventions : **[CONSTATÉ]**, **[SUPPOSÉ]**, **[À VÉRIFIER]**. Repère : X l
 | Jeux carte → paroi | gauche 4 mm, arrière 3 mm, avant et droite 1 mm | gauche : passage des fils de J1 ; arrière : débord possible de la fiche J2 au-delà de l'embase (11,4 mm contre 7,5 mm) |
 | Fixation murale | 2 pattes de 3 mm d'épaisseur, **bout arrondi R 8**, trou **Ø 4,5 pour vis M4** | demande de l'utilisateur |
 
-## 2. Ouvertures (toutes centrées sur le plan de joint, Z = 23,7 mm)
+## 2. Ouvertures (sur le plan de joint, Z = 23,7 mm, sauf celles du dessus)
 
 | Ouverture | Paroi | Position | Cote | Origine |
 |---|---|---|---|---|
 | USB-C du SuperMini | droite | Y = 16,47 | 13 × 9 mm, **coins arrondis R 3** | axe des barrettes J4/J5 (PCB) ; hauteur : barrette femelle 8,6 mm [CONSTATÉ] + entretoise des picots 2,5 mm + circuit 1 mm + demi-prise 1,6 mm [SUPPOSÉ]. L'ouverture laisse ± 2 mm de marge et passe la surmoulure d'un câble USB-C courant (≈ 12 × 6,5 mm) |
 | Bus BSB (J1) | gauche | Y = 16,48 (axe de J1) | Ø 7 | paire de fils ou câble jusqu'à Ø 6 |
-| DHT22 (J3) | avant | X = 37,1 (en face de J3) | Ø 5,5 | câble du capteur |
+| DHT22 (J3) | **dessus** du couvercle | X = 37,11, Y = 4,37 (à l'aplomb de J3) | lumière oblongue **9 × 4 mm**, alignée sur la rangée de J3 | demande de l'utilisateur : pas assez de place pour sortir sur le côté (connecteur Dupont enfiché à 22,6 mm au-dessus de la carte, sous un dessus à 28,4 mm). La lumière laisse passer le connecteur Dupont 3 points (≈ 7,6 × 2,5 mm) au montage ; le câble sort droit, sans courbure. Un point de colle souple ou un passe-fil referme le jeu autour du câble |
 | Entrée 5 V (J2) | arrière | X = 37,15 | Ø 7 | **désactivée par défaut** (`OUVERTURE_J2 = False`) : alimentation par l'USB-C. Passer à `True` si J2 sert |
 | LED de bus D1 | dessus | X = 15,03, Y = 5,76 | Ø 3,2 | au-dessus de D1 ; guide de lumière Ø 3 en option, la LED étant à 30 mm sous le dessus |
 
@@ -39,7 +39,7 @@ Un câble plus fin que son ouverture peut être entouré d'un tour de ruban ou d
 
 Le script calcule le volume commun entre chaque pièce imprimée et :
 - le volume de la carte, exporté par KiCad 9.0.6 (`kicad-cli pcb export step --board-only`) ;
-- l'encombrement simplifié des composants hauts et des têtes des vis de la carte. Les cotes viennent du STEP KiCad de la carte avec ses modèles 3D (embases J1/J2 9,3 mm, barrettes 8,6 mm, 4N25 3,8 mm, pattes −1,8 mm), des fiches Hong Cheng, ou d'hypothèses marquées dans le script : SuperMini, USB-C, fiches J1/J2 enfichées, connecteur Dupont sur J3.
+- l'encombrement simplifié des composants hauts, des têtes des vis de la carte et du câble du DHT22 (Ø 3,5, vertical depuis le connecteur Dupont : il doit traverser le couvercle par la lumière). Les cotes viennent du STEP KiCad de la carte avec ses modèles 3D (embases J1/J2 9,3 mm, barrettes 8,6 mm, 4N25 3,8 mm, pattes −1,8 mm), des fiches Hong Cheng, ou d'hypothèses marquées dans le script : SuperMini, USB-C, fiches J1/J2 enfichées, connecteur Dupont sur J3.
 
 Résultat : **0 mm³** partout, entre fond et couvercle compris (le contact carte/entretoises a un volume nul). Le script vérifie aussi le filet en prise : avec des M3 × 8, 6,4 mm pour la carte et 6,0 mm pour le couvercle ; avec des M3 × 6, 4,4 et 4,0 mm (au moins 4 mm exigés). La génération échoue sinon.
 
@@ -52,7 +52,7 @@ Fichiers (`alfea/hardware/boitier/sorties/`) : `boitier_fond.step/.stl`, `boitie
 | Matière | **PETG** (ou ASA) : chaufferie de 0 à 50 °C [SUPPOSÉ, 09 §5]. Le PLA ramollit vers 55-60 °C |
 | Orientation | fond posé sur son dessous ; couvercle **à l'envers** (dessus sur le plateau). Aucun support : les demi-ouvertures débouchent sur le joint |
 | Réglages | couches de 0,2 mm, 4 parois, 25 % de remplissage ; 4 parois suffisent à donner de la matière pleine autour des avant-trous |
-| Montage | 1. visser la carte (4 × M3 × 8), SuperMini enfiché ; 2. fils serrés dans les fiches JJ1 (et JJ2), fiches enfichées ; 3. câble du DHT22 sur J3 ; 4. poser les câbles dans les demi-ouvertures du fond ; 5. couvercle, puis 4 × M3 × 8 au fond des lamages, serrage modéré |
+| Montage | 1. visser la carte (4 × M3 × 8), SuperMini enfiché ; 2. fils serrés dans les fiches JJ1 (et JJ2), fiches enfichées ; 3. câble du DHT22 passé dans la lumière du couvercle (connecteur Dupont d'abord), puis enfiché sur J3 ; 4. poser les câbles dans les demi-ouvertures du fond ; 5. couvercle, puis 4 × M3 × 8 au fond des lamages, serrage modéré |
 
 **Quincaillerie** : 8 vis M3 × 8 (ou M3 × 6), tête cylindrique ISO 4762 (Ø 5,5) ou bombée ISO 7380 (Ø 5,7) ; 2 vis murales M4 ; en option, un guide de lumière Ø 3 × 30 mm.
 
@@ -65,7 +65,7 @@ Fichiers (`alfea/hardware/boitier/sorties/`) : `boitier_fond.step/.stl`, `boitie
 | Hauteur du SuperMini (entretoise des picots) | 2,5 mm [SUPPOSÉ] | mesurer : axe de l'USB-C attendu à 13,7 mm au-dessus de la carte. Le plan de joint suit (`Z_JOINT = USB_Z`) |
 | Débord de l'USB-C au-delà du module | 0,6 mm [SUPPOSÉ] | pied à coulisse ; le jeu à droite est de 1 mm |
 | Connecteur Dupont sur J3 | 14 mm de haut [SUPPOSÉ] | selon le câble du DHT22 |
-| Diamètres des câbles | bus ≤ 6 mm, DHT22 ≤ 5 mm [SUPPOSÉ] | ajuster `CABLE_J1` et `CABLE_DHT` |
+| Câbles | bus ≤ 6 mm [SUPPOSÉ] ; connecteur Dupont du DHT22 ≤ 8,5 × 3,5 mm | ajuster `CABLE_J1` et `SORTIE_DHT` |
 
 Toutes ces cotes sont des paramètres en tête de `boitier.py`. Après modification : `sh docker/cadquery/boitier.sh`, qui régénère tout et refait les contrôles.
 
