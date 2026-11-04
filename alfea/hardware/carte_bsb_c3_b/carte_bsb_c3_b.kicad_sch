@@ -9,7 +9,7 @@
 		(date "2026-11-04")
 		(rev "A")
 		(company "branche alfea-extensa")
-		(comment 1 "Proposition : schéma seul, aucun PCB ; le schéma maître carte_bsb_c3 reste la référence")
+		(comment 1 "Proposition : schéma seul, aucun PCB ; le schéma principal carte_bsb_c3 reste la référence")
 		(comment 2 "Analyse et calculs : docs/claude/15_option_b_non_isolee.md")
 	)
 	(lib_symbols
@@ -3486,7 +3486,7 @@
 		)
 		(uuid "70bde4f0-6ac6-4e2f-b0d5-8fb8e821b448")
 	)
-	(text "6. ESP32-C3 SuperMini et DHT22 (comme le schéma maître)"
+	(text "6. ESP32-C3 SuperMini et DHT22 (comme le schéma principal)"
 		(exclude_from_sim no)
 		(at 284.48 43.18 0)
 		(effects

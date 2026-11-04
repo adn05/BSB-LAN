@@ -21,7 +21,7 @@
 | 12 | [12_thermostat_home_assistant.md](12_thermostat_home_assistant.md) | 4 | thermostats HA des circuits CC1 et CC2 (paquet MQTT `climate`), installation, limites, essais |
 | 13 | [13_boitier_3d.md](13_boitier_3d.md) | 4 | boîtier imprimable en 3D (fond + couvercle, STEP et STL), ouvertures, quincaillerie, hypothèses à mesurer |
 | 14 | [14_alimentation_gplus.md](14_alimentation_gplus.md) | 4 | proposition (schéma seul) : ESP32 alimenté par G+ de X86 via un convertisseur isolé et un limiteur de courant ; essai de charge de G+ à faire avant |
-| 15 | [15_option_b_non_isolee.md](15_option_b_non_isolee.md) | 4 | proposition (schéma complet, pas de PCB) : carte sans optocoupleur, bornier 3 points CL+/CL-/G+, AP63205 sur G+, 74HC14 et 2N7002 ; précautions USB |
+| 15 | [15_option_b_non_isolee.md](15_option_b_non_isolee.md) | 4 | proposition (schéma complet, PCB placé non routé) : carte sans optocoupleur, bornier 3 points CL+/CL-/G+, AP63205 sur G+, 74HC14 et 2N7002 ; précautions USB |
 | — | [README_docker.md](README_docker.md) | 4 | build firmware, carte KiCad, simulateur BSB, pile HA de test |
 
 ## GATE 1 — synthèse (fin des phases 1, 1 bis et 2)
@@ -108,7 +108,7 @@ Réponses de l'utilisateur (après la synthèse ci-dessous) :
 - **Diff sur le code amont** : 27 lignes ajoutées, 4 supprimées, dans `BSB_LAN/BSB_LAN.ino` seulement. Le reste est dans `alfea/`, `docker/` et `docs/claude/`.
 - **E6 et E7 écartées après mesure** : environ 4 points de partition, pour des gardes sur une centaine de sites (10 J14).
 - **Validé sans matériel** : builds amont et Alféa, simulateur (autotest 13/13 sur trames réelles), pile Mosquitto + HA 2026.10.4, vérificateur de discovery.
-- **Carte** : schéma maître retouché par l'utilisateur (émission V3), 66 × 33 mm **placée et routée par l'utilisateur** (DRC 0 toutes sévérités, parité 0, isolation ≥ 5,2 mm), contrôlée par `docker/kicad/controler_carte.sh`. Générateur, Freerouting et variante sur plaquette d'essai supprimés (2026-11-03).
+- **Carte** : schéma principal retouché par l'utilisateur (émission V3), 66 × 33 mm **placée et routée par l'utilisateur** (DRC 0 toutes sévérités, parité 0, isolation ≥ 5,2 mm), contrôlée par `docker/kicad/controler_carte.sh`. Générateur, Freerouting et variante sur plaquette d'essai supprimés (2026-11-03).
 - **Pont de test** : firmware `pont_bsb` pour la NodeMCU ESP-C3-32S-Kit (ET câblé du bus, 10 J18-J19).
 
 ### Avant la GATE 3 (de votre côté)
