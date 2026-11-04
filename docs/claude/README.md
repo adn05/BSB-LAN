@@ -63,7 +63,7 @@
 | # | Réponse | Conséquence |
 |---|---|---|
 | Q1 | IHM, menu « version logicielle » : **Régulation : RVS21 - 89.006.090** | version applicative Atlantic, différente de la notice R32 (85.002.030). La correspondance avec la version OV (402.6 dans la liste de référence) et avec famille/variante est inconnue : **lecture de 6220-6229 obligatoire à la mise en service** (08a §6) |
-| Q2 | X86 : bornier à vis débrochable `B2 M B1 3 2 1` (photo `images/x86_alfea.jpeg`) ; **0 V mesuré entre 1, 2 et 3** | à confirmer par une mesure témoin (09 §8) : 0 V même sur G+ suggère une mesure faussée ou une régulation non alimentée. **Question ouverte** tant que la mesure n'est pas refaite |
+| Q2 | X86 : bornier à vis débrochable `B2 M B1 3 2 1` (photo `images/x86_alfea.jpeg`) ; remesure du 2026-11-04 : **11,5 V entre 1 et 2, 11,6 V entre 2 et 3** (la première, 0 V, prise sur les têtes de vis) | brochage 1 = CL+, 2 = CL-, 3 = G+ cohérent ; R2 = 2 kΩ conservée (> 11 V). Restent la polarité et le départage CL+ / G+ (09 §8) |
 | Q3 | **2 Navilink A59 sans fil**, pas sur X86 | pas d'autre maître sur X86 ; les sondes passent par une liaison radio dont le récepteur n'est pas sur X86 [À VÉRIFIER]. Deux sondes suggèrent deux circuits (CC1 et CC2) : la liste HA inclut CC2 |
 | Q4 | Concevoir notre carte avec KiCad | design dans 09, fichiers KiCad dans `hardware/alfea-esp32c3/` **après la GATE 2** (règle de la mission) |
 | Q5 | Optocoupleurs conservés ; alimentation hors bus ; « alim 5 V de la PAC, sinon chargeur de téléphone » | pas de 5 V documenté sur le RVS21 ; G+ casserait l'isolation. Retenu : **chargeur USB 5 V** par défaut, module rail DIN en option (09 §4) |
@@ -111,5 +111,5 @@ Réponses de l'utilisateur (après la synthèse ci-dessous) :
 
 ### Avant la GATE 3 (de votre côté)
 1. Banc T1/T2 : SuperMini + NodeMCU ESP-C3-32S-Kit en pont (README_docker §3), puis la carte CMS fabriquée.
-2. **Refaire la mesure de X86** avec la mesure témoin (09 §8) : la première a donné 0 V partout. Photo reçue.
+2. ~~Refaire la mesure de X86~~ : 11,5 V (1-2) et 11,6 V (2-3) le 2026-11-04. Reste à confirmer la polarité et quelle borne porte le trafic (09 §8).
 3. ~~Fichier `alfea/config/alfea_secrets.h`~~ : créé (firmware compilé avec, 71 %). L'utilisateur MQTT est resté `bsblan` : à créer tel quel dans l'add-on Mosquitto.

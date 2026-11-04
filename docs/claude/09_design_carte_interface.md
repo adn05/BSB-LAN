@@ -4,7 +4,7 @@
 > Carte porteuse 2 couches de **66 × 33 mm** (§6), **placée et routée à la main par l'utilisateur** : J1 et le SuperMini sur le même axe, borniers enfichables au pas de 3,5 mm, barrette pour le DHT22, 4N25 en DIP-6, trous M3 aux 4 coins, transistors en SOT-23, composants passifs sous le module. Le SuperMini s'y enfiche (2 × 8 broches au pas de 2,54 mm). Elle reprend **la topologie éprouvée de l'adaptateur officiel V3** : 2 × 4N25, BC547/BC557, mêmes valeurs. Les **écarts sont limités et justifiés** : rappel de TX au démarrage, transistor de bus en gain C, TVS sur l'entrée (PTC retirée, §7), R2 à 2 kΩ, retrait de l'EEPROM, entrée DHT22 protégée, entrée 5 V avec diode anti-retour.
 > **Isolation galvanique conservée** : rien n'est prélevé sur le bus pour l'ESP32. L'alimentation vient d'un **chargeur USB 5 V** (défaut, aucune intervention sur le 230 V) ou d'un module 5 V rail DIN (option).
 > Brochage : RX = GPIO6, TX = GPIO7, DHT22 = GPIO5, LED = GPIO8 (sur le SuperMini). **Projet KiCad 9 dans `alfea/hardware/carte_bsb_c3/`** : le schéma maître est celui retouché dans KiCad (émission conforme à V3, §2.3) ; PCB routé par l'utilisateur, plan de masse côté ESP32 ; ERC 0, DRC 0 (toutes sévérités), parité 0, isolation bus/ESP32 ≥ 5,2 mm (§7, §9). Gerber produits par l'utilisateur.
-> **Avant tout branchement**, X86 doit être mesuré (§8). Première mesure de l'utilisateur : **0 V entre 1, 2 et 3**, résultat à confirmer par une mesure témoin (§8).
+> **X86 mesuré** (§8, 2026-11-04) : **11,5 V entre 1 et 2, 11,6 V entre 2 et 3** ; la première mesure (0 V) avait été prise sur les têtes de vis. R2 = 2 kΩ reste dans la règle (> 11 V). Restent à confirmer avant branchement : la polarité et laquelle de 1 ou 3 porte CL+.
 
 Conventions : **[CONSTATÉ]**, **[SUPPOSÉ]**, **[À VÉRIFIER]**. Les calculs reprennent les valeurs de 06 §3 (4N25 : CTR ≥ 20 % à 10 mA, Vf 1,2 V ; C3 : V_IH ≥ 2,48 V, V_IL ≤ 0,83 V).
 
@@ -243,7 +243,18 @@ Contrôles du schéma après intégration [CONSTATÉ, kicad-cli 9.0.5] : ERC **0
 2. **régulateur non alimenté** au moment de la mesure : PAC en arrêt, disjoncteur de la régulation ouvert, IHM éteinte ;
 3. **X86 non alimenté par la régulation** tant qu'aucun appareil d'ambiance n'est déclaré [SUPPOSÉ, rien de documenté]. Dans ce cas, le BSB est à chercher ailleurs, par exemple sur la liaison vers l'IHM ou vers le récepteur radio des Navilink A59 : **question ouverte**.
 
-**Mesure à refaire**, PAC sous tension, **IHM allumée**. Même précautions qu'avant : 230 V à proximité, pointes isolées, ne rien débrocher sous tension.
+**Remesure de l'utilisateur (2026-11-04)** [CONSTATÉ] : **11,5 V entre 1 et 2**, **11,6 V entre 2 et 3**. La première mesure avait été prise sur les têtes de vis du bornier, sans contact avec la lame (hypothèse 1). Interprétation :
+- `2` est la borne commune (CL- / masse) ; `1` et `3` sont tous deux à ≈ 11,5 V au-dessus d'elle, si les deux lectures ont été faites avec COM sur `2` [À VÉRIFIER : signe affiché]. On attend alors ≈ 0,1 V entre `1` et `3` ;
+- cohérent avec 1 = CL+, 2 = CL-, 3 = G+ (§8). La tension continue ne départage pas CL+ et G+ ; la valeur un peu plus basse sur `1` va dans le sens d'un bus avec du trafic, mais 0,1 V est dans la tolérance du multimètre [SUPPOSÉ] ;
+- **R2 = 2 kΩ conservée** : I_F = (11,5 − 3,7) / 2 000 = **3,9 mA**, marge **× 1,47** au CTR minimal (2,65 mA requis), × 1,03 après une perte de 30 % du CTR au vieillissement, au CTR minimal garanti [SUPPOSÉ : le CTR réel d'un 4N25 est en général bien au-dessus de 20 %]. Avec 1,5 kΩ : 5,2 mA, × 1,96 (× 1,37 vieilli) ;
+- **D3** (SMAJ18CA, V_RWM 18 V) : 6,4 V de marge au-dessus du niveau haut, courant de fuite négligeable. Rien à changer.
+
+Contrôles restant avant branchement (PAC sous tension, IHM allumée, pointes dans les lames ou sur les vis serrées d'un fil) :
+1. COM sur `2`, rouge sur `1` puis sur `3` : les deux lectures doivent être **positives** ; mesurer aussi `1`-`3` (≈ 0 V attendu).
+2. Départager CL+ et G+ : multimètre en **alternatif, calibre 2 V ou mV**, entre `1` et `2` puis entre `3` et `2` ; le trafic du bus donne une composante alternative sur CL+, G+ reste lisse [SUPPOSÉ : le RVS21 émet des trames périodiques sans appareil d'ambiance]. À défaut, l'oscilloscope (créneaux de 208 µs) ou la fonction MIN/MAX (minimum vers 1-2 V sur CL+).
+3. Raccorder J1-1 (CL+) sur la borne qui porte le trafic, J1-2 (CL-) sur `2`. Une erreur sur G+ ne détruit rien (D2 bloque l'inversion, D3 tolère 18 V) mais le bus reste muet.
+
+**Première procédure de mesure** (conservée pour mémoire), PAC sous tension, **IHM allumée**. Même précautions qu'avant : 230 V à proximité, pointes isolées, ne rien débrocher sous tension.
 1. **Contrôler le multimètre** sur une source connue (chargeur USB : ≈ 5 V), en continu, calibre 20 V.
 2. COM sur `2` : mesurer `1` (attendu 12 à 15 V, valeur moyenne un peu plus basse à cause du trafic), puis `3` (attendu ≈ 12 V si c'est G+).
 3. **Mesure témoin**, COM sur `M` : mesurer `B1` et `B2`. Une entrée de sonde ouverte présente en général une tension de polarisation de quelques volts [SUPPOSÉ].
