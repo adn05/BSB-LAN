@@ -2,7 +2,7 @@
 
 > **Résumé**
 > Demande de l'utilisateur : schéma complet **sans optocoupleur**, avec un **bornier d'entrée 3 points** (CL+, CL-, G+), des **circuits logiques plutôt que des transistors**, et **sans limiteur de courant** pour cette première version.
-> Fichiers dans `alfea/hardware/carte_bsb_c3_b/` : schéma complet et **PCB placé, non routé** (§7, routage par l'utilisateur). Le schéma principal `carte_bsb_c3` et son PCB routé ne sont pas touchés.
+> Fichiers dans `alfea/hardware/carte_bsb_c3_b/` : schéma complet et **PCB routé par l'utilisateur**, avec vias de couture GND (§7). Le schéma principal `carte_bsb_c3` et son PCB routé ne sont pas touchés.
 > - **Alimentation** : G+ → SS14 → abaisseur synchrone **AP63205WU-7** (5 V fixe, démarrage progressif de 4 ms) → `5V_IN` → D4 → SuperMini, comme avec J2 sur la carte principale.
 > - **Réception** : pont 100 k / 33 k vers un **74HC14** (inverseurs à seuil de Schmitt). Deux portes en série donnent RX au même niveau que le bus.
 > - **Émission** : une porte du 74HC14 commande un **2N7002** qui tire CL+ à la masse. C'est le seul composant discret côté bus, car aucun circuit logique ne supporte 12 V en sortie.
@@ -99,7 +99,7 @@ Les autres composants (SS14, SMAJ18CA, 22 µF, 100 nF, 10 k, 100 Ω, LED, barret
 
 **Empreintes des connecteurs** : J1 utilise l'empreinte Phoenix MCV 3 points de la même famille. La question des perçages de 1,2 mm contre 1,4 mm recommandés par Hong Cheng reste **ouverte**, comme sur la carte principale. Empreintes non modifiées, conformément à la consigne.
 
-## 7. PCB (placement, sans routage)
+## 7. PCB
 
 Demande de l'utilisateur : mêmes dimensions que la carte principale, avec le SuperMini (J4, J5), J1 et J3 placés de la même façon ; le routage est laissé à l'utilisateur.
 
@@ -118,22 +118,33 @@ Construction [CONSTATÉ, API pcbnew de `kicad/kicad:9.0.6`, à partir d'une copi
 
 DRC avec parité, toutes sévérités [CONSTATÉ] : **0 écart avec le schéma**, aucun chevauchement de courtyard ni de sérigraphie, **63 connexions non routées** (normal : routage à faire). Les références et les champs JLCPCB sont liés au schéma : « Mettre à jour le PCB depuis le schéma » ne déplace rien.
 
-Conseils de routage : le nœud SW de U2 (C9, L1) doit être court et compact ; les retours GND de C6, C7 et C8 doivent rejoindre la broche 4 de U2 par le plan. Garder le pont R1 / R2 près de U1, et la grille de Q1 (R4) courte.
+**Routage de l'utilisateur** (2026-11-04) [CONSTATÉ, contrôle `kicad/kicad:9.0.6`] :
+- **pistes** de 0,4 mm partout, 3 vias de 0,6/0,3 mm, aucune piste ni via dans la zone d'antenne, 0 écart avec le schéma ;
+- **GND sans piste**, uniquement par les plans : une fois les zones remplies, la face avant était découpée en îlots non reliés, d'où 2 connexions manquantes (dont J3-3). Cela est corrigé par la couture ci-dessous ;
+- la broche GND de U2 n'avait qu'une branche thermique sur 2 : elle est passée en **raccordement plein** au plan, ce qui est aussi meilleur pour la masse du régulateur.
+
+**Finitions** (demande de l'utilisateur ; aucune piste modifiée) :
+- **82 vias de couture GND**, en 0,6/0,3 mm comme ceux de l'utilisateur :
+  - 79 sur une grille de 3 mm, placés seulement là où les deux plans sont remplis (disque du via entier dans le cuivre des deux faces), hors composants, hors zone d'antenne, à plus de 4 mm des trous M3 et à 1 mm du bord ;
+  - 3 de plus dans les îlots de la face avant qui restaient isolés (vers J4, R7) ;
+- **sérigraphie** : 16 repères en défaut déplacés à la main près de leur composant (U2, R6, C9, L1, C6, C7, C8, C5, U1, R7, R1, R2, C4, D1, R3, J1), texte « CL+ » sorti du contour de J1 ; les autres repères sont laissés là où l'utilisateur les avait mis.
+
+DRC avec parité, toutes sévérités, zones remplies : **0 violation, 0 connexion manquante, 0 écart avec le schéma** [CONSTATÉ]. Sorties pour la fabrication : `bom_jlcpcb.csv`, `positions.csv` (format JLCPCB), `assemblage.pdf`. Les Gerber restent à produire par l'utilisateur.
 
 ## 8. Avant toute fabrication
 
 1. Essai de charge de G+ (14 §6), avec un palier proche de 180 mA.
 2. Repérer CL- au multimètre par rapport à la terre de la chaufferie, PAC sous tension : si CL- est flottant, la règle de l'USB du §5 devient impérative.
 3. Banc T1 sur simulateur : seuils réels du 74HC14 sous 3,3 V, niveau bas de Q1, écho des trames, tension du 5 V pendant l'émission WiFi.
-4. Décider entre la variante A (doc 14, isolée) et l'option B, puis finir le routage du PCB de l'option B (§7).
+4. Décider entre la variante A (doc 14, isolée) et l'option B, puis produire les Gerber de la carte retenue.
 
 ## 9. Fichiers
 
 | Fichier | Rôle |
 |---|---|
 | `alfea/hardware/carte_bsb_c3_b/carte_bsb_c3_b.kicad_sch`, `.kicad_pro` | schéma A3 câblé, 6 blocs |
-| `alfea/hardware/carte_bsb_c3_b/carte_bsb_c3_b.kicad_pcb` | PCB 66 × 33 mm placé, **non routé** |
+| `alfea/hardware/carte_bsb_c3_b/carte_bsb_c3_b.kicad_pcb` | PCB 66 × 33 mm routé par l'utilisateur, 82 vias de couture GND |
 | `alfea/hardware/carte_bsb_c3_b/alfea.kicad_sym`, `sym-lib-table` | copie du symbole sans broche des fiches (JJ1) |
-| `alfea/hardware/carte_bsb_c3_b/sorties/` | `erc.rpt` (0 violation), `drc.rpt` (0 écart de parité, 63 connexions à router), `schema.pdf`, `schema.png`, `bom.csv`, `pcb.svg`, `pcb_dessus.png`, `pcb_dessous.png` |
+| `alfea/hardware/carte_bsb_c3_b/sorties/` | `erc.rpt` (0 violation), `drc.rpt` (0 violation), `bom_jlcpcb.csv`, `positions.csv`, `assemblage.pdf`, `schema.pdf`, `schema.png`, `bom.csv`, `pcb.svg`, `pcb_dessus.png`, `pcb_dessous.png` |
 
 Contrôle [CONSTATÉ] : `kicad-cli sch erc --severity-all --exit-code-violations`, puis comparaison de la netlist exportée avec les 20 nets attendus (ensembles de broches identiques).
