@@ -9,7 +9,7 @@
 		(date "2026-11-04")
 		(rev "A")
 		(company "branche alfea-extensa")
-		(comment 1 "Proposition à intégrer au schéma maître carte_bsb_c3 ; aucun PCB")
+		(comment 1 "Proposition à intégrer au schéma principal carte_bsb_c3 ; aucun PCB")
 		(comment 2 "Analyse et calculs : docs/claude/14_alimentation_gplus.md")
 	)
 	(lib_symbols
@@ -1466,7 +1466,7 @@
 		)
 		(uuid "dec47537-95ae-48ed-aace-61648727b3cc")
 	)
-	(text "Intégration au schéma maître\n- 5V_IN et GND sont les nets existants (entrée de D4, comme J2) ;\n- D4 (SS14) empêche l'USB-C de réalimenter U3 ;\n- ne pas alimenter J2 et J6 en même temps ;\n- J6 : 1 = G+ (X86-3), 2 = CL- (X86-2, même borne que J1-2) ;\n- R14 non montée (DNP) : seulement si 5V_IN > 5,8 V à vide."
+	(text "Intégration au schéma principal\n- 5V_IN et GND sont les nets existants (entrée de D4, comme J2) ;\n- D4 (SS14) empêche l'USB-C de réalimenter U3 ;\n- ne pas alimenter J2 et J6 en même temps ;\n- J6 : 1 = G+ (X86-3), 2 = CL- (X86-2, même borne que J1-2) ;\n- R14 non montée (DNP) : seulement si 5V_IN > 5,8 V à vide."
 		(exclude_from_sim no)
 		(at 160.02 109.22 0)
 		(effects

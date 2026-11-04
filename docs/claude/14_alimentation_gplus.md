@@ -1,7 +1,7 @@
 # 14 — Alimentation de l'ESP32 par G+ de X86 (variante A, isolée)
 
 > **Résumé**
-> Proposition à la demande de l'utilisateur, en **schéma seul**, sans PCB : `alfea/hardware/proposition_alim_gplus/alim_gplus.kicad_sch`. Le schéma maître et le PCB routé ne sont pas modifiés.
+> Proposition à la demande de l'utilisateur, en **schéma seul**, sans PCB : `alfea/hardware/proposition_alim_gplus/alim_gplus.kicad_sch`. Le schéma principal et le PCB routé ne sont pas modifiés.
 > Le 5 V de l'ESP32 est pris sur **G+ (X86-3, 11,6 V mesurés)**. La chaîne est la suivante : diode anti-inversion, **limiteur de courant à environ 120 mA** (protège la sortie G+, dont la puissance n'est pas documentée), réserve de 470 µF, puis **convertisseur isolé non régulé B1205S-2WR3** (12 V vers 5 V, 400 mA, 1,5 kVDC). Sa sortie arrive sur le net `5V_IN` existant, en amont de D4, comme J2.
 > **Les optocoupleurs et toute l'interface bus sont conservés** (décision de l'utilisateur, variante A) : l'ESP32 reste isolé du bus, et l'USB-C se branche toujours sans précaution.
 > Coût : aucune nouvelle référence CMS Extended facturée (Q3 est Preferred). Trois composants traversants (U3, C5, C7). **Prérequis avant toute réalisation : un essai de charge de G+ (§6).**
@@ -33,7 +33,7 @@ G+ est conçue pour un rétroéclairage, sans doute quelques dizaines de mA [SUP
 
 ## 3. Schéma et calculs
 
-Nets : `GP_IN` (G+ après J6), `GP_D` (après D6, rail positif), `GP_LIM` (retour du module, collecteur de Q3), `GP_S` (shunt), `GP_B` (base de Q3), `GP_RET` (X86-2). Les nets `5V_IN` et `GND` sont ceux du schéma maître.
+Nets : `GP_IN` (G+ après J6), `GP_D` (après D6, rail positif), `GP_LIM` (retour du module, collecteur de Q3), `GP_S` (shunt), `GP_B` (base de Q3), `GP_RET` (X86-2). Les nets `5V_IN` et `GND` sont ceux du schéma principal.
 
 | Réf. | Valeur | Rôle | JLCPCB |
 |---|---|---|---|
@@ -73,7 +73,7 @@ Hors tolérance du module, au-dessous de 10,8 V, U3 n'est pas abîmé : sa sorti
 
 **Isolation.** U3 est le seul composant à traverser la barrière : 1 500 VDC pendant 1 min [CONSTATÉ, datasheet]. Au PCB, il faut l'orienter à cheval sur la bande d'isolation. Entre les broches 2 (bus) et 4 (ESP32), il y a 5,08 − 1,5 = **3,58 mm** entre bords de pastilles avec l'empreinte retenue (TRACO TMA, pastilles de 1,5 mm), ce qui respecte l'objectif de 3 mm (09 §5). L'empreinte TRACO TMA a les mêmes broches 1, 2, 4 et 6 au pas de 2,54 mm. Son boîtier fait 6,3 mm d'épaisseur contre 7 mm pour le B1205S-2WR3 **[À VÉRIFIER au placement]**.
 
-## 4. Intégration au schéma maître (à faire avec l'accord de l'utilisateur)
+## 4. Intégration au schéma principal (à faire avec l'accord de l'utilisateur)
 
 1. Copier le bloc dans `carte_bsb_c3.kicad_sch` : les nets `5V_IN` et `GND` s'y raccordent d'eux-mêmes. Le symbole de U3 est dans `proposition_alim_gplus/alim.kicad_sym`, à ajouter à `alfea.kicad_sym`.
 2. **J2 et J6 sont exclusifs** : ne jamais raccorder une alimentation 5 V sur J2 quand G+ alimente J6. L'USB-C reste utilisable : D4 empêche le 5 V de l'USB de réalimenter U3.
