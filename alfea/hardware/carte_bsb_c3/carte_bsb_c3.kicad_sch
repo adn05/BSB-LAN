@@ -8,7 +8,7 @@
 		(title "Interface BSB isolée pour ESP32-C3 SuperMini (Alféa Extensa Duo A.I.)")
 		(rev "A")
 		(company "branche alfea-extensa")
-		(comment 1 "Schéma maître et PCB édités dans KiCad ; contrôles : docker/kicad/controler_carte.sh")
+		(comment 1 "Schéma principal et PCB édités dans KiCad ; contrôles : docker/kicad/controler_carte.sh")
 		(comment 2 "Connexions par étiquettes de net ; topologie adaptateur BSB-LAN V3 (docs/claude/06 et 09)")
 	)
 	(lib_symbols
