@@ -20,6 +20,7 @@
 | 10 | [10_journal_implementation.md](10_journal_implementation.md) | 4 | journal des étapes E0-E10, décisions et écarts, rapport de taille, diff amont |
 | 12 | [12_thermostat_home_assistant.md](12_thermostat_home_assistant.md) | 4 | thermostats HA des circuits CC1 et CC2 (paquet MQTT `climate`), installation, limites, essais |
 | 13 | [13_boitier_3d.md](13_boitier_3d.md) | 4 | boîtier imprimable en 3D (fond + couvercle, STEP et STL), ouvertures, quincaillerie, hypothèses à mesurer |
+| 14 | [14_alimentation_gplus.md](14_alimentation_gplus.md) | 4 | proposition (schéma seul) : ESP32 alimenté par G+ de X86 via un convertisseur isolé et un limiteur de courant ; essai de charge de G+ à faire avant |
 | — | [README_docker.md](README_docker.md) | 4 | build firmware, carte KiCad, simulateur BSB, pile HA de test |
 
 ## GATE 1 — synthèse (fin des phases 1, 1 bis et 2)
