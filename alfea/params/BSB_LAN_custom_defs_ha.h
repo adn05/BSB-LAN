@@ -4889,6 +4889,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D1095,  VT_ENERGY,          3113.2,S3113P2_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
 {0x053D1B7E,  VT_ENERGY,          3113.3,S3113P3_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
 {0x053D1082,  VT_ENERGY,          3113.4,S3113P4_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
+{0x313D071D,  VT_TEMP,            5024,  S5024_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Différentiel ECS
+{0x253D0731,  VT_MINUTES_WORD_N,  5030,  S5030_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Limitation du temps de charge ECS
 {0x053D000E,  VT_FP1,             6220,  S6220_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Version du logiciel
 {0x053D1388,  VT_UINT,            6221,  S6221_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Indice de développement
 {0x053D0011,  VT_HOURS,           6222,  S6222_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Heures de fonctionnement

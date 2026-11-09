@@ -24,6 +24,9 @@
 1012
 1600
 1610
+# ECS : différentiel de relance (K) et durée maximale de charge (min), demande de l'utilisateur (2026-11-09)
+5024
+5030
 
 # Températures
 8700
