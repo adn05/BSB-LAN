@@ -40,9 +40,10 @@ def lire_liste(chemin):
 
 
 def lire_dump(chemin, adresse=0):
-    """Enregistrements IA1 de l'appareil `adresse` (section « Teste Geräteadresse <n>... »)."""
+    """Enregistrements IA1 de l'appareil `adresse` (section « Teste Geräteadresse <n>... » en allemand,
+    « Tester l’adresse de l’appareil <n>... » en français, « Testing device address <n>... » en anglais)."""
     txt = open(chemin, encoding='utf-8').read()
-    sections = re.split(r'Teste Ger.teadresse (\d+)\.\.\.', txt)
+    sections = re.split(r"(?:Teste Ger.teadresse|Tester l.adresse de l.appareil|Testing device address) (\d+)\.\.\.", txt)
     corps = dict(zip(sections[1::2], sections[2::2])).get(str(adresse), '')
     enr, ia2 = [], 0
     for ligne in corps.splitlines():
