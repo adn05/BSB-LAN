@@ -25,7 +25,7 @@ Six blocs câblés. Les masses et les rails passent par des symboles d'alimentat
 | 3. Réception | R1 100 k, R2 33 k, C4 100 pF, U1A (1 → 2), U1E (11 → 10), U1B (3 → 4), R3, D1 | CL+ vers RX (GPIO6) par U1A puis U1E ; U1B recopie le bus sur la LED |
 | 4. Émission | R7 10 k, U1D (9 → 8), R4 100 Ω, R5 100 k, Q1 2N7002 | TX (GPIO7) vers CL+ |
 | 5. U1 | U1G (alimentation), C5 ; U1C (5) et U1F (13), entrées à la masse | portes permutées par l'utilisateur au routage (version fabriquée) |
-| 6. SuperMini, DHT22 | J4, J5, C1 à C3, J3, R9, R10, D5 | **repris tels quels du schéma principal** (mêmes valeurs et références JLCPCB) |
+| 6. SuperMini, DHT22 | J4, J5, C1 à C3, J3, R9, R10, D5 | **repris tels quels du schéma principal** (mêmes valeurs et références JLCPCB). **Même erreur que la rev A** : rangées J4 / J5 en miroir (09 §10.1), à corriger avant toute fabrication |
 
 **Retirés par rapport à la carte principale** : U1 et U2 (LTV-4N25), Q1 et Q2 (BC847C, BC857C), R1 à R8 de l'interface bus, D2 (1N4148W dans le retour CL-), J2 (entrée 5 V, inutile puisque G+ alimente la carte), J1 2 points.
 

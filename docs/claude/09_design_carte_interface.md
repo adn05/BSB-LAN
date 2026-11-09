@@ -283,7 +283,7 @@ Ces mesures fixent la tension nominale de D3 et le sens de raccordement de J1 (C
 **Historique** : jusqu'au 2026-11-03, le PCB était placé par un générateur Python (`alfea/hardware/gen/`) et routé par Freerouting 2.1.0 (`docker/kicad/generer_carte.sh`). Le routage étant désormais manuel, ces outils ont été supprimés à la demande de l'utilisateur, comme la variante sur plaquette d'essai (ancienne doc 09b). Ils restent dans l'historique git.
 
 **Avant fabrication, à vérifier sur un exemplaire** :
-- le brochage du SuperMini (5V, GND, 3V3, GPIO4-0 d'un côté ; GPIO5-10, 20, 21 de l'autre) et l'entraxe des rangées (15,24 mm) ;
+- le brochage du SuperMini (5V, GND, 3V3, GPIO4-0 d'un côté ; GPIO5-10, 20, 21 de l'autre) et l'entraxe des rangées (15,24 mm) : **rangées en miroir sur la rev A**, module à enficher retourné (§10.1) ;
 - le sens du connecteur USB (vers la droite, au bord de la carte) ;
 - la position de l'antenne céramique, qui doit tomber dans la zone sans cuivre ;
 - le brochage du module AM2302 sur J3 (1 = 3V3, 2 = DATA, 3 = GND).
@@ -328,3 +328,18 @@ Ordre à suivre, **sans la PAC** jusqu'à l'étape 6. Les mesures relevées remp
    - firmware en lecture seule ;
    - première lecture de 6220 à 6229 (08a §6).
 
+### 10.1 Erratum rev A : rangées du SuperMini en miroir [CONSTATÉ par l'utilisateur, 2026-11-09]
+
+**Constat** : le SuperMini ne s'enfiche correctement que **retourné**, composants et USB-C tournés vers la carte. La rangée 5V / GND / 3V3 / GPIO4-0 du module tombe alors sur J4 (en haut) et la rangée GPIO5-10, 20, 21 sur J5 (en bas). Le brochage supposé au §6 était donc vu en miroir. Une rotation à plat de 180° ne convient pas : le 5 V tomberait sur J5-8, non connectée.
+
+**Électriquement, la carte rev A fonctionne avec le module retourné** : mêmes broches, même logiciel. Conséquences :
+
+| Sujet | Effet | Disposition |
+|---|---|---|
+| Barrettes mâles du SuperMini | à souder **côté composants** (entretoise plastique contre la face des composants) | vérifier que l'USB-C (3,2 mm) ne touche pas J4/J5 : il est entre les rangées, au-dessus de C1 à C3 (≈ 7,9 mm sous la prise contre 1,6 mm pour C1) |
+| USB-C | sous le module, son axe passe de 13,7 à **≈ 9,5 mm** au-dessus de la carte [SUPPOSÉ : entretoise de 2,5 mm] | boîtier adapté (`SUPERMINI_RETOURNE = True`, doc 13) |
+| Boutons BOOT et RESET, LED bleue (GPIO8) | côté carte, inaccessibles | flashage par USB (USB-CDC, sans BOOT) ; pour une récupération, retirer le module |
+| Antenne céramique | tournée vers la carte, à ≈ 11 mm, au-dessus de la zone sans cuivre | mesurer le RSSI à l'emplacement de la PAC (§10, étape 5) |
+| Module déjà enfiché à l'endroit et alimenté ? | le 5 V de l'USB serait arrivé sur DHT_IO (GPIO5 côté carte), GND sur RX, 3V3 sur TX | si c'est arrivé : contrôler le 3,3 V, D5 et R10, et retester le module seul |
+
+**Correction pour une rev B** : échanger les rangées J4 et J5, à positions inchangées, en permutant leurs affectations de nets dans le schéma. J4 (en haut) doit porter GPIO5-10, 20, 21 et J5 (en bas) 5V, GND, 3V3, GPIO4-0, broche 1 toujours côté USB. Il faut **refaire le routage** de cette zone. Non fait : à décider par l'utilisateur.
