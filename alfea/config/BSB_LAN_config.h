@@ -201,6 +201,29 @@ static_assert(sizeof(AP_PASSWORD) >= 9, "ALFEA_AP_PASSWORD : au moins 8 caractè
 // 20000-20006 (durées internes), 20700-20899 (custom_floats/longs). Publiées à chaque démarrage, elles ne pouvaient
 // pas être supprimées dans HA (journal J29). Restent : la liste réduite (10020-10033 compris) et le DHT22 (20100-20199).
 #define MQTT_DISCOVERY_SKIP(line) ((line) >= 10100 && !((line) >= BSP_DHT22 && (line) < BSP_BME280))
+// Noms courts des entités HA : « <pièce ou fonction> - <description> » au lieu de
+// « 00-08 Circuit de chauffe 1 - 712 - <description> » (demande de l'utilisateur, journal J61).
+// CC1 = chambre, CC2 = salon (confirmé par l'utilisateur le 2026-11-09). Chaîne vide : description seule.
+// L'identifiant unique (unique_id) ne change pas : HA garde les entity_id existants.
+#define MQTT_DISCOVERY_SHORT_NAMES
+static inline const char *alfea_prefixe(float l) {
+  if (l >= 501 && l < 508) return "Prog chambre";
+  if (l >= 521 && l < 528) return "Prog salon";
+  if (l >= 561 && l < 568) return "Prog ECS";
+  if (l >= 10020 && l < 10027) return "Prog caché chambre";
+  if (l >= 10027 && l < 10034) return "Prog caché salon";
+  if (l >= 700 && l < 1000) return "Chambre";
+  if (l >= 1000 && l < 1300) return "Salon";
+  if ((l >= 1600 && l < 1700) || (l >= 5000 && l < 5200)) return "ECS";
+  if (l >= 3113 && l < 3114) return "Énergie";
+  if (l >= 6220 && l < 6230) return "Config";
+  if (l >= 6700 && l < 6710) return "Défaut";
+  if (l == 8000 || (l >= 8740 && l < 8750)) return "Chambre";
+  if (l == 8001 || (l >= 8770 && l < 8780)) return "Salon";
+  if (l == 8003 || (l >= 8820 && l < 8840)) return "ECS";
+  if (l == 8006 || (l >= 8400 && l < 8470)) return "PAC";
+  return "";   // heure (0-3), température extérieure (8700), DHT22 (20100) : la description suffit
+}
 
 // Broker Mosquitto local en 1883 : TLS inutile (docs/claude/08 §1.2).
 #define NO_TLS

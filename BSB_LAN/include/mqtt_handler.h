@@ -318,7 +318,18 @@ bool mqtt_send_discovery(bool create=true) {
             sensor_type = MQTT_TEXT;
           }
         }
+#ifdef MQTT_DISCOVERY_SHORT_NAMES
+        {                                           // short names: "<prefix> - <description>" (prefix from the configuration)
+          const char *prefix = alfea_prefixe(line);
+          if (prefix[0]) {
+            appendStringBuffer(&sb_payload, "\"name\":\"%s - %s", prefix, decodedTelegram.prognrdescaddr);
+          } else {
+            appendStringBuffer(&sb_payload, "\"name\":\"%s", decodedTelegram.prognrdescaddr);
+          }
+        }
+#else
         appendStringBuffer(&sb_payload, "\"name\":\"%02d-%02d %s - %g - %s", bus->getBusDest(), decodedTelegram.cat, decodedTelegram.catdescaddr, line, decodedTelegram.prognrdescaddr);
+#endif
         if (sensor_type == MQTT_TEXT && (decodedTelegram.unit_enum != UNIT_NONE) && decodedTelegram.unit_mqtt[0]) {
           appendStringBuffer(&sb_payload, " (%s)", decodedTelegram.unit_mqtt);
         }
