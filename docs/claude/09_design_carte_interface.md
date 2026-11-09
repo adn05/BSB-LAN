@@ -287,3 +287,44 @@ Ces mesures fixent la tension nominale de D3 et le sens de raccordement de J1 (C
 - le sens du connecteur USB (vers la droite, au bord de la carte) ;
 - la position de l'antenne céramique, qui doit tomber dans la zone sans cuivre ;
 - le brochage du module AM2302 sur J3 (1 = 3V3, 2 = DATA, 3 = GND).
+
+## 10. Mise en service de la carte reçue (rev A, 2026-11-09)
+
+Ordre à suivre, **sans la PAC** jusqu'à l'étape 6. Les mesures relevées remplacent les valeurs [SUPPOSÉ] des §2 à §4 et sont à consigner ici.
+
+1. **Inspection** :
+   - sens de U1 et U2 (LTV-4N25, point de la broche 1), de Q1 et Q2 ;
+   - bague de cathode de D2 (1N4148W) et de D4 (SS14), sens de la LED D1 ;
+   - D3 est bidirectionnelle (pas de sens) ;
+   - J1 et J2 : vérifier que les embases HC-JXDZVC sont bien assises. Les perçages de 1,2 mm sont plus petits que les 1,4 mm conseillés par Hong Cheng (question restée ouverte). Si JLCPCB les a soudées, contrôler simplement la soudure.
+2. **À l'ohmmètre, hors tension, SuperMini retiré** :
+
+   | Entre | Attendu |
+   |---|---|
+   | J1-1 (CL+) ou J1-2 (CL-) et J4-2 (GND) | **circuit ouvert** (isolation, > 10 MΩ) |
+   | J1-1 et J1-2 | pas de court-circuit (TVS D3 bloquée) |
+   | J4-1 (5 V), J4-3 (3V3) et J4-2 (GND) | pas de court-circuit |
+
+3. **SuperMini enfiché**, flashé avec `sh docker/compiler.sh alfea` (lecture seule), alimenté par l'USB-C :
+   - 3,3 V sur J4-3 ;
+   - D1 éteinte (pas de bus) ;
+   - RX (J5-2) à 0 V : U1 est bloqué et R5 tire RX à la masse ;
+   - TX (J5-3) à 3,3 V au repos, donc Q2, U2 et Q1 bloqués ;
+   - **V(DATA) ≥ 3,1 V**, capteur débranché : c'est le contrôle de la fuite de D5 (§2.4). Sinon, retirer D5.
+4. **Bus simulé** : alimentation de labo **12 V** dont le + passe par une résistance de **330 Ω (½ W)** vers J1-1 (CL+), et dont le − va sur J1-2 (CL-).
+
+   | Situation | Attendu |
+   |---|---|
+   | Repos | I_F(U1) ≈ (12 − 3,7) / (2 000 + 330) ≈ 3,6 mA ; CL+ ≈ 10,8 V ; **D1 allumée, RX ≈ 3,1 à 3,3 V** (≥ 2,48 V requis ; le phototransistor sature) |
+   | CL+ court-circuité sur CL- | D1 éteinte, RX = 0 V |
+   | Émission de BSB-LAN (requête depuis l'interface web) | CL+ descend à **≈ 1,5 V** (§2.3), Q1 tire ≈ 32 mA ; créneaux de 208 µs à l'oscilloscope, sinon D1 clignote. BSB-LAN relit sa propre trame (écho) |
+   | Fils de J1 inversés | D1 éteinte, rien ne chauffe (D2 bloque) : contrôle de la protection, facultatif |
+
+   L'USB vers le PC reste branché sans risque : la carte est isolée et l'alimentation de labo indépendante.
+5. **WiFi et Home Assistant** : RSSI ≥ −70 dBm à l'emplacement de la PAC (D1 de 07), et tension au 5 V du SuperMini pendant l'émission (§4, choix ME6211 ou LP5907).
+6. **Avant de brancher sur la PAC** (GATE 3, accord de l'utilisateur) :
+   - repérer CL+ et G+ par la mesure en alternatif, et vérifier le signe des lectures (§8) ;
+   - câbler **PAC hors tension**, CL+ de X86 sur J1-1 et X86-2 sur J1-2 ;
+   - firmware en lecture seule ;
+   - première lecture de 6220 à 6229 (08a §6).
+

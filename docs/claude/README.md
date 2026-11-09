@@ -112,6 +112,6 @@ Réponses de l'utilisateur (après la synthèse ci-dessous) :
 - **Pont de test** : firmware `pont_bsb` pour la NodeMCU ESP-C3-32S-Kit (ET câblé du bus, 10 J18-J19).
 
 ### Avant la GATE 3 (de votre côté)
-1. Banc T1/T2 : SuperMini + NodeMCU ESP-C3-32S-Kit en pont (README_docker §3), puis la carte CMS fabriquée.
+1. Banc T1/T2 : SuperMini + NodeMCU ESP-C3-32S-Kit en pont (README_docker §3). **Carte principale rev A reçue le 2026-11-09** : mise en service sur banc, bus simulé, selon 09 §10.
 2. ~~Refaire la mesure de X86~~ : 11,5 V (1-2) et 11,6 V (2-3) le 2026-11-04. Reste à confirmer la polarité et quelle borne porte le trafic (09 §8).
 3. ~~Fichier `alfea/config/alfea_secrets.h`~~ : créé (firmware compilé avec, 71 %). L'utilisateur MQTT est resté `bsblan` : à créer tel quel dans l'add-on Mosquitto.
