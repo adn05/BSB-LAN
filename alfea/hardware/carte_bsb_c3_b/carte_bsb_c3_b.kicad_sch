@@ -7396,7 +7396,7 @@
 			)
 		)
 		(property "Value" "HC-JXDZVC-3.5-3P"
-			(at 30.48 60.96 0)
+			(at 50.038 80.518 0)
 			(effects
 				(font
 					(size 1.27 1.27)
