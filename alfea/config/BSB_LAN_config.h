@@ -90,11 +90,11 @@ uint8_t logTelegram = LOGTELEGRAM_OFF;
 unsigned long log_interval = 60;
 parameter log_parameters[48] = {
   {8700, -1},    // Température extérieure
-  {8740, -1},    // Température ambiante CC1 (salon + cuisine)
+  {8740, -1},    // Température ambiante CC1 (chambre)
   {8741, -1},    // Consigne ambiante actuelle CC1
   {8743, -1},    // Température de départ CC1
   {8744, -1},    // Consigne de départ résultante CC1
-  {8770, -1},    // Température ambiante CC2 (chambres)
+  {8770, -1},    // Température ambiante CC2 (salon)
   {8771, -1},    // Consigne ambiante actuelle CC2
   {8773, -1},    // Température de départ CC2
   {8410, -1},    // Température de retour PAC
@@ -200,7 +200,11 @@ static_assert(sizeof(AP_PASSWORD) >= 9, "ALFEA_AP_PASSWORD : au moins 8 caractè
 // Discovery sans les lignes virtuelles ajoutées par BSB-LAN à la liste réduite : 10195-10199 (codes bruts),
 // 20000-20006 (durées internes), 20700-20899 (custom_floats/longs). Publiées à chaque démarrage, elles ne pouvaient
 // pas être supprimées dans HA (journal J29). Restent : la liste réduite (10020-10033 compris) et le DHT22 (20100-20199).
-#define MQTT_DISCOVERY_SKIP(line) ((line) >= 10100 && !((line) >= BSP_DHT22 && (line) < BSP_BME280))
+// Masquées dans HA à la demande de l'utilisateur (journal J63), mais gardées dans le firmware (pages web, et 6225/6226
+// interrogées par BSB-LAN lui-même) : heure et dates séparées 1-3 (la ligne 0 « Date actuelle / Heure actuelle » suffit),
+// 6220, 6221 et 6225-6229 (versions, famille, variante). Restent 6222 (heures de fonctionnement) et 6224 (identification).
+#define ALFEA_HORS_HA(l) (((l) >= 1 && (l) < 4) || (l) == 6220 || (l) == 6221 || ((l) >= 6225 && (l) < 6230))
+#define MQTT_DISCOVERY_SKIP(line) (ALFEA_HORS_HA(line) || ((line) >= 10100 && !((line) >= BSP_DHT22 && (line) < BSP_BME280)))
 // Noms courts des entités HA : « <pièce ou fonction> - <description> » au lieu de
 // « 00-08 Circuit de chauffe 1 - 712 - <description> » (demande de l'utilisateur, journal J61).
 // CC1 = chambre, CC2 = salon (confirmé par l'utilisateur le 2026-11-09). Chaîne vide : description seule.
