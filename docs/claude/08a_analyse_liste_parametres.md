@@ -169,6 +169,15 @@ Sans risque : uniquement des requêtes de lecture (`QUR`).
 
 Famille et variante identiques à la liste de l'issue #622 : **la liste HA s'applique** (étape 2 sans objet). La version 8.9 / 6 correspond à l'affichage de l'IHM (89.006.090, Q1). La version OV diffère (4067 contre 402.6 [SUPPOSÉ : même codage, soit 406.7]) : il reste l'étape 3, l'analyse de la liste contre **le dump `/QD` de cette machine**, pour repérer les paramètres ajoutés, retirés ou retypés entre les deux versions.
 
+**Lectures complémentaires (2026-11-09, lecture seule)** [CONSTATÉ] :
+- **502, 522, 562** (programmes horaires du mardi : CC1, CC2, ECS) se lisent et se décodent : `00:00-01:00 06:00-08:10 17:40-24:00` pour 502. Le premier dump partiel ne décrivait pas les jours 2 à 7 dans ses IA1, mais **les objets existent** : la liste les garde.
+- **I1 levé** : 3113 = 3113.4 = **2510 kWh**. Le compteur `0x12` est déjà décodé en kWh ; aucun retypage n'est nécessaire.
+- **`/QD` : la carte redémarre au 990e IA1**, de façon reproductible : dump de l'utilisateur dans le navigateur, puis dump relancé depuis le PC de développement. Les deux s'arrêtent net après l'IA1 n° 989, au bout d'environ 3 min 30. Le compteur de fonctionnement (`/JI`, en ms) situe le redémarrage **1 s après** le dernier enregistrement reçu. Ce n'est pas le chien de garde (150 s, `BSB_LAN/BSB_LAN.ino:8026-8037`) ni un dépassement de tampon de trame (bornes à 32 octets dans `src/BSB/bsb.cpp:131, 245`). **Cause inconnue** : il faut la trace de la console USB pendant un `/QD` (question ouverte). Les 989 IA1 reçus sont conservés dans `alfea/params/dump_211-127_alfea.txt` (partiel).
+- **Lecture de toute la liste HA** (`/JQ`, 93 lignes, lecture seule) : **93 réponses, 0 erreur** [CONSTATÉ] :
+  - valeurs plausibles : extérieur 13,8 °C, ECS 53,3 °C (consigne 55 °C), modulation du compresseur 67 %, 16 898 démarrages, 2 456 h ;
+  - **sans valeur** (« None », sonde ou mesure absente sur cette installation) : **8460** débit PAC, **8743** température de départ CC1, **8832** ECS en bas (B31). « --- » pour 8402/8403 (résistances électriques de départ non présentes) ;
+  - **programmes cachés 10020-10033 identiques à 501-507 (CC1) et 521-527 (CC2)** : ils doublent les programmes de l'IHM (question P7 de 08 §5.2 éclairée : même contenu ; reste à savoir lequel l'IHM modifie).
+
 ## 7. Limites
 - Une seule machine de référence (dump d'un tiers) ; les IA2 ne sont pas décodés, donc les **valeurs d'énumération** ne sont pas vérifiées.
 - Les objets cachés ne sont découvrables qu'en observant le trafic IHM ↔ régulateur (ce qu'ont fait les auteurs de #829 et #831) ; d'autres peuvent manquer.
