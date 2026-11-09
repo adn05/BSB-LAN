@@ -103,7 +103,7 @@ Réponses de l'utilisateur (après la synthèse ci-dessous) :
 
 ## Phase 4 — synthèse (avant la GATE 3)
 
-**Statut : implémentation terminée et validée sans matériel. GATE 3 à venir** : rien n'a été branché sur la PAC.
+**Statut : GATE 3 validée le 2026-11-09.** Premier raccordement à la PAC en lecture seule selon la doc 11 (firmware `alfea` flashé).
 
 - **Firmware Alféa** (`sh docker/compiler.sh alfea`) : **1 410 705 o (71 %)**, **49 104 o de RAM** (amont : 1 610 749 o, 65 624 o). Lecture seule par défaut ; variante `alfea-ecriture` limitée à la liste blanche (programmes horaires, modes, consignes).
 - **Diff sur le code amont** : 27 lignes ajoutées, 4 supprimées, dans `BSB_LAN/BSB_LAN.ino` seulement. Le reste est dans `alfea/`, `docker/` et `docs/claude/`.
