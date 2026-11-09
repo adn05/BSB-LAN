@@ -70,3 +70,33 @@ Ces relevés lèvent les questions ouvertes Q2 (brochage et polarité de X86), I
 ## 6. Retour arrière
 
 Débrocher JJ1 : la PAC revient exactement dans son état d'origine (rien n'a été modifié dans la régulation, aucune écriture n'a été faite).
+
+## 7. Essai d'endurance de 48 h (T4, ramené de 72 h à 48 h par l'utilisateur)
+
+**Avant** :
+1. Analyse de la nuit avec la console USB (2026-11-09 au 10) : nombre de plantages, reconnexions WiFi et RSSI (08a §6.1).
+2. Si possible, couverture WiFi améliorée : RSSI ≥ −70 dBm, contre −77 à −83 dBm relevés à la mise en service.
+3. Console retirée, carte alimentée par le chargeur USB, firmware `alfea-ecriture` en mode d'écriture 1 (état actuel). **Aucune écriture volontaire pendant l'essai**, pour isoler la stabilité.
+
+**Suivi**, sur le PC de développement allumé pendant 48 h, depuis la racine du dépôt :
+
+    python alfea/tools/suivi_endurance.py            # Ctrl+C à la fin
+    python alfea/tools/suivi_endurance.py --resume   # bilan
+
+L'outil est passif vis-à-vis de la PAC : aucune trame supplémentaire sur le bus.
+- Il interroge `/JI` toutes les 5 min. Ce sont des informations internes de BSB-LAN : `uptime`, mémoire libre.
+- Il s'abonne au broker MQTT : disponibilité `BSB-LAN/status`, et valeurs publiées par BSB-LAN chaque minute, dont 6700, 6701 et 6708.
+- Sorties dans `alfea/build/endurance/` (`ji.csv`, `mqtt.log`, ignorées par git).
+
+**Critères** (08 §6, T4) :
+
+| Critère | Seuil |
+|---|---|
+| Redémarrages (uptime qui recule) | 0 |
+| Mémoire libre | stable : pas de baisse continue sur 48 h |
+| Disponibilité MQTT | aucun « offline » hors coupure volontaire |
+| Erreurs PAC (6700, 6701, 6708) | aucune valeur non nulle imputable à la carte ; IHM sans erreur de communication |
+| Valeurs dans HA | continues, plausibles (comparaison ponctuelle avec l'IHM) |
+
+En cas de redémarrage, rebrancher la console USB pour obtenir la trace (`python alfea/tools/flasher.py console`), puis la décoder (08a §6.1).
+
