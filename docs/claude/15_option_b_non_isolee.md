@@ -20,11 +20,11 @@ Six blocs câblés. Les masses et les rails passent par des symboles d'alimentat
 
 | Bloc | Composants | Rôle |
 |---|---|---|
-| 1. Entrée | J1 HC-JXDZVC-3.5-3P (fiche JJ1 HC-JXDZK-3.5-3P), D3 et D6 SMAJ18CA | J1-1 = CL+ (X86-1), J1-2 = CL- (X86-2), J1-3 = G+ (X86-3) : câblage 1-1, 2-2, 3-3. D3 et D6 écrêtent CL+ et G+ |
+| 1. Entrée | J1 HC-JXDZVC-3.5-3P (fiche JJ1 HC-JXDZK-3.5-3P), D3 et D6 SMAJ18CA | **J1-1 = G+ (X86-3), J1-2 = CL- (X86-2), J1-3 = CL+ (X86-1)** : câblage **croisé** 3 → 1, 2 → 2, 1 → 3 (ordre inversé par l'utilisateur au routage, sérigraphie « G+ » en haut et « CL+ » en bas). D3 écrête CL+, D6 écrête G+ |
 | 2. Alimentation | D2 SS14, C6, R6, U2 AP63205WU-7, C9, L1 4,7 µH, C7 et C8, D4 | G+ vers 5 V. Valeurs du tableau 3 de la datasheet Diodes (L 4,7 µH, Cin 10 µF, Cout 2 × 22 µF, Cboot 100 nF) [CONSTATÉ] |
-| 3. Réception | R1 100 k, R2 33 k, C4 100 pF, U1A, U1B, U1D, R3, D1 | CL+ vers RX (GPIO6) ; U1D recopie le bus sur la LED |
-| 4. Émission | R7 10 k, U1C, R4 100 Ω, R5 100 k, Q1 2N7002 | TX (GPIO7) vers CL+ |
-| 5. U1 | U1G (alimentation), C5 ; U1E et U1F, entrées à la masse | |
+| 3. Réception | R1 100 k, R2 33 k, C4 100 pF, U1A (1 → 2), U1E (11 → 10), U1B (3 → 4), R3, D1 | CL+ vers RX (GPIO6) par U1A puis U1E ; U1B recopie le bus sur la LED |
+| 4. Émission | R7 10 k, U1D (9 → 8), R4 100 Ω, R5 100 k, Q1 2N7002 | TX (GPIO7) vers CL+ |
+| 5. U1 | U1G (alimentation), C5 ; U1C (5) et U1F (13), entrées à la masse | portes permutées par l'utilisateur au routage (version fabriquée) |
 | 6. SuperMini, DHT22 | J4, J5, C1 à C3, J3, R9, R10, D5 | **repris tels quels du schéma principal** (mêmes valeurs et références JLCPCB) |
 
 **Retirés par rapport à la carte principale** : U1 et U2 (LTV-4N25), Q1 et Q2 (BC847C, BC857C), R1 à R8 de l'interface bus, D2 (1N4148W dans le retour CL-), J2 (entrée 5 V, inutile puisque G+ alimente la carte), J1 2 points.
@@ -58,14 +58,14 @@ Pont R1 / R2 : rapport 33 / 133 = **0,248**. Le 74HC14 est alimenté en 3,3 V.
 | Surtension (29 V écrêtés par D3) | 7,2 V au pont : courant d'injection ≤ (7,2 − 3,8) / 24,8 kΩ ≈ 0,14 mA, bref, admissible (20 mA max. selon la datasheet) |
 | Filtre C4 | τ = 24,8 kΩ × 100 pF = 2,5 µs, pour un bit de 208 µs |
 
-U1A inverse, U1B rétablit le niveau : **RX = niveau du bus**, comme le phototransistor de V3. U1D, branché après U1A, recopie aussi le bus sur la LED D1 (1,5 mA pris sur le 3,3 V, pas sur le bus). D1 est allumée au repos et clignote au trafic, comme V3. Si J1 est branché par erreur sur G+, la LED reste fixe.
+U1A inverse, U1E rétablit le niveau : **RX = niveau du bus**, comme le phototransistor de V3. U1B, branché après U1A, recopie aussi le bus sur la LED D1 (1,5 mA pris sur le 3,3 V, pas sur le bus). D1 est allumée au repos et clignote au trafic, comme V3. Si J1 est branché par erreur sur G+, la LED reste fixe.
 
 ## 4. Émission (TX vers CL+)
 
 | Grandeur | Valeur |
 |---|---|
-| TX haut (repos) | U1C en sortie basse, Q1 bloqué, bus libre |
-| TX bas | U1C en sortie haute (3,3 V), Q1 conduit, CL+ tiré à **≈ 0,2 V** [SUPPOSÉ : R_DS(on) de quelques ohms sous V_GS 3,3 V, non spécifié en dessous de 4,5 V, **à mesurer**], pour quelques dizaines de mA de bus [SUPPOSÉ, 09 §2.3]. V3 descendait à environ 1,5 V |
+| TX haut (repos) | U1D en sortie basse, Q1 bloqué, bus libre |
+| TX bas | U1D en sortie haute (3,3 V), Q1 conduit, CL+ tiré à **≈ 0,2 V** [SUPPOSÉ : R_DS(on) de quelques ohms sous V_GS 3,3 V, non spécifié en dessous de 4,5 V, **à mesurer**], pour quelques dizaines de mA de bus [SUPPOSÉ, 09 §2.3]. V3 descendait à environ 1,5 V |
 | Démarrage, GPIO en haute impédance | R7 tire TX à 3,3 V : Q1 reste bloqué (rôle de R8 sur la carte principale) |
 | 3,3 V absent | U1 n'est pas alimenté, R5 tient la grille à 0 : Q1 bloqué |
 | Courant admissible de Q1 | 115 mA en continu, 800 mA en impulsion (2N7002 CJ) : suffisant si la source du bus est limitée, comme supposé pour V3 [SUPPOSÉ, 06 Q5] |
@@ -77,9 +77,9 @@ U1A inverse, U1B rétablit le niveau : **RX = niveau du bus**, comme le phototra
 | Sujet | Effet | Disposition |
 |---|---|---|
 | USB-C | la masse de l'ESP32 est CL- de la PAC. Un PC fixe relié à la terre par sa prise relie la terre à CL- : courant de boucle, perturbation du bus, risque pour le port USB si CL- n'est pas au potentiel de la terre [SUPPOSÉ : référence de CL- inconnue] | carte raccordée : PC portable **sur batterie** ou isolateur USB (ADuM3160 ou équivalent). Pour flasher en temps normal : carte débranchée de X86 |
-| Surtensions | elles arrivent sur la logique sans barrière | D3 et D6 en entrée, R1 (100 kΩ) devant U1, RX tamponné par U1B (aucune broche de l'ESP32 n'est reliée au bus) |
-| Erreur de câblage 1 ↔ 2 (CL+ et CL- inversés) | carte non alimentée (G+ − « masse » ≈ 0 V) ; la diode interne de Q1 relie CL+ et CL- : **bus en court-circuit** tant que l'erreur dure [SUPPOSÉ : état toléré par la PAC, comme un bit à 0 prolongé] | contrôler au multimètre avant d'enficher la fiche (09 §8) |
-| Erreur de câblage 1 ↔ 3 (CL+ et G+ inversés) | U2 se nourrit sur CL+ : ≈ 50 mA tirés sur le bus, **communication de la PAC perturbée**, et la LED reste fixe | même contrôle ; repérer les fils |
+| Surtensions | elles arrivent sur la logique sans barrière | D3 et D6 en entrée, R1 (100 kΩ) devant U1, RX tamponné par U1E (aucune broche de l'ESP32 n'est reliée au bus) |
+| Erreur de câblage CL+ ↔ CL- (J1-3 et J1-2) | carte non alimentée (G+ − « masse » ≈ 0 V) ; la diode interne de Q1 relie CL+ et CL- : **bus en court-circuit** tant que l'erreur dure [SUPPOSÉ : état toléré par la PAC, comme un bit à 0 prolongé] | contrôler au multimètre avant d'enficher la fiche (09 §8) |
+| Erreur de câblage CL+ ↔ G+ (par exemple câblage 1-1, 3-3 au lieu du câblage croisé) | U2 se nourrit sur CL+ : ≈ 50 mA tirés sur le bus, **communication de la PAC perturbée**, et la LED reste fixe | même contrôle ; repérer les fils |
 | Écart à la mission | décision D6 (« optocoupleurs conservés ») et adaptateur V3 | **choix explicite de l'utilisateur** pour cette option, à valider avant toute fabrication |
 
 ## 6. Nomenclature et coût
@@ -113,7 +113,7 @@ Construction [CONSTATÉ, API pcbnew de `kicad/kicad:9.0.6`, à partir d'une copi
   - au centre : U1 (SOIC-14) ;
   - à sa gauche, réception et émission : R1, R2, C4, R4, R5, Q1 ;
   - à sa droite : C5, R7, R3, D1 ;
-  - D6 sous D3, près de G+ (J1-3) ;
+  - D6 et D3 près de J1 (placement initial ; l'utilisateur a ensuite inversé J1 et déplacé D6 près de G+, J1-1) ;
 - repères en sérigraphie de 0,8 mm, horizontaux. Règles de conception du projet principal reprises (`.kicad_pro`).
 
 DRC avec parité, toutes sévérités [CONSTATÉ] : **0 écart avec le schéma**, aucun chevauchement de courtyard ni de sérigraphie, **63 connexions non routées** (normal : routage à faire). Les références et les champs JLCPCB sont liés au schéma : « Mettre à jour le PCB depuis le schéma » ne déplace rien.
@@ -131,14 +131,55 @@ DRC avec parité, toutes sévérités [CONSTATÉ] : **0 écart avec le schéma**
 
 DRC avec parité, toutes sévérités, zones remplies : **0 violation, 0 connexion manquante, 0 écart avec le schéma** [CONSTATÉ]. Sorties pour la fabrication : `bom_jlcpcb.csv`, `positions.csv` (format JLCPCB), `assemblage.pdf`. Les Gerber restent à produire par l'utilisateur.
 
-## 8. Avant toute fabrication
+## 8. Mise en service (quand la carte sera fabriquée)
+
+Ordre à suivre, **sans la PAC** jusqu'à l'étape 6. Alimentation de labo réglée sur **12 V, limite de courant 150 mA**.
+
+1. **Inspection** : sens de U1 (point de la broche 1), de U2 et de Q1, bague de cathode de D2 et D4 (côté K de la sérigraphie), LED D1. D3 et D6 sont bidirectionnelles (pas de sens). Aucun pont de soudure sur U1 (pas de 1,27 mm) ni sur U2 (TSOT-23-6).
+2. **À l'ohmmètre, hors tension, SuperMini retiré** :
+
+   | Entre | Attendu |
+   |---|---|
+   | J1-1 (G+) et J1-2 (GND) | pas de court-circuit (quelques kΩ ou plus) |
+   | `5V_IN` (anode de D4) et GND | pas de court-circuit |
+   | J1-3 (CL+) et GND | ≈ 133 kΩ (R1 + R2) |
+   | J4-3 (3V3) et GND, J4-1 (5V) et GND | pas de court-circuit |
+   | J1-1 et J1-3 | circuit ouvert |
+
+3. **12 V sur J1-1 (+) et J1-2 (−), SuperMini retiré** :
+   - courant ≤ 5 mA, car U2 passe en mode économie à vide ;
+   - `5V_IN` = 5,0 V ± 0,1 V ;
+   - J4-1 ≈ 4,7 V, avec la chute de D4 à faible courant ;
+   - D1 éteinte (pas de 3,3 V, pas de bus).
+4. **SuperMini enfiché**, flashé avec `sh docker/compiler.sh alfea` (lecture seule), USB débranché, 12 V sur J1-1 / J1-2 :
+   - 3,3 V sur J4-3 ;
+   - courant moyen de 40 à 60 mA sous 12 V une fois le WiFi connecté (§2) ;
+   - BSB-LAN répond sur le réseau.
+
+   Sur le banc, l'USB vers un PC est sans risque si l'alimentation de labo est flottante.
+5. **Bus simulé** : résistance de **1 kΩ** entre le +12 V et J1-3 (CL+), qui joue la source du bus.
+   - Au repos : CL+ ≈ 12 V, U1-1 ≈ 3,0 V, **RX (J5-2) = 3,3 V, D1 allumée**.
+   - CL+ mis à GND à la main : RX = 0, D1 éteinte.
+   - Pendant une émission de BSB-LAN (requête depuis l'interface web) : niveau bas de CL+ à mesurer, **≤ 0,3 V attendu** (Q1 sous 12 mA). À l'oscilloscope, créneaux de 208 µs ; à défaut, D1 clignote.
+   - Relever aussi les seuils réels du 74HC14 : on monte puis descend lentement la tension de CL+ et on note les basculements de RX. Attendu : bascule à ≤ 9,3 V en montée et à ≥ 2,6 V en descente (§3).
+6. **Avant de brancher sur la PAC** (GATE 3, accord de l'utilisateur) :
+   - essai de charge de G+ (14 §6), avec un palier à environ 180 mA (68 Ω) ;
+   - repérage de CL+ et G+ par la mesure en alternatif (09 §8) ;
+   - repérage de CL- par rapport à la terre ;
+   - puis câblage **croisé** X86-3 → J1-1, X86-2 → J1-2, X86-1 → J1-3, **PAC hors tension**, et firmware en lecture seule.
+
+   Carte raccordée : USB-C seulement sur un PC portable sur batterie (§5).
+
+Les mesures relevées aux étapes 3 à 5 remplacent les valeurs [SUPPOSÉ] des §2 à §4.
+
+## 9. Points restant avant la mise sur la PAC
 
 1. Essai de charge de G+ (14 §6), avec un palier proche de 180 mA.
 2. Repérer CL- au multimètre par rapport à la terre de la chaufferie, PAC sous tension : si CL- est flottant, la règle de l'USB du §5 devient impérative.
 3. Banc T1 sur simulateur : seuils réels du 74HC14 sous 3,3 V, niveau bas de Q1, écho des trames, tension du 5 V pendant l'émission WiFi.
-4. Décider entre la variante A (doc 14, isolée) et l'option B, puis produire les Gerber de la carte retenue.
+4. Choix entre la variante A (doc 14) et l'option B, puis fabrication (la carte principale rev A, isolée, a été reçue le 2026-11-09).
 
-## 9. Fichiers
+## 10. Fichiers
 
 | Fichier | Rôle |
 |---|---|

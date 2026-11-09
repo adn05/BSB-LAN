@@ -3484,7 +3484,7 @@
 		)
 		(uuid "48fcb882-edc9-4aa5-b8eb-03f157ecbeee")
 	)
-	(text "1-2. Entrée X86 (1 = CL+, 2 = CL-, 3 = G+) et alimentation 5 V non isolée"
+	(text "1-2. Entrée X86 (J1-1 = G+, J1-2 = CL-, J1-3 = CL+) et alimentation 5 V non isolée"
 		(exclude_from_sim no)
 		(at 27.94 43.18 0)
 		(effects
@@ -7422,7 +7422,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Embase enfichable 3 pts pas 3,5 mm : 1 = CL+ (X86-1), 2 = CL- (X86-2), 3 = G+ (X86-3)"
+		(property "Description" "Embase enfichable 3 pts pas 3,5 mm : 1 = G+ (X86-3), 2 = CL- (X86-2), 3 = CL+ (X86-1)"
 			(at 38.1 71.12 0)
 			(effects
 				(font
@@ -10385,7 +10385,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Fiche à vis 3 pts pas 3,5 mm pour J1, câblée 1-1, 2-2, 3-3 sur X86 (hors carte)"
+		(property "Description" "Fiche à vis 3 pts pas 3,5 mm pour J1, câblée X86-3 -> 1, X86-2 -> 2, X86-1 -> 3 (hors carte)"
 			(at 35.56 93.98 0)
 			(effects
 				(font
