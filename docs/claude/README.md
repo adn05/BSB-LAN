@@ -99,7 +99,7 @@ Réponses de l'utilisateur (après la synthèse ci-dessous) :
 - Q6 : marquage du LDO du SuperMini (ME6211 / LP5907), distance PAC ↔ point d'accès WiFi.
 - Q7 reformulée : Home Assistant est-il déjà installé, comment (HA OS ou Docker) et en quelle version ? Avez-vous un broker MQTT (en général l'add-on Mosquitto de HA) ?
 - Q9 : photo de la sérigraphie de X86, pas du connecteur, mesures de tension (09 §8), à faire avant la GATE 3.
-- Q10 : à la mise en service, valeurs de 6224-6227 (famille/variante, 08a §6).
+- ~~Q10~~ : 6224 RVS21.831F/127, famille 211, variante 127, OV 4067 (08a §6.1, 2026-11-09).
 
 ## Phase 4 — synthèse (avant la GATE 3)
 

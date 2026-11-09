@@ -153,6 +153,22 @@ Sans risque : uniquement des requêtes de lecture (`QUR`).
 3. Si 211/127 : relancer quand même l'analyse sur votre dump pour détecter des écarts de version (89.006.090).
 4. Lever **I1** : lire 3113 et 3113.4 avec le journal de débogage USB actif et noter la trame brute de 3113. Si 3113 affiche `-` alors que 3113.4 donne une valeur en kWh, retyper les compteurs `0x12` en `VT_ENERGY` (correction à ajouter au générateur).
 
+### 6.1 Relevé sur la machine de l'utilisateur (2026-11-09, firmware `alfea`, lecture seule) [CONSTATÉ]
+
+| Ligne | Valeur |
+|---|---|
+| 6220 Version du logiciel | 8.9 |
+| 6221 Indice de développement | 6 |
+| 6222 Heures de fonctionnement | 15 621 h |
+| 6224 Identification | **RVS21.831F/127** |
+| 6225 Famille | **211** |
+| 6226 Variante | **127** |
+| 6227 Version OV | **4067** (référence de la liste : 402.6) |
+| 6228 Bootloader | 4.0 |
+| 6229 EEPROM | 9.0 |
+
+Famille et variante identiques à la liste de l'issue #622 : **la liste HA s'applique** (étape 2 sans objet). La version 8.9 / 6 correspond à l'affichage de l'IHM (89.006.090, Q1). La version OV diffère (4067 contre 402.6 [SUPPOSÉ : même codage, soit 406.7]) : il reste l'étape 3, l'analyse de la liste contre **le dump `/QD` de cette machine**, pour repérer les paramètres ajoutés, retirés ou retypés entre les deux versions.
+
 ## 7. Limites
 - Une seule machine de référence (dump d'un tiers) ; les IA2 ne sont pas décodés, donc les **valeurs d'énumération** ne sont pas vérifiées.
 - Les objets cachés ne sont découvrables qu'en observant le trafic IHM ↔ régulateur (ce qu'ont fait les auteurs de #829 et #831) ; d'autres peuvent manquer.
