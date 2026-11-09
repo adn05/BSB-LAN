@@ -18,6 +18,7 @@
 | 08a | [08a_analyse_liste_parametres.md](08a_analyse_liste_parametres.md) | 3 | analyse de la liste 211/127 contre un dump `/QD`, incohérences, nouvelle liste générée |
 | 09 | [09_design_carte_interface.md](09_design_carte_interface.md) | 3 | carte porteuse SuperMini : schéma, calculs, protections, alimentation, BOM, mesure de X86 |
 | 10 | [10_journal_implementation.md](10_journal_implementation.md) | 4 | journal des étapes E0-E10, décisions et écarts, rapport de taille, diff amont |
+| 11 | [11_mise_en_service_pac.md](11_mise_en_service_pac.md) | 5 | GATE 3 : prérequis, identification de CL+ sur X86, raccordement PAC hors tension, premier essai en lecture seule (T3), relevés à transmettre |
 | 12 | [12_thermostat_home_assistant.md](12_thermostat_home_assistant.md) | 4 | thermostats HA des circuits CC1 et CC2 (paquet MQTT `climate`), installation, limites, essais |
 | 13 | [13_boitier_3d.md](13_boitier_3d.md) | 4 | boîtier imprimable en 3D (fond + couvercle, STEP et STL), ouvertures, quincaillerie, hypothèses à mesurer |
 | 14 | [14_alimentation_gplus.md](14_alimentation_gplus.md) | 4 | proposition (schéma seul) : ESP32 alimenté par G+ de X86 via un convertisseur isolé et un limiteur de courant ; essai de charge de G+ à faire avant |
