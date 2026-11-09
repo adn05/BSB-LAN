@@ -19,3 +19,8 @@
 1010
 1012
 1610
+
+# ECS : différentiel de relance et durée maximale de charge (demande de l'utilisateur, 2026-11-09)
+# Valeurs d'origine relevées sur la PAC : 5024 = 5,0 K, 5030 = 90 min
+5024
+5030

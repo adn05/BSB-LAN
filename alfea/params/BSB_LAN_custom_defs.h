@@ -4845,7 +4845,7 @@ const char S3113P4_0[] PROGMEM = "Energie utilisée totale (compteur IHM)";
 const char S5057_0[] PROGMEM = "Paramètre ECS 5057 (non documenté, valeur brute)";
 
 // ALFEA : liste blanche d'écriture (alfea/params/ecriture.txt), garde WRITE_WHITELIST de set()
-const float write_whitelist[][2] = {{501, 507.95}, {521, 527.95}, {561, 567.95}, {700, 700.95}, {1000, 1000.95}, {1600, 1600.95}, {710, 710.95}, {712, 712.95}, {1010, 1010.95}, {1012, 1012.95}, {1610, 1610.95}};
+const float write_whitelist[][2] = {{501, 507.95}, {521, 527.95}, {561, 567.95}, {700, 700.95}, {1000, 1000.95}, {1600, 1600.95}, {710, 710.95}, {712, 712.95}, {1010, 1010.95}, {1012, 1012.95}, {1610, 1610.95}, {5024, 5024.95}, {5030, 5030.95}};
 
 PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D000B,  VT_DATETIME,        0,     S0,       0,                  NULL,         FL_RONLY, 255, 255},
@@ -5255,8 +5255,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D1998,  VT_ENUM,            4761,  S4761_0,  sizeof(E4761_0),    E4761_0,      FL_RONLY, 211, 127}, // Charge forcée par rés élec
 {0x253D072F,  VT_ONOFF,           5012,  S5012_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY+FL_OEM,       211, 127}, // Charge forcée ECS
 {0x253D0720,  VT_TEMP,            5020,  S5020_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Surélévation consigne de départ ECS
-{0x313D071D,  VT_TEMP,            5024,  S5024_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Différentiel ECS
-{0x253D0731,  VT_MINUTES_WORD_N,  5030,  S5030_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Limitation du temps de charge ECS
+{0x313D071D,  VT_TEMP,            5024,  S5024_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Différentiel ECS
+{0x253D0731,  VT_MINUTES_WORD_N,  5030,  S5030_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Limitation du temps de charge ECS
 {0x253D08BD,  VT_TEMP,            5055,  S5055_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Temp. refroidissement adiabatique ballon ECS
 {0x313D0714,  VT_BYTE,            5057,  S5057_0,  0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA : objet du dump absent de la liste
 {0x253D0688,  VT_ENUM,            5061,  S5061_0,  sizeof(E5061_0),    E5061_0,      FL_RONLY, 211, 127}, // Libération résistance électrique ECS

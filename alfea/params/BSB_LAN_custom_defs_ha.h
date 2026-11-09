@@ -4845,7 +4845,7 @@ const char S3113P4_0[] PROGMEM = "Energie utilisée totale (compteur IHM)";
 const char S5057_0[] PROGMEM = "Paramètre ECS 5057 (non documenté, valeur brute)";
 
 // ALFEA : liste blanche d'écriture (alfea/params/ecriture.txt), garde WRITE_WHITELIST de set()
-const float write_whitelist[][2] = {{501, 507.95}, {521, 527.95}, {561, 567.95}, {700, 700.95}, {1000, 1000.95}, {1600, 1600.95}, {710, 710.95}, {712, 712.95}, {1010, 1010.95}, {1012, 1012.95}, {1610, 1610.95}};
+const float write_whitelist[][2] = {{501, 507.95}, {521, 527.95}, {561, 567.95}, {700, 700.95}, {1000, 1000.95}, {1600, 1600.95}, {710, 710.95}, {712, 712.95}, {1010, 1010.95}, {1012, 1012.95}, {1610, 1610.95}, {5024, 5024.95}, {5030, 5030.95}};
 
 PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D000B,  VT_DATETIME,        0,     S0,       0,                  NULL,         FL_RONLY, 255, 255},
@@ -4889,8 +4889,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D1095,  VT_ENERGY,          3113.2,S3113P2_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
 {0x053D1B7E,  VT_ENERGY,          3113.3,S3113P3_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
 {0x053D1082,  VT_ENERGY,          3113.4,S3113P4_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
-{0x313D071D,  VT_TEMP,            5024,  S5024_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Différentiel ECS
-{0x253D0731,  VT_MINUTES_WORD_N,  5030,  S5030_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Limitation du temps de charge ECS
+{0x313D071D,  VT_TEMP,            5024,  S5024_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Différentiel ECS
+{0x253D0731,  VT_MINUTES_WORD_N,  5030,  S5030_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Limitation du temps de charge ECS
 {0x053D000E,  VT_FP1,             6220,  S6220_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Version du logiciel
 {0x053D1388,  VT_UINT,            6221,  S6221_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Indice de développement
 {0x053D0011,  VT_HOURS,           6222,  S6222_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // Heures de fonctionnement
