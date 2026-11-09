@@ -20,7 +20,7 @@ Conventions : **[CONSTATÉ]**, **[SUPPOSÉ]**, **[À VÉRIFIER]**, **[CHOIX]** (
 
 ## 2. Correspondance avec les paramètres
 
-| Élément HA | CC1 (salon + cuisine) | CC2 (chambres) | Notes |
+| Élément HA | CC1 (chambre) | CC2 (salon) | Notes |
 |---|---|---|---|
 | Température actuelle | 8740 `BSB-LAN/0/32/8740/status` | 8770 `…/0/32/8770/status` | sonde ambiante (Navilink A59) |
 | Consigne (lecture et écriture) | 710 `…/0/8/710/status`, `…/set` | 1010 `…/0/10/1010/status`, `…/set` | **consigne de confort** (§3.2) ; envoyée avec 1 décimale (`'%.1f'`) |
@@ -74,7 +74,7 @@ En période réduite (`auto` hors plage horaire, ou `eco`), la consigne réellem
      packages: !include_dir_named packages
    ```
 3. Aller dans Outils de développement > YAML > Vérifier la configuration, puis redémarrer HA. Le rechargement « Entités MQTT configurées manuellement » suffit pour les modifications suivantes.
-4. Deux entités apparaissent dans l'appareil BSB-LAN : `climate.bsb_lan_thermostat_cc1_salon_cuisine` et `climate.bsb_lan_thermostat_cc2_chambres` [SUPPOSÉ : identifiants dérivés du nom de l'appareil ; dans le HA jetable, l'appareil n'avait pas de nom propre]. Ajouter ensuite une carte « Thermostat » au tableau de bord.
+4. Deux entités apparaissent dans l'appareil BSB-LAN : `climate.bsb_lan_thermostat_cc1_salon_cuisine` et `climate.bsb_lan_thermostat_cc2_chambres` (noms affichés « Thermostat chambre » et « Thermostat salon » depuis la correction du 2026-11-09 : CC1 = chambre, CC2 = salon ; les `entity_id` déjà créés gardent l'ancien libellé, à renommer dans HA si souhaité) [SUPPOSÉ : identifiants dérivés du nom de l'appareil ; dans le HA jetable, l'appareil n'avait pas de nom propre]. Ajouter ensuite une carte « Thermostat » au tableau de bord.
 5. Pour piloter : firmware `alfea-ecriture` et mode d'écriture 1 (`/C`, ou `/JW {"Parameter":33,"Value":"1"}`). Seules les lignes de `alfea/params/ecriture.txt` sont modifiables.
 
 ## 5. Contrôles réalisés

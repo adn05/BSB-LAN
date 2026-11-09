@@ -79,7 +79,7 @@
 
 Réponses de l'utilisateur (après la synthèse ci-dessous) :
 - liste de paramètres : **réduite aux paramètres utiles** → 96 entrées, 1 638 533 o (83 %), soit −58 752 o (08a §5.4) ;
-- paramètres HA validés ; **2 circuits** (CC1 : salon et cuisine ; CC2 : chambres) ;
+- paramètres HA validés ; **2 circuits** (CC1 : chambre ; CC2 : salon, corrigé le 2026-11-09) ;
 - **écriture** souhaitée pour les **programmes horaires, modes et consignes** (CC1, CC2, ECS) : liste blanche, désactivée par défaut, avertissement et procédure dans 08 §5.2 ;
 - fichiers de la carte dans **`alfea/hardware/`** : projet KiCad 9 généré, ERC/DRC/parité à 0, **non routé** (09 §9) ;
 - alimentation : **chargeur USB**, rail DIN en option ;

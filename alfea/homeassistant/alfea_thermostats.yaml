@@ -11,7 +11,7 @@
 
 mqtt:
   climate:
-    - name: "Thermostat CC1 salon cuisine"
+    - name: "Thermostat chambre"
       unique_id: alfea_thermostat_cc1
       device:
         identifiers: ["BSB-LAN-DC067567DA2C"]   # appareil créé par la discovery de BSB-LAN
@@ -45,7 +45,7 @@ mqtt:
         {% set c = value.split(' - ')[0] | int(-1) %}{{ 'heating' if c in [103, 104, 105, 106, 111, 112, 113, 114, 116]
         else ('off' if c in [25, 162] else 'idle') }}
 
-    - name: "Thermostat CC2 chambres"
+    - name: "Thermostat salon"
       unique_id: alfea_thermostat_cc2
       device:
         identifiers: ["BSB-LAN-DC067567DA2C"]

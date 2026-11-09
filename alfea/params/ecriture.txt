@@ -3,7 +3,7 @@
 # Avertissement, effets d'une erreur et procédure : docs/claude/08_plan_migration.md §5.2.
 # Format : numéros ou plages « a-b » (sous-lignes comprises), commentaires « # ».
 
-# Programmes horaires : CC1 (salon + cuisine), CC2 (chambres), ECS
+# Programmes horaires : CC1 (chambre), CC2 (salon), ECS
 501-507
 521-527
 561-567

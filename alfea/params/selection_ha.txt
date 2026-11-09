@@ -8,7 +8,7 @@
 # Identification (famille, variante, versions) : indispensable à la mise en service (08a §6)
 6220-6229
 
-# Programmes horaires : CC1 (salon + cuisine), CC2 (chambres), ECS
+# Programmes horaires : CC1 (chambre), CC2 (salon), ECS
 501-507
 521-527
 561-567

@@ -107,7 +107,7 @@ L'ordre met la **sécurité avant l'optimisation** : à partir de E4, le firmwar
 | Extérieur | 8700 | Température extérieure | °C | |
 | CC1 | 8740, 8741 | Température ambiante réelle / consigne ambiante actuelle CC1 | °C | 8740 vient de la sonde A59 |
 | CC1 | 8743, 8744 | Température de départ / consigne de départ résultante CC1 | °C | |
-| CC2 | 8770, 8771, 8773 | Ambiante, consigne ambiante, départ CC2 | °C | CC2 confirmé : chambres. CC1 : salon et cuisine |
+| CC2 | 8770, 8771, 8773 | Ambiante, consigne ambiante, départ CC2 | °C | **CC1 : chambre, CC2 : salon** (correction de l'utilisateur, 2026-11-09 ; l'attribution inverse notée à la GATE 2 était fausse) |
 | PAC | 8410, 8411, 8412 | Retour PAC, consigne PAC, départ PAC | °C | |
 | PAC | 8400 | État compresseur 1 | on/off | |
 | PAC | 8413 | Modulation compresseur | % | |
@@ -129,8 +129,8 @@ L'ordre met la **sécurité avant l'optimisation** : à partir de E4, le firmwar
 
 | Programme | Lignes (lundi → dimanche) | CmdID du lundi | Accès (dump, `id4`) |
 |---|---|---|---|
-| CC1, salon + cuisine | 501-507 | `0x053D0A8C` | 0x11 : utilisateur final |
-| CC2, chambres | 521-527 | `0x063D0A8C` | 0x11 |
+| CC1, chambre | 501-507 | `0x053D0A8C` | 0x11 : utilisateur final |
+| CC2, salon | 521-527 | `0x063D0A8C` | 0x11 |
 | ECS | 561-567 | `0x053D0AA0` | 0x11 |
 
 - **Format** (`VT_TIMEPROG`, `BSB_LAN/BSB_LAN.ino:3358-3385`) : jusqu'à 3 plages par jour, par exemple `06:00-08:00 17:00-22:30`. Les plages absentes sont envoyées comme désactivées (`0x80`). Le pas des minutes accepté par le régulateur n'est pas connu [À VÉRIFIER : 10 ou 15 min sur l'IHM].
