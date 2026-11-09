@@ -13,7 +13,7 @@ Conventions : **[CONSTATÉ]**, **[SUPPOSÉ]**, **[À VÉRIFIER]**. Repère : X l
 
 | Élément | Choix | Justification |
 |---|---|---|
-| Plan de joint | horizontal, à **Z = 23,7 mm**, sur l'axe de l'USB-C : fond de 23,7 mm, couvercle de 17,1 mm | toutes les ouvertures sont à cheval sur le joint (demande de l'utilisateur) ; les câbles sont pincés entre les deux pièces |
+| Plan de joint | horizontal, sur l'axe de l'USB-C : **Z = 19,5 mm** avec le SuperMini retourné de la rev A (fond 19,5 mm, couvercle 21,3 mm, §7) ; 23,7 mm avec un module à l'endroit | toutes les ouvertures sont à cheval sur le joint (demande de l'utilisateur) ; les câbles sont pincés entre les deux pièces |
 | Emboîtement | lèvre de 1 × 2 mm sur le pourtour intérieur du fond, logée dans le couvercle avec 0,2 mm de jeu | centrage et fermeture du joint |
 | Carte | 4 entretoises Ø 7 × 6 mm ; **vis M3 × 8 ou M3 × 6** tête cylindrique, avant-trou Ø 2,5 (6,4 ou 4,4 mm de filet) | les pattes traversantes dépassent de **1,8 mm** sous la carte [CONSTATÉ, STEP KiCad] |
 | Couvercle | 4 colonnes Ø 10 aux angles extérieurs (centres décalés de 0,5 mm vers l'extérieur, pour dégager les angles de la carte) ; **vis M3 × 8 ou M3 × 6** par le dessus, **tête noyée** dans un lamage Ø 6,2 qui descend jusqu'à 2 mm au-dessus du joint ; passage Ø 3,4, avant-trou Ø 2,5 dans le fond (6,0 ou 4,0 mm de filet) | une seule longueur de vis courte pour tout le boîtier (demande de l'utilisateur) ; lamage de 15,1 mm de profondeur : prendre la vis avec un tournevis ou une clé à six pans longs |
@@ -62,7 +62,7 @@ Fichiers (`alfea/hardware/boitier/sorties/`) : `boitier_fond.step/.stl`, `boitie
 |---|---|---|
 | Hauteur de la fiche J1/J2 enfichée | 19 mm au-dessus de la carte [SUPPOSÉ] | enficher JJ1 sur J1 et mesurer ; si plus de 22 mm, augmenter `H_INT` |
 | Côté du verrou des fiches (débord de 3,9 mm) | vers l'intérieur de la carte [SUPPOSÉ] | à l'œil sur la carte montée ; s'il est vers le bord arrière, garder `JEU_AR` = 3 mm au moins |
-| Hauteur du SuperMini (entretoise des picots) | 2,5 mm [SUPPOSÉ] | mesurer : axe de l'USB-C attendu à 13,7 mm au-dessus de la carte. Le plan de joint suit (`Z_JOINT = USB_Z`) |
+| Hauteur du SuperMini (entretoise des picots) | 2,5 mm [SUPPOSÉ] | mesurer : axe de l'USB-C attendu à **9,5 mm** au-dessus de la carte, module retourné (13,7 mm à l'endroit). Le plan de joint suit (`Z_JOINT = USB_Z`) |
 | Débord de l'USB-C au-delà du module | 0,6 mm [SUPPOSÉ] | pied à coulisse ; le jeu à droite est de 1 mm |
 | Connecteur Dupont sur J3 | 14 mm de haut [SUPPOSÉ] | selon le câble du DHT22 |
 | Câbles | bus ≤ 6 mm [SUPPOSÉ] ; connecteur Dupont du DHT22 ≤ 8,5 × 3,5 mm | ajuster `CABLE_J1` et `SORTIE_DHT` |
@@ -74,3 +74,12 @@ Toutes ces cotes sont des paramètres en tête de `boitier.py`. Après modificat
 `sh docker/cadquery/boitier.sh` depuis la racine du dépôt (≈ 10 s une fois l'image construite) :
 1. export du volume de la carte par `kicad/kicad:9.0.6` dans `alfea/build/boitier/` (ignoré par git) ;
 2. génération dans l'image `alfea-cadquery:2.5.2` (`docker/cadquery/Dockerfile` : Python 3.11, CadQuery 2.5.2, OCP 7.7.2, versions figées), contrôles, exports STEP, STL et aperçu.
+
+## 7. Carte rev A : SuperMini retourné (2026-11-09)
+
+Les rangées J4 / J5 de la rev A sont en miroir du brochage réel : le module s'enfiche **retourné**, avec l'USB-C sous le module (09 §10.1). Paramètre `SUPERMINI_RETOURNE = True` (par défaut) dans `boitier.py` :
+- l'axe de l'USB-C descend de 4,2 mm, à 9,5 mm au-dessus de la carte, et le **plan de joint passe à Z = 19,5 mm** (fond de 19,5 mm, couvercle de 21,3 mm). L'ouverture de l'USB-C et les demi-ouvertures suivent ;
+- la lèvre d'emboîtement est retirée le long de la paroi droite : le bout du module, abaissé, la touchait (0,2 mm³ détectés par le contrôle). Elle reste sur les trois autres côtés ;
+- contrôles : 0 mm³ d'interférence, filets de 6,4 / 6,0 mm en M3 × 8 [CONSTATÉ].
+
+Pour une carte corrigée, mettre `SUPERMINI_RETOURNE = False` et relancer `sh docker/cadquery/boitier.sh`. Le plan de joint revient alors à 23,7 mm.

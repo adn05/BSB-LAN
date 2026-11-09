@@ -51,7 +51,11 @@ COINS = [(EX0 - DECAL_COLONNE, EY0 - DECAL_COLONNE), (EX1 + DECAL_COLONNE, EY0 -
 # Ouvertures, toutes centrées sur le plan de joint
 USB_Y, USB_L, USB_H, USB_R = 16.47, 13.0, 9.0, 3.0  # USB-C du SuperMini, paroi droite, coins arrondis R 3
 SUPERMINI_DESSOUS = Z_DESSUS_CARTE + 8.6 + 2.5      # barrette femelle 8,6 mm + entretoise des picots 2,5 mm [SUPPOSÉ]
-USB_Z = SUPERMINI_DESSOUS + 1.0 + 1.6               # axe de l'USB-C (circuit 1 mm, prise de 3,2 mm de haut)
+# Carte rev A : rangées J4 / J5 en miroir du brochage réel, le SuperMini s'enfiche RETOURNÉ (composants et USB-C
+# vers la carte). Mettre False pour une carte corrigée (module à l'endroit).
+SUPERMINI_RETOURNE = True
+USB_BAS = SUPERMINI_DESSOUS - 3.2 if SUPERMINI_RETOURNE else SUPERMINI_DESSOUS + 1.0   # dessous de la prise USB-C
+USB_Z = USB_BAS + 1.6                               # axe de l'USB-C (prise de 3,2 mm de haut, circuit 1 mm)
 Z_JOINT = USB_Z                                     # plan de joint fond / couvercle
 CABLE_J1 = dict(paroi='gauche', pos=16.48, d=7.0)   # bus BSB (paire de fils ou câble Ø ≤ 6)
 SORTIE_DHT = dict(x=37.11, y=4.37, l=9.0, h=4.0)  # câble du DHT22 : lumière oblongue dans le dessus, au-dessus de J3,
@@ -105,6 +109,8 @@ def oreille(cote):
 def fond():
     s = boite(EX0, EX1, EY0, EY1, 0, Z_JOINT).cut(boite(IX0, IX1, IY0, IY1, FOND, Z_JOINT + 1))
     s = s.fuse(anneau(0.01, -LEVRE_EP, Z_JOINT - 1, Z_JOINT + LEVRE_H))          # lèvre intérieure au-dessus du joint
+    if SUPERMINI_RETOURNE:   # module abaissé : pas de lèvre contre la paroi droite (bout du SuperMini, USB-C)
+        s = s.cut(boite(IX1 - LEVRE_EP - 0.5, IX1 + 0.01, IY0 - 0.01, IY1 + 0.01, Z_JOINT, Z_JOINT + LEVRE_H + 1))
     for x, y in COINS:
         s = s.fuse(cyl(COLONNE_D / 2, (x, y, 0), (0, 0, 1), Z_JOINT))
     for x, y in TROUS:
@@ -147,7 +153,7 @@ def fantomes():
         'câble du DHT22 (Ø 3,5)': cyl(1.75, (SORTIE_DHT['x'], SORTIE_DHT['y'], t + 8.6 + 14.0), (0, 0, 1), Z_TOTAL - t + 10),
         'J4, J5 barrettes': boite(44.72, 65.04, 133 - 125.42, 133 - 107.63, t, t + 8.6),
         'SuperMini': boite(sm_x0, sm_x0 + 22.5, 133 - 125.5, 133 - 107.5, SUPERMINI_DESSOUS, SUPERMINI_DESSOUS + 1.0),
-        'USB-C': boite(66.6 - 7.4, 66.6, USB_Y - 4.5, USB_Y + 4.5, SUPERMINI_DESSOUS + 1.0, SUPERMINI_DESSOUS + 4.2),
+        'USB-C': boite(66.6 - 7.4, 66.6, USB_Y - 4.5, USB_Y + 4.5, USB_BAS, USB_BAS + 3.2),
         'U1, U2': boite(120.41 - 100, 128.30 - 100, 133 - 128.23, 133 - 104.73, t, t + 3.8),
         'pattes sous la carte': boite(7.0, 59.0, 0.5, 32.5, Z_CARTE - 1.9, Z_CARTE),   # hors entretoises
     }
