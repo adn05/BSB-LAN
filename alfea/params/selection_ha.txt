@@ -50,6 +50,13 @@
 3113-3113.4
 8450
 8451
+# Chaleur fournie et COP, si la PAC les renseigne (demande de l'utilisateur, 2026-11-10)
+3110
+3116
+
+# Dérogation temporaire : écart de consigne en cours, CC1 (chambre) et CC2 (salon), objets cachés #829
+701.3
+1001.3
 
 # Défauts
 6700

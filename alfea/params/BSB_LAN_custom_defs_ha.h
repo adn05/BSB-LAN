@@ -4848,7 +4848,7 @@ const char S5057_0[] PROGMEM = "Paramètre ECS 5057 (non documenté, valeur brut
 const float write_whitelist[][2] = {{501.0, 507.95}, {521.0, 527.95}, {561.0, 567.95}, {700.0, 700.95}, {1000.0, 1000.95}, {1600.0, 1600.95}, {710.0, 710.95}, {712.0, 712.95}, {1010.0, 1010.95}, {1012.0, 1012.95}, {1610.0, 1610.95}, {5024.0, 5024.95}, {5030.0, 5030.95}};
 
 // ALFEA : lignes annoncées à Home Assistant (alfea/params/selection_ha.txt), filtre MQTT_DISCOVERY_SKIP
-static const float alfea_ha[][2] = {{0.0, 3.95}, {6220.0, 6229.95}, {501.0, 507.95}, {521.0, 527.95}, {561.0, 567.95}, {10020.0, 10033.95}, {700.0, 700.95}, {710.0, 710.95}, {712.0, 712.95}, {1000.0, 1000.95}, {1010.0, 1010.95}, {1012.0, 1012.95}, {1600.0, 1600.95}, {1610.0, 1610.95}, {5024.0, 5024.95}, {5030.0, 5030.95}, {8700.0, 8700.95}, {8740.0, 8744.95}, {8770.0, 8774.95}, {8410.0, 8413.95}, {8830.0, 8832.95}, {8000.0, 8000.95}, {8001.0, 8001.95}, {8003.0, 8003.95}, {8006.0, 8006.95}, {8400.0, 8400.95}, {8402.0, 8402.95}, {8403.0, 8403.95}, {8460.0, 8460.95}, {8821.0, 8821.95}, {3113.0, 3114.35}, {8450.0, 8450.95}, {8451.0, 8451.95}, {6700.0, 6700.95}, {6701.0, 6701.95}, {6708.0, 6708.95}};
+static const float alfea_ha[][2] = {{0.0, 3.95}, {6220.0, 6229.95}, {501.0, 507.95}, {521.0, 527.95}, {561.0, 567.95}, {10020.0, 10033.95}, {700.0, 700.95}, {710.0, 710.95}, {712.0, 712.95}, {1000.0, 1000.95}, {1010.0, 1010.95}, {1012.0, 1012.95}, {1600.0, 1600.95}, {1610.0, 1610.95}, {5024.0, 5024.95}, {5030.0, 5030.95}, {8700.0, 8700.95}, {8740.0, 8744.95}, {8770.0, 8774.95}, {8410.0, 8413.95}, {8830.0, 8832.95}, {8000.0, 8000.95}, {8001.0, 8001.95}, {8003.0, 8003.95}, {8006.0, 8006.95}, {8400.0, 8400.95}, {8402.0, 8402.95}, {8403.0, 8403.95}, {8460.0, 8460.95}, {8821.0, 8821.95}, {3113.0, 3113.45}, {8450.0, 8450.95}, {8451.0, 8451.95}, {3110.0, 3110.95}, {3116.0, 3116.95}, {701.3, 701.35}, {1001.3, 1001.35}, {6700.0, 6700.95}, {6701.0, 6701.95}, {6708.0, 6708.95}};
 static inline bool alfea_dans_ha(float l) {
   for (unsigned i = 0; i < sizeof(alfea_ha) / sizeof(alfea_ha[0]); i++) {
     if (l >= alfea_ha[i][0] && l <= alfea_ha[i][1]) return true;
@@ -4884,20 +4884,24 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0AA6,  VT_TIMEPROG,        567,   S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x2D3D0574,  VT_ENUM,            700,   S700_0,   sizeof(E700_0),     E700_0,       DEFAULT_FLAG, 211, 127}, // Mode de fonctionnement
 {0x2D3D0574,  VT_ENUM,            700,   S_BA_TEXT,sizeof(E_BA_HK),    E_BA_HK,      DEFAULT_FLAG, 255, 255}, // Mode de fonctionnement
+{0x053D1AA6,  VT_TEMP,            701.3, S701P3_0, 0,                  NULL,         FL_RONLY, 211, 127}, // ALFEA #829 : écart de consigne de la dérogation CC1
 {0x2D3D058E,  VT_TEMP,            710,   S710_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de confort
 {0x2D3D0590,  VT_TEMP,            712,   S712_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne régime REDUIT
 {0x2E3D0574,  VT_ENUM,            1000,  S1000_0,  sizeof(E1000_0),    E1000_0,      DEFAULT_FLAG, 211, 127}, // Mode de fonctionnement
 {0x2E3D0574,  VT_ENUM,            1000,  S_BA_TEXT,sizeof(E_BA_HK),    E_BA_HK,      DEFAULT_FLAG, 255, 255}, // Mode de fonctionnement
+{0x063D1AA6,  VT_TEMP,            1001.3,S1001P3_0,0,                  NULL,         FL_RONLY, 211, 127}, // ALFEA #829 : écart de consigne de la dérogation CC2
 {0x2E3D058E,  VT_TEMP,            1010,  S1010_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de confort
 {0x2E3D0590,  VT_TEMP,            1012,  S1012_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne régime REDUIT
 {0x313D0571,  VT_ENUM,            1600,  S1600_0,  sizeof(E1600_0),    E1600_0,      DEFAULT_FLAG, 211, 127}, // Mode de fonctionnement
 {0x313D0571,  VT_ENUM,            1600,  S_BA_TEXT,sizeof(E_BA_TW),    E_BA_TW,      DEFAULT_FLAG, 255, 255}, // Mode de fonctionnement
 {0x313D06B9,  VT_TEMP,            1610,  S1610_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne nominale de température ECS
+{0x053D10B3,  VT_STRING,          3110,  S3110_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Chaleur fournie
 {0x053D10B4,  VT_STRING,          3113,  S3113_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Energie utilisée
 {0x053D1094,  VT_ENERGY,          3113.1,S3113P1_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
 {0x053D1095,  VT_ENERGY,          3113.2,S3113P2_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
 {0x053D1B7E,  VT_ENERGY,          3113.3,S3113P3_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
 {0x053D1082,  VT_ENERGY,          3113.4,S3113P4_0,0,                  NULL,         FL_RONLY,     211, 127}, // ALFEA #831
+{0x053D1083,  VT_UINT100_WORD,    3116,  S3116_0,  0,                  NULL,         FL_RONLY+FL_OEM, 211, 127}, // COP
 {0x313D071D,  VT_TEMP,            5024,  S5024_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Différentiel ECS
 {0x253D0731,  VT_MINUTES_WORD_N,  5030,  S5030_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Limitation du temps de charge ECS
 {0x053D000E,  VT_FP1,             6220,  S6220_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Version du logiciel

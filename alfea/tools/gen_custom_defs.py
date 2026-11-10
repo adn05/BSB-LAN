@@ -76,7 +76,9 @@ def lire_selection(chemin):
         if not ligne:
             continue
         debut, _, fin = ligne.partition('-')
-        plages.append((float(debut), float(fin or debut) + 0.95))
+        fin = fin or debut
+        # « 8460 » couvre aussi ses sous-lignes (8460.1…) ; « 701.3 » ou « …-3113.4 » s'arrête à la sous-ligne citée
+        plages.append((float(debut), round(float(fin) + (0.05 if '.' in fin else 0.95), 2)))
     return plages
 
 

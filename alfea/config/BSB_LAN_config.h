@@ -85,7 +85,9 @@ uint8_t LogDestination = FLASH;
 uint8_t logTelegram = LOGTELEGRAM_OFF;
 
 /*
- * Paramètres journalisés et publiés en MQTT (docs/claude/08 §5.1) : 40 entrées, tableau de 48.
+ * Paramètres journalisés et publiés en MQTT (docs/claude/08 §5.1) : 48 entrées, tableau de 48.
+ * Les 8 dernières (8742 à 1001.3) sont ajoutées à la demande de l'utilisateur (2026-11-10) ; 701.3, 1001.3, 3110 et
+ * 3116 n'existent que dans les listes régénérées à cette date (sinon ligne inconnue, ignorée).
  */
 unsigned long log_interval = 60;
 parameter log_parameters[48] = {
@@ -129,6 +131,14 @@ parameter log_parameters[48] = {
   {6708, -1},    // Message d'erreur PAC
   {20100.1, -1}, // DHT22 : température
   {20100.2, -1}, // DHT22 : humidité
+  {8742, -1},    // Température modèle d'ambiance CC1 (chambre)
+  {8772, -1},    // Température modèle d'ambiance CC2 (salon)
+  {8774, -1},    // Consigne de départ résultante CC2 (salon)
+  {6701, -1},    // Erreur 2
+  {3110, -1},    // Chaleur fournie
+  {3116, -1},    // COP
+  {701.3, -1},   // Dérogation temporaire : écart de consigne CC1 (#829)
+  {1001.3, -1},  // Dérogation temporaire : écart de consigne CC2 (#829)
 };
 
 /*
@@ -222,7 +232,7 @@ static inline const char *alfea_prefixe(float l) {
   if (l >= 700 && l < 1000) return "Chambre";
   if (l >= 1000 && l < 1300) return "Salon";
   if ((l >= 1600 && l < 1700) || (l >= 5000 && l < 5200)) return "ECS";
-  if (l >= 3113 && l < 3114) return "Énergie";
+  if (l == 3110 || (l >= 3113 && l < 3114) || l == 3116) return "Énergie";
   if (l >= 6220 && l < 6230) return "Config";
   if (l >= 6700 && l < 6710) return "Défaut";
   if (l == 8000 || (l >= 8740 && l < 8750)) return "Chambre";
