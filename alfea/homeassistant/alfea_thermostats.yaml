@@ -19,7 +19,7 @@ mqtt:
       temperature_unit: "C"
       precision: 0.1
       temp_step: 0.5
-      min_temp: 12
+      min_temp: 16
       max_temp: 26
       # Température ambiante mesurée (8740) ; consigne = consigne de confort (710).
       current_temperature_topic: "BSB-LAN/0/32/8740/status"
@@ -58,7 +58,7 @@ mqtt:
       temperature_unit: "C"
       precision: 0.1
       temp_step: 0.5
-      min_temp: 12
+      min_temp: 16
       max_temp: 26
       current_temperature_topic: "BSB-LAN/0/32/8770/status"
       temperature_state_topic: "BSB-LAN/0/10/1010/status"
