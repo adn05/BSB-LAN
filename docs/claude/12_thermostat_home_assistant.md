@@ -86,3 +86,17 @@ En période réduite (`auto` hors plage horaire, ou `eco`), la consigne réellem
 | Paquet chargé par HA 2026.10.4 (jetable, Mosquitto de test) | `python -I alfea/tools/test_thermostat_ha.py` | [CONSTATÉ] 13/13 : 2 entités, modes, préréglages, bornes, action, services → sujets `set` attendus, retour d'état, `None` → inconnu, `offline` → indisponible ; 0 avertissement MQTT |
 | `check_config` de HA | conteneur | sans valeur probante : il ne valide pas le schéma MQTT (un mode invalide passe, contrôle négatif) |
 | HA réel de l'utilisateur | — | **non fait** : installation par l'utilisateur (§4) |
+
+## 6. Évolution prévue : thermostat piloté par la dérogation temporaire (demande du 2026-11-10)
+Objectif de l'utilisateur : le thermostat HA se comporte comme l'afficheur de la PAC et les A59.
+- **Consigne affichée** = consigne en vigueur, 8741 (chambre) / 8771 (salon), et non plus la consigne de confort 710 / 1010.
+- **Consigne modifiée dans HA** = **dérogation temporaire** (701.3 écart, 701.4 durée ; 1001.x pour le salon, objets cachés #829), qui prend fin d'elle-même, et non plus l'écriture de 710 / 1010.
+
+Principe envisagé [SUPPOSÉ, à confirmer par la capture] : la commande du thermostat publie sur un sujet interne ; une automatisation calcule l'écart (consigne demandée − consigne de base, c'est-à-dire 8741 moins l'écart de dérogation éventuellement en cours), puis écrit la durée et l'écart. Les consignes de confort et de réduit restent réglables par leurs entités.
+
+Préalables, dans l'ordre :
+1. **Capture sur le bus** (console USB) d'une dérogation faite sur un A59 puis sur l'afficheur : objets écrits, format de l'écart et de la durée, ordre des écritures, effet sur 8741 et 8000, fin de dérogation.
+2. 701, 701.3, 701.4, 1001, 1001.3, 1001.4 ajoutés à la liste HA en lecture.
+3. Ajout à la liste blanche d'écriture avec l'accord de l'utilisateur (niveau d'accès 6, 08a I5), puis paquet YAML et automatisation.
+
+Points à vérifier : pas d'écriture en mémoire permanente à chaque dérogation ; comportement si la plage horaire change pendant la dérogation ; pas de bouclage entre la consigne affichée et la commande.
