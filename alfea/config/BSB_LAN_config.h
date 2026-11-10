@@ -204,7 +204,10 @@ static_assert(sizeof(AP_PASSWORD) >= 9, "ALFEA_AP_PASSWORD : au moins 8 caractè
 // interrogées par BSB-LAN lui-même) : heure et dates séparées 1-3 (la ligne 0 « Date actuelle / Heure actuelle » suffit),
 // 6220, 6221 et 6225-6229 (versions, famille, variante). Restent 6222 (heures de fonctionnement) et 6224 (identification).
 #define ALFEA_HORS_HA(l) (((l) >= 1 && (l) < 4) || (l) == 6220 || (l) == 6221 || ((l) >= 6225 && (l) < 6230))
-#define MQTT_DISCOVERY_SKIP(line) (ALFEA_HORS_HA(line) || ((line) >= 10100 && !((line) >= BSP_DHT22 && (line) < BSP_BME280)))
+// Seules les lignes de alfea/params/selection_ha.txt sont annoncées (alfea_dans_ha(), émise par gen_custom_defs.py --ha) :
+// le firmware peut contenir la liste complète du régulateur (cible alfea-complet) sans 900 entités dans HA.
+#define MQTT_DISCOVERY_SKIP(line) (ALFEA_HORS_HA(line) || ((line) < 10100 && !alfea_dans_ha(line)) || \
+                                   ((line) >= 10100 && !((line) >= BSP_DHT22 && (line) < BSP_BME280)))
 // Noms courts des entités HA : « <pièce ou fonction> - <description> » au lieu de
 // « 00-08 Circuit de chauffe 1 - 712 - <description> » (demande de l'utilisateur, journal J61).
 // CC1 = chambre, CC2 = salon (confirmé par l'utilisateur le 2026-11-09). Chaîne vide : description seule.

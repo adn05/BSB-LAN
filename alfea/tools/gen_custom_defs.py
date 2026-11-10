@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Produit la liste Alféa (BSB_LAN_custom_defs.h) à partir de la liste 211/127 de référence.
 
-Usage : gen_custom_defs.py <liste_source.h> <sortie.h> [--selection <fichier>] [--ecriture <fichier>]
+Usage : gen_custom_defs.py <liste_source.h> <sortie.h> [--selection <fichier>] [--ecriture <fichier>] [--ha <fichier>]
 
 Avec --selection, seules les entrées dont le numéro de ligne figure dans le fichier
 (numéros ou plages « a-b », commentaires « # ») sont conservées dans la cmdtbl.
@@ -10,6 +10,10 @@ Les textes et énumérations non référencés sont éliminés à l'édition de 
 Avec --ecriture (liste blanche, même format), toute entrée hors liste reçoit FL_RONLY
 (FL_OEM conservé) et le tableau write_whitelist[][2] est émis pour la garde
 WRITE_WHITELIST de set() (BSB_LAN.ino). Voir docs/claude/08_plan_migration.md §5.2.
+
+Avec --ha (même format, en pratique alfea/params/selection_ha.txt), la fonction alfea_dans_ha(ligne) est émise :
+elle dit si une ligne est annoncée à Home Assistant (filtre MQTT_DISCOVERY_SKIP de alfea/config/BSB_LAN_config.h).
+La liste complète peut ainsi être compilée sans annoncer ses 900 paramètres à HA.
 
 Les corrections sont décrites et justifiées dans docs/claude/08a_analyse_liste_parametres.md.
 Chaque ajout porte le commentaire « ALFEA » ; aucune entrée source n'est supprimée.
@@ -86,17 +90,29 @@ def main():
     args.add_argument('sortie')
     args.add_argument('--selection')
     args.add_argument('--ecriture')
+    args.add_argument('--ha')
     args = args.parse_args()
     src, dst = args.source, args.sortie
     plages = lire_selection(args.selection) if args.selection else None
     blanche = lire_selection(args.ecriture) if args.ecriture else None
+    ha = lire_selection(args.ha) if args.ha else None
     lignes = open(src, encoding='utf-8').read().splitlines()
     debut = next(i for i, l in enumerate(lignes) if 'const cmd_t cmdtbl[]' in l)
     entete = TEXTES.splitlines()
     if blanche is not None:
         entete += ["// ALFEA : liste blanche d'écriture (alfea/params/ecriture.txt), garde WRITE_WHITELIST de set()",
                    'const float write_whitelist[][2] = {'
-                   + ', '.join(f'{{{a:g}, {b:g}}}' for a, b in blanche) + '};', '']
+                   + ', '.join(f'{{{a!r}, {b!r}}}' for a, b in blanche) + '};', '']
+    if ha is not None:
+        entete += ['// ALFEA : lignes annoncées à Home Assistant (alfea/params/selection_ha.txt), filtre MQTT_DISCOVERY_SKIP',
+                   'static const float alfea_ha[][2] = {'
+                   + ', '.join(f'{{{a!r}, {b!r}}}' for a, b in ha) + '};',
+                   'static inline bool alfea_dans_ha(float l) {',
+                   '  for (unsigned i = 0; i < sizeof(alfea_ha) / sizeof(alfea_ha[0]); i++) {',
+                   '    if (l >= alfea_ha[i][0] && l <= alfea_ha[i][1]) return true;',
+                   '  }',
+                   '  return false;',
+                   '}', '']
     sortie = lignes[:debut] + entete + [lignes[debut]]
     restants = dict(AJOUTS)
     i = debut + 1
