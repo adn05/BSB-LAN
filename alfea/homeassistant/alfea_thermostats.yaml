@@ -34,9 +34,14 @@ mqtt:
       mode_command_topic: "BSB-LAN/0/8/700/set"
       mode_command_template: "{{ {'off': 0, 'auto': 1, 'heat': 3}[value] }}"
       preset_modes: ["eco", "comfort"]
-      preset_mode_state_topic: "BSB-LAN/0/8/700/status"
+      # Préréglage affiché = régime réel du circuit (8000), y compris en automatique :
+      # 112-115 optimisation / réchauffement / confort / optimisation de coupure -> comfort ;
+      # 116 réduit, 119 Eco de jour, 120 réduction -> eco ; été, hors-gel, autres -> none.
+      # La commande reste sur le mode (700) : choisir eco ou comfort quitte le mode automatique.
+      preset_mode_state_topic: "BSB-LAN/0/28/8000/status"
       preset_mode_value_template: >-
-        {{ {2: 'eco', 3: 'comfort'}.get(value.split(' - ')[0] | int(-1), 'none') }}
+        {% set c = value.split(' - ')[0] | int(-1) %}{{ 'comfort' if c in [112, 113, 114, 115]
+        else ('eco' if c in [116, 119, 120] else 'none') }}
       preset_mode_command_topic: "BSB-LAN/0/8/700/set"
       preset_mode_command_template: "{{ {'eco': 2, 'comfort': 3}[value] }}"
       # État du circuit (8000) : régime de chauffe en cours -> heating, circuit arrêté -> off, sinon idle.
@@ -66,9 +71,14 @@ mqtt:
       mode_command_topic: "BSB-LAN/0/10/1000/set"
       mode_command_template: "{{ {'off': 0, 'auto': 1, 'heat': 3}[value] }}"
       preset_modes: ["eco", "comfort"]
-      preset_mode_state_topic: "BSB-LAN/0/10/1000/status"
+      # Préréglage affiché = régime réel du circuit (8001), y compris en automatique :
+      # 112-115 optimisation / réchauffement / confort / optimisation de coupure -> comfort ;
+      # 116 réduit, 119 Eco de jour, 120 réduction -> eco ; été, hors-gel, autres -> none.
+      # La commande reste sur le mode (1000) : choisir eco ou comfort quitte le mode automatique.
+      preset_mode_state_topic: "BSB-LAN/0/29/8001/status"
       preset_mode_value_template: >-
-        {{ {2: 'eco', 3: 'comfort'}.get(value.split(' - ')[0] | int(-1), 'none') }}
+        {% set c = value.split(' - ')[0] | int(-1) %}{{ 'comfort' if c in [112, 113, 114, 115]
+        else ('eco' if c in [116, 119, 120] else 'none') }}
       preset_mode_command_topic: "BSB-LAN/0/10/1000/set"
       preset_mode_command_template: "{{ {'eco': 2, 'comfort': 3}[value] }}"
       action_topic: "BSB-LAN/0/29/8001/status"

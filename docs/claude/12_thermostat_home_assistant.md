@@ -25,7 +25,7 @@ Conventions : **[CONSTATÉ]**, **[SUPPOSÉ]**, **[À VÉRIFIER]**, **[CHOIX]** (
 | Température actuelle | 8740 `BSB-LAN/0/32/8740/status` | 8770 `…/0/32/8770/status` | sonde ambiante (Navilink A59) |
 | Consigne (lecture et écriture) | 710 `…/0/8/710/status`, `…/set` | 1010 `…/0/10/1010/status`, `…/set` | **consigne de confort** (§3.2) ; envoyée avec 1 décimale (`'%.1f'`) |
 | Modes `off` / `auto` / `heat` | 700 = 0 / 1 / 3 | 1000 = 0 / 1 / 3 | réception : 0 → `off`, 1 → `auto`, 2 et 3 → `heat` ; valeur inconnue → `off` |
-| Préréglages `eco` / `comfort` | 700 = 2 / 3 | 1000 = 2 / 3 | `none` en protection ou en automatique |
+| Préréglages `eco` / `comfort` | état lu sur 8000 (112-115 → `comfort`, 116 / 119 / 120 → `eco`), commande 700 = 2 / 3 | idem sur 8001, commande 1000 = 2 / 3 | le préréglage suit le régime réel, même en automatique ; `none` en été, hors-gel, protection (2026-11-10, demande utilisateur) |
 | Action (`hvac_action`) | 8000 `…/0/28/8000/status` | 8001 `…/0/29/8001/status` | voir §3.3 |
 | Disponibilité | `BSB-LAN/status` (`online` / `offline`) | idem | message de dernière volonté de BSB-LAN (`mqtt_handler.h:447`) |
 
