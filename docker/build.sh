@@ -5,6 +5,7 @@
 #   alfea : configuration alfea/config + liste réduite alfea/params (firmware Alféa, lecture seule)
 #   alfea-ecriture : idem, compilé avec ALFEA_ECRITURE (écriture de la liste blanche possible
 #                    après choix du mode d'écriture dans /C ; docs/claude/08 §5.2)
+#   alfea-complet : comme alfea-ecriture, avec la liste complète du régulateur (alfea/params/BSB_LAN_custom_defs.h)
 #   pont : firmware de la NodeMCU ESP-C3-32S-Kit servant de pont USB (CH340) <-> bus logique pour le simulateur
 #          (alfea/tools/pont_bsb, docs/claude/README_docker.md §3)
 #   pont-diag : idem avec PONT_DIAG (compteurs de fronts et d'octets, une ligne par seconde sur la console)
@@ -47,9 +48,10 @@ case "$CIBLE" in
     cp "$TMP/BSB_LAN/BSB_LAN_config.h.default" "$TMP/BSB_LAN/BSB_LAN_config.h"
     cp "$TMP/BSB_LAN/BSB_LAN_custom_defs.h.default" "$TMP/BSB_LAN/BSB_LAN_custom_defs.h"
     ;;
-  alfea|alfea-ecriture)
+  alfea|alfea-ecriture|alfea-complet)
     cp "$DEPOT/alfea/config/BSB_LAN_config.h" "$TMP/BSB_LAN/BSB_LAN_config.h"
-    cp "$DEPOT/alfea/params/BSB_LAN_custom_defs_ha.h" "$TMP/BSB_LAN/BSB_LAN_custom_defs.h"
+    LISTE=BSB_LAN_custom_defs_ha.h; [ "$CIBLE" = alfea-complet ] && LISTE=BSB_LAN_custom_defs.h
+    cp "$DEPOT/alfea/params/$LISTE" "$TMP/BSB_LAN/BSB_LAN_custom_defs.h"
     if [ -f "$DEPOT/alfea/config/alfea_secrets.h" ]; then
       cp "$DEPOT/alfea/config/alfea_secrets.h" "$TMP/BSB_LAN/alfea_secrets.h"
     else
@@ -57,10 +59,10 @@ case "$CIBLE" in
       cp "$DEPOT/alfea/config/alfea_secrets.h.example" "$TMP/BSB_LAN/alfea_secrets.h"
     fi
     ;;
-  *) echo "cible inconnue : $CIBLE (amont | alfea | alfea-ecriture | pont | pont-diag | test-broches | test-broches-pont)" >&2; exit 2 ;;
+  *) echo "cible inconnue : $CIBLE (amont | alfea | alfea-ecriture | alfea-complet | pont | pont-diag | test-broches | test-broches-pont)" >&2; exit 2 ;;
 esac
 OPTIONS=""
-[ "$CIBLE" = alfea-ecriture ] && OPTIONS="-DALFEA_ECRITURE"
+[ "$CIBLE" != alfea ] && OPTIONS="-DALFEA_ECRITURE"
 
 rm -rf "$SORTIE"
 mkdir -p "$SORTIE"
