@@ -223,6 +223,9 @@ static_assert(sizeof(AP_PASSWORD) >= 9, "ALFEA_AP_PASSWORD : au moins 8 caractè
 // CC1 = chambre, CC2 = salon (confirmé par l'utilisateur le 2026-11-09). Chaîne vide : description seule.
 // L'identifiant unique (unique_id) ne change pas : HA garde les entity_id existants.
 #define MQTT_DISCOVERY_SHORT_NAMES
+// Compteurs en kWh (3113.1 à 3113.4) annoncés en state_class total_increasing : sans state_class, le tableau Énergie
+// de HA les refuse (BSB-LAN n'en met pas aux kWh, mqtt_handler.h). Demande de l'utilisateur, 2026-11-10.
+#define MQTT_DISCOVERY_ENERGY_TOTAL
 static inline const char *alfea_prefixe(float l) {
   if (l >= 501 && l < 508) return "Prog chambre";
   if (l >= 521 && l < 528) return "Prog salon";

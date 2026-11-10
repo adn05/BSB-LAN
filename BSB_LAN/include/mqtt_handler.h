@@ -280,6 +280,12 @@ bool mqtt_send_discovery(bool create=true) {
             if (decodedTelegram.data_type == DT_VALS && (decodedTelegram.unit_enum != UNIT_HOUR) && (decodedTelegram.unit_enum != UNIT_KWH)) {    // do not add state_class for potentially cumulative parameters 
               appendStringBuffer(&sb_payload, "\"state_class\":\"measurement\",");
             }
+#ifdef MQTT_DISCOVERY_ENERGY_TOTAL
+            // ALFEA: kWh counters declared as cumulative, so that Home Assistant accepts them in its Energy dashboard
+            if (decodedTelegram.data_type == DT_VALS && decodedTelegram.unit_enum == UNIT_KWH) {
+              appendStringBuffer(&sb_payload, "\"state_class\":\"total_increasing\",");
+            }
+#endif
             sensor_type = MQTT_SENSOR;
           }
         } else {
