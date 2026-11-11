@@ -116,6 +116,7 @@ Chaque écriture est acquittée (ACK). 8741 passe de 18,0 à 19,5 °C ; 701.4 et
 Deuxième essai (même jour, ~08:50) [CONSTATÉ] :
 - **Salon, « plus froid » 1 °C pendant 1 h** : 1001 = 1, 1001.3 = 1,0 °C, 1001.4 = 1 h, puis **1001 = 0 « Plus froid »** ; 8771 passe de 18,0 à 17,0 °C. L'écart reste **positif** : le sens est donné par 701 / 1001 (0 plus froid, 2 plus chaud).
 - **Annulation (chambre)** : une seule écriture, **701 = 1 « ... »** ; 8741 revient aussitôt de 19,5 à 18,0 °C. 701.3 (1,5 °C) et 701.4 (24 h) restent mémorisés : seul 701 dit si une dérogation est active.
-Reste à vérifier : fin de la dérogation (durée écoulée : compte à rebours de 1001.4 ou non ; changement de plage horaire), écriture en mémoire permanente ou non.
+- **Fin de la dérogation du salon** (1 h, lancée vers 08:48) : vers 09:42, **sans aucune trame SET**, le régulateur remet lui-même 1001 à 1 « ... » et 8771 revient à 18,0 °C. 1001.4 est resté à 1 h tout du long : c'est la **durée réglée, pas un compte à rebours** (le temps restant n'est pas lisible dans la liste).
+Reste à vérifier : fin anticipée au changement de plage horaire, écriture en mémoire permanente ou non.
 Séquence à reproduire depuis HA : 701 = 1, 701.3 = écart (positif), 701.4 = durée, 701 = 2 (plus chaud) ou 0 (plus froid) ; annulation : 701 = 1 ; avec l'accord de l'utilisateur pour la liste blanche (08a I5).
 
