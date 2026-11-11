@@ -4845,10 +4845,10 @@ const char S3113P4_0[] PROGMEM = "Energie utilisée totale (compteur IHM)";
 const char S5057_0[] PROGMEM = "Paramètre ECS 5057 (non documenté, valeur brute)";
 
 // ALFEA : liste blanche d'écriture (alfea/params/ecriture.txt), garde WRITE_WHITELIST de set()
-const float write_whitelist[][2] = {{501.0, 507.95}, {521.0, 527.95}, {561.0, 567.95}, {700.0, 700.95}, {1000.0, 1000.95}, {1600.0, 1600.95}, {710.0, 710.95}, {712.0, 712.95}, {1010.0, 1010.95}, {1012.0, 1012.95}, {1610.0, 1610.95}, {5024.0, 5024.95}, {5030.0, 5030.95}};
+const float write_whitelist[][2] = {{501.0, 507.95}, {521.0, 527.95}, {561.0, 567.95}, {700.0, 700.95}, {1000.0, 1000.95}, {710.0, 710.95}, {712.0, 712.95}, {1010.0, 1010.95}, {1012.0, 1012.95}, {1610.0, 1610.95}, {1612.0, 1612.95}, {5024.0, 5024.95}, {5030.0, 5030.95}};
 
 // ALFEA : lignes annoncées à Home Assistant (alfea/params/selection_ha.txt), filtre MQTT_DISCOVERY_SKIP
-static const float alfea_ha[][2] = {{0.0, 3.95}, {6220.0, 6229.95}, {501.0, 507.95}, {521.0, 527.95}, {561.0, 567.95}, {10020.0, 10033.95}, {700.0, 700.95}, {710.0, 710.95}, {712.0, 712.95}, {1000.0, 1000.95}, {1010.0, 1010.95}, {1012.0, 1012.95}, {1600.0, 1600.95}, {1610.0, 1610.95}, {5024.0, 5024.95}, {5030.0, 5030.95}, {8700.0, 8700.95}, {8740.0, 8744.95}, {8770.0, 8774.95}, {8410.0, 8413.95}, {8830.0, 8832.95}, {8000.0, 8000.95}, {8001.0, 8001.95}, {8003.0, 8003.95}, {8006.0, 8006.95}, {8400.0, 8400.95}, {8402.0, 8402.95}, {8403.0, 8403.95}, {8460.0, 8460.95}, {8821.0, 8821.95}, {3113.0, 3113.45}, {8450.0, 8450.95}, {8451.0, 8451.95}, {3110.0, 3110.95}, {3116.0, 3116.95}, {701.3, 701.35}, {1001.3, 1001.35}, {6700.0, 6700.95}, {6701.0, 6701.95}, {6708.0, 6708.95}};
+static const float alfea_ha[][2] = {{0.0, 3.95}, {6220.0, 6229.95}, {501.0, 507.95}, {521.0, 527.95}, {561.0, 567.95}, {10020.0, 10033.95}, {700.0, 700.95}, {710.0, 710.95}, {712.0, 712.95}, {1000.0, 1000.95}, {1010.0, 1010.95}, {1012.0, 1012.95}, {1610.0, 1610.95}, {1612.0, 1612.95}, {5024.0, 5024.95}, {5030.0, 5030.95}, {8700.0, 8700.95}, {8740.0, 8744.95}, {8770.0, 8774.95}, {8410.0, 8413.95}, {8830.0, 8832.95}, {8000.0, 8000.95}, {8001.0, 8001.95}, {8003.0, 8003.95}, {8006.0, 8006.95}, {8400.0, 8400.95}, {8402.0, 8402.95}, {8403.0, 8403.95}, {8460.0, 8460.95}, {8821.0, 8821.95}, {8820.0, 8820.95}, {3113.0, 3113.45}, {8450.0, 8450.95}, {8451.0, 8451.95}, {3110.0, 3110.95}, {3116.0, 3116.95}, {701.3, 701.35}, {1001.3, 1001.35}, {6700.0, 6700.95}, {6701.0, 6701.95}, {6708.0, 6708.95}};
 static inline bool alfea_dans_ha(float l) {
   for (unsigned i = 0; i < sizeof(alfea_ha) / sizeof(alfea_ha[0]); i++) {
     if (l >= alfea_ha[i][0] && l <= alfea_ha[i][1]) return true;
@@ -5031,11 +5031,11 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x073D1A83,  VT_ENUM,            1301,  S1301_0,  sizeof(E1301_0),    E1301_0,      FL_RONLY, 211, 127}, // Plus chaud/froid
 {0x073D1A91,  VT_ENUM,            1301.1,S1301P1_0,sizeof(E1301P1_0),  E1301P1_0,    FL_RONLY, 211, 127}, // Temporarily warmer
 {0x073D1A92,  VT_ENUM,            1301.2,S1301P2_0,sizeof(E1301P2_0),  E1301P2_0,    FL_RONLY, 211, 127}, // Temporarily cooler
-{0x313D0571,  VT_ENUM,            1600,  S1600_0,  sizeof(E1600_0),    E1600_0,      DEFAULT_FLAG, 211, 127}, // Mode de fonctionnement
-{0x313D0571,  VT_ENUM,            1600,  S_BA_TEXT,sizeof(E_BA_TW),    E_BA_TW,      DEFAULT_FLAG, 255, 255}, // Mode de fonctionnement
+{0x313D0571,  VT_ENUM,            1600,  S1600_0,  sizeof(E1600_0),    E1600_0,      FL_RONLY, 211, 127}, // Mode de fonctionnement
+{0x313D0571,  VT_ENUM,            1600,  S_BA_TEXT,sizeof(E_BA_TW),    E_BA_TW,      FL_RONLY, 255, 255}, // Mode de fonctionnement
 {0x253D1158,  VT_ENUM,            1601,  S1601_0,  sizeof(E1601_0),    E1601_0,      FL_RONLY+FL_OEM,       211, 127}, // Sélection régime Eco
 {0x313D06B9,  VT_TEMP,            1610,  S1610_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne nominale de température ECS
-{0x313D06BA,  VT_TEMP,            1612,  S1612_0,  0,                  NULL,         FL_RONLY, 211, 127}, // Consigne réduite de température ECS
+{0x313D06BA,  VT_TEMP,            1612,  S1612_0,  0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne réduite de température ECS
 {0x313D06B8,  VT_TEMP,            1614,  S1614_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Consigne nominale  max. température ECS
 {0x253D0722,  VT_ENUM,            1620,  S1620_0,  sizeof(E1620_0),    E1620_0,      FL_RONLY, 211, 127}, // Libération ECS
 {0x313D0721,  VT_ENUM,            1630,  S1630_0,  sizeof(E1630_0),    E1630_0,      FL_RONLY+FL_OEM,       211, 127}, // Priorité de charge ECS

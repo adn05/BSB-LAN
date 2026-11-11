@@ -116,7 +116,7 @@ parameter log_parameters[48] = {
   {8006, -1},    // État PAC
   {700, -1},     // Mode CC1
   {1000, -1},    // Mode CC2
-  {1600, -1},    // Mode ECS
+  {8820, -1},    // État pompe ECS (remplace 1600, mode ECS, retiré le 2026-11-11)
   {710, -1},     // Consigne confort CC1
   {712, -1},     // Consigne réduit CC1
   {1010, -1},    // Consigne confort CC2

@@ -46,8 +46,8 @@ views:
             entity: sensor.bsb_lan_ecs_consigne_actuelle_de_temperature_ecs
             name: Consigne en vigueur
           - type: tile
-            entity: select.bsb_lan_ecs_mode_de_fonctionnement
-            name: Mode
+            entity: binary_sensor.bsb_lan_ecs_etat_pompe_ecs
+            name: Charge ECS (après mise à jour)
           - type: tile
             entity: binary_sensor.bsb_lan_ecs_etat_resistance_electrique_ecs
             name: Résistance ECS
@@ -199,6 +199,8 @@ views:
                 name: Consigne
               - entity: binary_sensor.bsb_lan_ecs_etat_resistance_electrique_ecs
                 name: Résistance
+              - entity: binary_sensor.bsb_lan_ecs_etat_pompe_ecs
+                name: Charge ECS (après mise à jour)
         column_span: 2
     cards: []
   - title: Énergie
@@ -310,10 +312,10 @@ views:
             icon: mdi:water-boiler
           - type: entities
             entities:
-              - entity: select.bsb_lan_ecs_mode_de_fonctionnement
-                name: Mode
               - entity: text.bsb_lan_ecs_consigne_nominale_de_temperature_ecs_degc
                 name: Consigne (°C)
+              - entity: text.bsb_lan_ecs_consigne_reduite_de_temperature_ecs_degc
+                name: Consigne Eco (°C) (après mise à jour)
               - entity: text.bsb_lan_00_22_accumulateur_eau_potable_5024_differentiel_ecs_degc
                 name: Différentiel de relance (K)
               - entity: text.bsb_lan_00_22_accumulateur_eau_potable_5030_limitation_du_temps_de_charge_ecs_min

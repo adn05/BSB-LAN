@@ -22,8 +22,9 @@
 1000
 1010
 1012
-1600
+# 1600 (mode ECS) retiré le 2026-11-11 ; 1612 consigne réduite (Eco) ECS ajoutée (demande de l'utilisateur)
 1610
+1612
 # ECS : différentiel de relance (K) et durée maximale de charge (min), demande de l'utilisateur (2026-11-09)
 5024
 5030
@@ -45,6 +46,8 @@
 8403
 8460
 8821
+# État pompe ECS, interrogé par l'afficheur de la PAC (picto ECS probable, 2026-11-11)
+8820
 
 # Énergie et compteurs
 3113-3113.4
