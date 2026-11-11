@@ -113,6 +113,9 @@ Dérogation faite sur l'A59 de la chambre, de 18,0 à 19,5 °C (période réduit
 | 5 | 1001 `0x063D1A83` = 1 « ... » | `01 01` | CC2 remis au neutre |
 
 Chaque écriture est acquittée (ACK). 8741 passe de 18,0 à 19,5 °C ; 701.4 et 1001.4 relues à 24 h. BSB-LAN publie 701 et 701.3 sur MQTT dès le passage des trames (écoute passive, `print_telegram.h:1319-1329`).
-Reste à vérifier : fin de la dérogation (durée écoulée, changement de plage horaire), écart négatif (« Plus froid » : signe de 701.3), écriture en mémoire permanente ou non.
-Séquence à reproduire depuis HA : 701 = 1, 701.3 = écart, 701.4 = durée, 701 = 2 (ou 0), avec l'accord de l'utilisateur pour la liste blanche (08a I5).
+Deuxième essai (même jour, ~08:50) [CONSTATÉ] :
+- **Salon, « plus froid » 1 °C pendant 1 h** : 1001 = 1, 1001.3 = 1,0 °C, 1001.4 = 1 h, puis **1001 = 0 « Plus froid »** ; 8771 passe de 18,0 à 17,0 °C. L'écart reste **positif** : le sens est donné par 701 / 1001 (0 plus froid, 2 plus chaud).
+- **Annulation (chambre)** : une seule écriture, **701 = 1 « ... »** ; 8741 revient aussitôt de 19,5 à 18,0 °C. 701.3 (1,5 °C) et 701.4 (24 h) restent mémorisés : seul 701 dit si une dérogation est active.
+Reste à vérifier : fin de la dérogation (durée écoulée : compte à rebours de 1001.4 ou non ; changement de plage horaire), écriture en mémoire permanente ou non.
+Séquence à reproduire depuis HA : 701 = 1, 701.3 = écart (positif), 701.4 = durée, 701 = 2 (plus chaud) ou 0 (plus froid) ; annulation : 701 = 1 ; avec l'accord de l'utilisateur pour la liste blanche (08a I5).
 
