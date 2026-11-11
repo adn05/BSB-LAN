@@ -100,3 +100,19 @@ Préalables, dans l'ordre :
 3. Ajout à la liste blanche d'écriture avec l'accord de l'utilisateur (niveau d'accès 6, 08a I5), puis paquet YAML et automatisation.
 
 Points à vérifier : pas d'écriture en mémoire permanente à chaque dérogation ; comportement si la plage horaire change pendant la dérogation ; pas de bouclage entre la consigne affichée et la commande.
+
+### 6.1 Capture du 2026-11-11 [CONSTATÉ]
+Dérogation faite sur l'A59 de la chambre, de 18,0 à 19,5 °C (période réduite) ; console USB, firmware alfea-complet. L'A59 passe par l'afficheur (DSP1, adresse 0x0A), qui écrit dans le régulateur (0x00) :
+
+| # | Écriture (SET, DSP1 -> régulateur) | Données | Sens |
+|---|---|---|---|
+| 1 | 701 `0x053D1A83` = 1 « ... » | `01 01` | état neutre (préparation) |
+| 2 | 701.3 `0x053D1AA6` = 1,5 °C | `01 00 60` | écart, VT_TEMP (/64), octet d'activation 01 |
+| 3 | 701.4 `0x053D1AA5` = 24 h | `01 18` | durée ; l'A59 n'a pas de réglage de durée et envoie 24 h |
+| 4 | 701 = 2 « Plus chaud » | `01 02` | activation (0 plus froid, 1 neutre, 2 plus chaud) |
+| 5 | 1001 `0x063D1A83` = 1 « ... » | `01 01` | CC2 remis au neutre |
+
+Chaque écriture est acquittée (ACK). 8741 passe de 18,0 à 19,5 °C ; 701.4 et 1001.4 relues à 24 h. BSB-LAN publie 701 et 701.3 sur MQTT dès le passage des trames (écoute passive, `print_telegram.h:1319-1329`).
+Reste à vérifier : fin de la dérogation (durée écoulée, changement de plage horaire), écart négatif (« Plus froid » : signe de 701.3), écriture en mémoire permanente ou non.
+Séquence à reproduire depuis HA : 701 = 1, 701.3 = écart, 701.4 = durée, 701 = 2 (ou 0), avec l'accord de l'utilisateur pour la liste blanche (08a I5).
+
