@@ -130,6 +130,12 @@ Séquence à reproduire depuis HA : 701 = 1, 701.3 = écart (positif), 701.4 = d
 Salon passé en confort permanent depuis HA (1000 = 3, 8771 = 22,5 °C), puis consigne 24,0 °C demandée au thermostat : 1001.3 = 1,5 °C, 1001.4 = 3 h, 1001 = 2 écrits et acquittés, **8771 = 24,0 °C**. L'écriture initiale 1001 = 1 a échoué à l'envoi (« set failed », `bus->Send` différent de BUS_OK, aucune trame émise : collision probable avec l'afficheur, BSB-LAN ne réessaie pas) : l'automatisation attend désormais la confirmation de l'écart et de l'état final (8 s) et réécrit une fois sinon.
 **Un changement de mode du circuit annule la dérogation** : retour en automatique (1000 = 1), le régulateur remet lui-même 1001 à 1 et 8771 revient à 18,0 °C (période réduite).
 
+### 6.4 Mode automatique seul, préréglages par dérogation (2026-11-11, demande de l'utilisateur)
+- Thermostats : `modes: [auto]` (état affiché en permanence) ; 700 / 1000 retirés de la liste blanche, encore lus.
+- Préréglage `eco` / `comfort` publié sur `alfea/thermostat/cc1|cc2/preset` : l'automatisation prend pour consigne cible la consigne réduit (712 / 1012) ou confort (710 / 1010), cherchée par nom d'entité, puis applique la même logique (dérogation, ou annulation si c'est la consigne du programme).
+- Tableau de bord : fin de dérogation affichée sous chaque thermostat, seulement pendant une dérogation.
+- Essai HA jetable « TOUT OK » (eco depuis le confort : plus froid 2,5 °C ; comfort = programme : annulation ; eco pendant une dérogation plus chaud : annulation).
+
 ## 7. Boost ECS (forçage 5072)
 Capture du 2026-11-11 [CONSTATÉ] : l'afficheur écrit une seule trame, **5072 = 1 « Rechargement »** (`DC 8A 00 0D 03 05 31 05 73 01 01`). Effets dans la minute : consigne ECS en vigueur 40 -> 55 °C (consigne nominale 1610), 8003 = 93 « Push, Consigne nominale », pompe ECS 8820 activée, compresseur en marche.
 Dans HA : entité de la discovery « ECS - Forçage ECS » (liste « ... » / « Rechargement »), 5072 dans la liste blanche (accord de l'utilisateur) et lu chaque minute.

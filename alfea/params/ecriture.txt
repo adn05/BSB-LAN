@@ -8,9 +8,8 @@
 521-527
 561-567
 
-# Modes de fonctionnement CC1, CC2 (1600, mode ECS, retiré le 2026-11-11 : inutile à l'utilisateur)
-700
-1000
+# Modes de fonctionnement : plus aucun modifiable (2026-11-11, demande de l'utilisateur : thermostats HA en automatique
+# seul, préréglages appliqués par dérogation). 700, 1000 et 1600 restent lisibles.
 
 # Consignes : confort et réduit CC1 et CC2, nominale et réduite (Eco) ECS (1612 ajoutée le 2026-11-11, demande de l'utilisateur)
 710

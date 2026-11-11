@@ -34,9 +34,9 @@
 # Températures
 # Retirés le 2026-11-11 (sans valeur sur la PAC, accord de l'utilisateur) : 8460 débit, 8743 départ CC1, 8832 ECS bas, 3110, 3116
 8700
+# 8744 / 8774 (consignes de départ résultantes) retirées le 2026-11-11 : sans valeur hors demande de chaleur
 8740-8742
-8744
-8770-8774
+8770-8773
 8410-8413
 8830-8831
 

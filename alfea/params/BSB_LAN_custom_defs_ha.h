@@ -4845,10 +4845,10 @@ const char S3113P4_0[] PROGMEM = "Energie utilisée totale (compteur IHM)";
 const char S5057_0[] PROGMEM = "Paramètre ECS 5057 (non documenté, valeur brute)";
 
 // ALFEA : liste blanche d'écriture (alfea/params/ecriture.txt), garde WRITE_WHITELIST de set()
-const float write_whitelist[][2] = {{501.0, 507.95}, {521.0, 527.95}, {561.0, 567.95}, {700.0, 700.95}, {1000.0, 1000.95}, {710.0, 710.95}, {712.0, 712.95}, {1010.0, 1010.95}, {1012.0, 1012.95}, {1610.0, 1610.95}, {1612.0, 1612.95}, {5024.0, 5024.95}, {5030.0, 5030.95}, {5072.0, 5072.95}, {701.0, 701.05}, {701.3, 701.35}, {701.4, 701.45}, {1001.0, 1001.05}, {1001.3, 1001.35}, {1001.4, 1001.45}};
+const float write_whitelist[][2] = {{501.0, 507.95}, {521.0, 527.95}, {561.0, 567.95}, {710.0, 710.95}, {712.0, 712.95}, {1010.0, 1010.95}, {1012.0, 1012.95}, {1610.0, 1610.95}, {1612.0, 1612.95}, {5024.0, 5024.95}, {5030.0, 5030.95}, {5072.0, 5072.95}, {701.0, 701.05}, {701.3, 701.35}, {701.4, 701.45}, {1001.0, 1001.05}, {1001.3, 1001.35}, {1001.4, 1001.45}};
 
 // ALFEA : lignes annoncées à Home Assistant (alfea/params/selection_ha.txt), filtre MQTT_DISCOVERY_SKIP
-static const float alfea_ha[][2] = {{0.0, 3.95}, {6220.0, 6229.95}, {501.0, 507.95}, {521.0, 527.95}, {561.0, 567.95}, {10020.0, 10033.95}, {700.0, 700.95}, {710.0, 710.95}, {712.0, 712.95}, {1000.0, 1000.95}, {1010.0, 1010.95}, {1012.0, 1012.95}, {1610.0, 1610.95}, {1612.0, 1612.95}, {5024.0, 5024.95}, {5030.0, 5030.95}, {5072.0, 5072.95}, {8700.0, 8700.95}, {8740.0, 8742.95}, {8744.0, 8744.95}, {8770.0, 8774.95}, {8410.0, 8413.95}, {8830.0, 8831.95}, {8000.0, 8000.95}, {8001.0, 8001.95}, {8003.0, 8003.95}, {8006.0, 8006.95}, {8400.0, 8400.95}, {8402.0, 8402.95}, {8403.0, 8403.95}, {8821.0, 8821.95}, {8820.0, 8820.95}, {3113.0, 3113.45}, {8450.0, 8450.95}, {8451.0, 8451.95}, {701.0, 701.05}, {701.3, 701.35}, {701.4, 701.45}, {1001.0, 1001.05}, {1001.3, 1001.35}, {1001.4, 1001.45}, {6700.0, 6700.95}, {6701.0, 6701.95}, {6708.0, 6708.95}};
+static const float alfea_ha[][2] = {{0.0, 3.95}, {6220.0, 6229.95}, {501.0, 507.95}, {521.0, 527.95}, {561.0, 567.95}, {10020.0, 10033.95}, {700.0, 700.95}, {710.0, 710.95}, {712.0, 712.95}, {1000.0, 1000.95}, {1010.0, 1010.95}, {1012.0, 1012.95}, {1610.0, 1610.95}, {1612.0, 1612.95}, {5024.0, 5024.95}, {5030.0, 5030.95}, {5072.0, 5072.95}, {8700.0, 8700.95}, {8740.0, 8742.95}, {8770.0, 8773.95}, {8410.0, 8413.95}, {8830.0, 8831.95}, {8000.0, 8000.95}, {8001.0, 8001.95}, {8003.0, 8003.95}, {8006.0, 8006.95}, {8400.0, 8400.95}, {8402.0, 8402.95}, {8403.0, 8403.95}, {8821.0, 8821.95}, {8820.0, 8820.95}, {3113.0, 3113.45}, {8450.0, 8450.95}, {8451.0, 8451.95}, {701.0, 701.05}, {701.3, 701.35}, {701.4, 701.45}, {1001.0, 1001.05}, {1001.3, 1001.35}, {1001.4, 1001.45}, {6700.0, 6700.95}, {6701.0, 6701.95}, {6708.0, 6708.95}};
 static inline bool alfea_dans_ha(float l) {
   for (unsigned i = 0; i < sizeof(alfea_ha) / sizeof(alfea_ha[0]); i++) {
     if (l >= alfea_ha[i][0] && l <= alfea_ha[i][1]) return true;
@@ -4882,15 +4882,15 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0AA4,  VT_TIMEPROG,        565,   S_WD_5,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0AA5,  VT_TIMEPROG,        566,   S_WD_6,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
 {0x053D0AA6,  VT_TIMEPROG,        567,   S_WD_7,   0,                  NULL,         DEFAULT_FLAG, 211, 127},
-{0x2D3D0574,  VT_ENUM,            700,   S700_0,   sizeof(E700_0),     E700_0,       DEFAULT_FLAG, 211, 127}, // Mode de fonctionnement
-{0x2D3D0574,  VT_ENUM,            700,   S_BA_TEXT,sizeof(E_BA_HK),    E_BA_HK,      DEFAULT_FLAG, 255, 255}, // Mode de fonctionnement
+{0x2D3D0574,  VT_ENUM,            700,   S700_0,   sizeof(E700_0),     E700_0,       FL_RONLY, 211, 127}, // Mode de fonctionnement
+{0x2D3D0574,  VT_ENUM,            700,   S_BA_TEXT,sizeof(E_BA_HK),    E_BA_HK,      FL_RONLY, 255, 255}, // Mode de fonctionnement
 {0x053D1A83,  VT_ENUM,            701,   S701_0,   sizeof(E701_0),     E701_0,       DEFAULT_FLAG, 211, 127}, // Plus chaud/froid
 {0x053D1AA6,  VT_TEMP,            701.3, S701P3_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // ALFEA #829 : écart de consigne de la dérogation CC1
 {0x053D1AA5,  VT_HOURS_SHORT,     701.4, S701P4_0, 0,                  NULL,         DEFAULT_FLAG, 211, 127}, // ALFEA #829 : durée de la dérogation CC1
 {0x2D3D058E,  VT_TEMP,            710,   S710_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne de confort
 {0x2D3D0590,  VT_TEMP,            712,   S712_0,   0,                  NULL,         DEFAULT_FLAG, 211, 127}, // Consigne régime REDUIT
-{0x2E3D0574,  VT_ENUM,            1000,  S1000_0,  sizeof(E1000_0),    E1000_0,      DEFAULT_FLAG, 211, 127}, // Mode de fonctionnement
-{0x2E3D0574,  VT_ENUM,            1000,  S_BA_TEXT,sizeof(E_BA_HK),    E_BA_HK,      DEFAULT_FLAG, 255, 255}, // Mode de fonctionnement
+{0x2E3D0574,  VT_ENUM,            1000,  S1000_0,  sizeof(E1000_0),    E1000_0,      FL_RONLY, 211, 127}, // Mode de fonctionnement
+{0x2E3D0574,  VT_ENUM,            1000,  S_BA_TEXT,sizeof(E_BA_HK),    E_BA_HK,      FL_RONLY, 255, 255}, // Mode de fonctionnement
 {0x063D1A83,  VT_ENUM,            1001,  S1001_0,  sizeof(E1001_0),    E1001_0,      DEFAULT_FLAG, 211, 127}, // Plus chaud/froid
 {0x063D1AA6,  VT_TEMP,            1001.3,S1001P3_0,0,                  NULL,         DEFAULT_FLAG, 211, 127}, // ALFEA #829 : écart de consigne de la dérogation CC2
 {0x063D1AA5,  VT_HOURS_SHORT,     1001.4,S1001P4_0,0,                  NULL,         DEFAULT_FLAG, 211, 127}, // ALFEA #829 : durée de la dérogation CC2
@@ -4935,12 +4935,10 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D3D051E,  VT_TEMP,            8740,  S8740_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température ambiante réelle CC1
 {0x2D3D0593,  VT_TEMP,            8741,  S8741_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne température ambiante actuelle CC1
 {0x2D3D05E9,  VT_TEMP,            8742,  S8742_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Température modèle d'ambiance CC1
-{0x213D0667,  VT_TEMP,            8744,  S8744_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne de température de départ résultante CC1
 {0x2E3D051E,  VT_TEMP,            8770,  S8770_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température ambiante actuelle CC 2
 {0x2E3D0593,  VT_TEMP,            8771,  S8771_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne actuelle de température ambiante CC2
 {0x2E3D05E9,  VT_TEMP,            8772,  S8772_0,  0,                  NULL,         FL_RONLY+FL_OEM,       211, 127}, // Température de modèle d'ambiance CC2
 {0x223D0518,  VT_TEMP,            8773,  S8773_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température de départ circuit de chauffe 2
-{0x223D0667,  VT_TEMP,            8774,  S8774_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Consigne de température de départ résultante CC2
 {0x053D09A3,  VT_ONOFF,           8820,  S8820_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Etat pompe ECS
 {0x053D09AE,  VT_ONOFF,           8821,  S8821_0,  sizeof(ENUM_ONOFF), ENUM_ONOFF,   FL_RONLY,     211, 127}, // Etat résistance électrique ECS
 {0x313D052F,  VT_TEMP,            8830,  S8830_0,  0,                  NULL,         FL_RONLY,     211, 127}, // Température  mesurée ECS en haut (B3)

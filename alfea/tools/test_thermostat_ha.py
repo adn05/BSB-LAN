@@ -187,7 +187,7 @@ def essai():
     s = req('GET', '/api/states/' + cc1)['attributes']
     print('attributs CC1 :', {k: s.get(k) for k in ('hvac_modes', 'preset_modes', 'min_temp', 'max_temp', 'target_temp_step')})
     verifie(cc1, {'state': 'auto', 'current_temperature': 20.2, 'temperature': 20.5, 'hvac_action': 'heating', 'preset_mode': 'comfort'})
-    verifie(cc2, {'state': 'heat', 'current_temperature': 18.7, 'temperature': 18.0, 'hvac_action': 'idle', 'preset_mode': 'eco'})
+    verifie(cc2, {'state': 'auto', 'current_temperature': 18.7, 'temperature': 18.0, 'hvac_action': 'idle', 'preset_mode': 'eco'})
     verifie('input_number.pac_duree_derogation', {'state': '3.0'})
 
     # 4. consigne -> dérogation (séquence de l'A59, doc 12 §6.1) ; consigne du programme : CC1 20,5, CC2 18,0
@@ -212,15 +212,20 @@ def essai():
     appel('set_temperature', {'entity_id': cc2, 'temperature': 19.5},
           [('BSB-LAN/0/10/1001/set', '1'), ('BSB-LAN/0/10/1001.3/set', '1.5'), ('BSB-LAN/0/10/1001.4/set', '3'), ('BSB-LAN/0/10/1001/set', '2')], D)
 
-    # 5. modes et préréglages : inchangés (700 / 1000)
-    appel('set_hvac_mode', {'entity_id': cc1, 'hvac_mode': 'heat'}, [('BSB-LAN/0/8/700/set', '3')])
-    appel('set_hvac_mode', {'entity_id': cc1, 'hvac_mode': 'off'}, [('BSB-LAN/0/8/700/set', '0')])
-    appel('set_preset_mode', {'entity_id': cc2, 'preset_mode': 'comfort'}, [('BSB-LAN/0/10/1000/set', '3')])
-    appel('set_hvac_mode', {'entity_id': cc2, 'hvac_mode': 'auto'}, [('BSB-LAN/0/10/1000/set', '1')])
+    pub('BSB-LAN/0/32/8771/status', '19.5')
 
-    # 6. retour d'état de BSB-LAN et indisponibilité
-    pub('BSB-LAN/0/8/700/status', '3 - Confort')
-    verifie(cc1, {'state': 'heat', 'temperature': 20.5, 'preset_mode': 'comfort'})
+    # 5. préréglages = consigne cible réduit / confort, par dérogation ou annulation (modes : automatique seul)
+    print('modes CC1 :', req('GET', '/api/states/' + cc1)['attributes'].get('hvac_modes'))
+    appel('set_preset_mode', {'entity_id': cc1, 'preset_mode': 'eco'},     # confort 20,5 -> réduit 18,0 : plus froid 2,5
+          [('BSB-LAN/0/8/701/set', '1'), ('BSB-LAN/0/8/701.3/set', '2.5'), ('BSB-LAN/0/8/701.4/set', '3'), ('BSB-LAN/0/8/701/set', '0')], D)
+    pub('BSB-LAN/0/32/8741/status', '18.0')
+    verifie(cc1, {'temperature': 18.0, 'preset_mode': 'eco'})
+    appel('set_preset_mode', {'entity_id': cc1, 'preset_mode': 'comfort'}, [('BSB-LAN/0/8/701/set', '1')], D)   # = programme
+    appel('set_preset_mode', {'entity_id': cc2, 'preset_mode': 'eco'}, [('BSB-LAN/0/10/1001/set', '1')], D)     # annule +1,5
+
+    # 6. retour d'état de BSB-LAN et indisponibilité ; le mode reste « auto » quel que soit 700
+    pub('BSB-LAN/0/8/700/status', '3 - Confort'); pub('BSB-LAN/0/32/8741/status', '20.5')
+    verifie(cc1, {'state': 'auto', 'temperature': 20.5, 'preset_mode': 'comfort'})
     pub('BSB-LAN/0/32/8740/status', 'None')
     verifie(cc1, {'current_temperature': None})
     pub('BSB-LAN/status', 'offline')

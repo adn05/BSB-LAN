@@ -85,9 +85,9 @@ uint8_t LogDestination = FLASH;
 uint8_t logTelegram = LOGTELEGRAM_OFF;
 
 /*
- * Paramètres journalisés et publiés en MQTT (docs/claude/08 §5.1) : 47 entrées, tableau de 48 (taille inchangée : la
+ * Paramètres journalisés et publiés en MQTT (docs/claude/08 §5.1) : 45 entrées, tableau de 48 (taille inchangée : la
  * modifier déplace la configuration enregistrée et la réinitialise).
- * 2026-11-11 : 8460, 8743, 3110, 3116 retirés (sans valeur sur la PAC) ; 701 et 1001 (état de dérogation) ajoutés.
+ * 2026-11-11 : 8460, 8743, 3110, 3116, 8744, 8774 retirés (sans valeur sur la PAC) ; 701, 1001, 5072 ajoutés.
  * Les 8 dernières (8742 à 1001.3) sont ajoutées à la demande de l'utilisateur (2026-11-10) ; 701.3, 1001.3, 3110 et
  * 3116 n'existent que dans les listes régénérées à cette date (sinon ligne inconnue, ignorée).
  */
@@ -96,7 +96,6 @@ parameter log_parameters[48] = {
   {8700, -1},    // Température extérieure
   {8740, -1},    // Température ambiante CC1 (chambre)
   {8741, -1},    // Consigne ambiante actuelle CC1
-  {8744, -1},    // Consigne de départ résultante CC1
   {8770, -1},    // Température ambiante CC2 (salon)
   {8771, -1},    // Consigne ambiante actuelle CC2
   {8773, -1},    // Température de départ CC2
@@ -133,7 +132,6 @@ parameter log_parameters[48] = {
   {20100.2, -1}, // DHT22 : humidité
   {8742, -1},    // Température modèle d'ambiance CC1 (chambre)
   {8772, -1},    // Température modèle d'ambiance CC2 (salon)
-  {8774, -1},    // Consigne de départ résultante CC2 (salon)
   {6701, -1},    // Erreur 2
   {701, -1},     // Dérogation temporaire : état CC1 (0 plus froid, 1 neutre, 2 plus chaud)
   {1001, -1},    // Dérogation temporaire : état CC2

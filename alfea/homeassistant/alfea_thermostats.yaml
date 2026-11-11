@@ -14,6 +14,8 @@
 #   - modifiée : dérogation temporaire (701.x / 1001.x), qui prend fin d'elle-même après la durée choisie
 #     (input_number.pac_duree_derogation) ; revenir à la consigne du programme annule la dérogation.
 #   Les consignes confort / réduit (710, 712, 1010, 1012) restent réglables par leurs entités.
+#   Mode : automatique seul (programme horaire) ; 700 / 1000 ne sont plus modifiables (2026-11-11, demande de
+#   l'utilisateur). Préréglage eco / comfort = consigne cible réduit / confort, appliquée par dérogation ou annulation.
 #   Il faut le firmware alfea-complet du 2026-11-11 (701, 701.3, 701.4, 1001.x dans la liste blanche).
 
 mqtt:
@@ -34,19 +36,15 @@ mqtt:
       temperature_state_topic: "BSB-LAN/0/32/8741/status"
       temperature_command_topic: "alfea/thermostat/cc1/consigne"
       temperature_command_template: "{{ '%.1f' | format(value | float) }}"
-      # Mode de fonctionnement (700) : 0 protection, 1 automatique, 2 réduit, 3 confort.
-      modes: ["off", "auto", "heat"]
+      # Mode : automatique seul. Sans sujet d'état, HA afficherait « off » : l'état suit la disponibilité de 700.
+      modes: ["auto"]
       mode_state_topic: "BSB-LAN/0/8/700/status"
-      mode_state_template: >-
-        {{ {0: 'off', 1: 'auto', 2: 'heat', 3: 'heat'}.get(value.split(' - ')[0] | int(-1), 'off') }}
-      mode_command_topic: "BSB-LAN/0/8/700/set"
-      mode_command_template: "{{ {'off': 0, 'auto': 1, 'heat': 3}[value] }}"
+      mode_state_template: "auto"
       preset_modes: ["eco", "comfort"]
       # Préréglage affiché = consigne en vigueur (8741) comparée aux consignes confort et réduit, y compris en
       # automatique. L'état du circuit (8000) ne suffit pas : 122 « Limitation de la température ambiante » apparaît
       # en confort comme en réduit (constaté le 2026-11-11). Entités cherchées par nom, quel que soit le suffixe d'unité.
-      # « none » pendant une dérogation ou en protection. La commande reste sur le mode (700) : choisir eco ou
-      # comfort quitte le mode automatique.
+      # « none » pendant une dérogation.
       preset_mode_state_topic: "BSB-LAN/0/32/8741/status"
       preset_mode_value_template: >-
         {% set v = value | float(-99) %}
@@ -55,8 +53,8 @@ mqtt:
         {% set r = states.text | selectattr('entity_id', 'search', 'chambre_consigne_regime_reduit')
            | map(attribute='state') | first | default('') | float(-98) %}
         {{ 'comfort' if v == c else ('eco' if v == r else 'none') }}
-      preset_mode_command_topic: "BSB-LAN/0/8/700/set"
-      preset_mode_command_template: "{{ {'eco': 2, 'comfort': 3}[value] }}"
+      # Préréglage choisi -> consigne cible réduit / confort, par dérogation ou annulation (automatisation plus bas).
+      preset_mode_command_topic: "alfea/thermostat/cc1/preset"
       # État du circuit (8000) : régime de chauffe en cours -> heating, circuit arrêté -> off, sinon idle.
       action_topic: "BSB-LAN/0/28/8000/status"
       action_template: >-
@@ -77,18 +75,15 @@ mqtt:
       temperature_state_topic: "BSB-LAN/0/32/8771/status"
       temperature_command_topic: "alfea/thermostat/cc2/consigne"
       temperature_command_template: "{{ '%.1f' | format(value | float) }}"
-      modes: ["off", "auto", "heat"]
+      # Mode : automatique seul. Sans sujet d'état, HA afficherait « off » : l'état suit la disponibilité de 1000.
+      modes: ["auto"]
       mode_state_topic: "BSB-LAN/0/10/1000/status"
-      mode_state_template: >-
-        {{ {0: 'off', 1: 'auto', 2: 'heat', 3: 'heat'}.get(value.split(' - ')[0] | int(-1), 'off') }}
-      mode_command_topic: "BSB-LAN/0/10/1000/set"
-      mode_command_template: "{{ {'off': 0, 'auto': 1, 'heat': 3}[value] }}"
+      mode_state_template: "auto"
       preset_modes: ["eco", "comfort"]
       # Préréglage affiché = consigne en vigueur (8771) comparée aux consignes confort et réduit, y compris en
       # automatique. L'état du circuit (8001) ne suffit pas : 122 « Limitation de la température ambiante » apparaît
       # en confort comme en réduit (constaté le 2026-11-11). Entités cherchées par nom, quel que soit le suffixe d'unité.
-      # « none » pendant une dérogation ou en protection. La commande reste sur le mode (1000) : choisir eco ou
-      # comfort quitte le mode automatique.
+      # « none » pendant une dérogation.
       preset_mode_state_topic: "BSB-LAN/0/32/8771/status"
       preset_mode_value_template: >-
         {% set v = value | float(-99) %}
@@ -97,8 +92,8 @@ mqtt:
         {% set r = states.text | selectattr('entity_id', 'search', 'salon_consigne_regime_reduit')
            | map(attribute='state') | first | default('') | float(-98) %}
         {{ 'comfort' if v == c else ('eco' if v == r else 'none') }}
-      preset_mode_command_topic: "BSB-LAN/0/10/1000/set"
-      preset_mode_command_template: "{{ {'eco': 2, 'comfort': 3}[value] }}"
+      # Préréglage choisi -> consigne cible réduit / confort, par dérogation ou annulation (automatisation plus bas).
+      preset_mode_command_topic: "alfea/thermostat/cc2/preset"
       action_topic: "BSB-LAN/0/29/8001/status"
       action_template: >-
         {% set c = value.split(' - ')[0] | int(-1) %}{{ 'heating' if c in [103, 104, 105, 106, 111, 112, 113, 114, 116]
@@ -232,13 +227,27 @@ automation:
       - trigger: mqtt
         topic: "alfea/thermostat/cc2/consigne"
         id: cc2
+      # préréglage : eco -> consigne réduit (712 / 1012), comfort -> consigne confort (710 / 1010)
+      - trigger: mqtt
+        topic: "alfea/thermostat/cc1/preset"
+        id: cc1_preset
+      - trigger: mqtt
+        topic: "alfea/thermostat/cc2/preset"
+        id: cc2_preset
     variables:
-      racine: "BSB-LAN/0/{{ 8 if trigger.id == 'cc1' else 10 }}/{{ 701 if trigger.id == 'cc1' else 1001 }}"
-      etat_brut: "{{ states('sensor.pac_' ~ trigger.id ~ '_derogation_etat') }}"
-      vigueur_brute: "{{ states('sensor.pac_' ~ trigger.id ~ '_consigne_en_vigueur') }}"
-      demande: "{{ trigger.payload | float(0) }}"
+      cc: "{{ trigger.id[:3] }}"
+      piece: "{{ 'chambre' if cc == 'cc1' else 'salon' }}"
+      racine: "BSB-LAN/0/{{ 8 if cc == 'cc1' else 10 }}/{{ 701 if cc == 'cc1' else 1001 }}"
+      etat_brut: "{{ states('sensor.pac_' ~ cc ~ '_derogation_etat') }}"
+      vigueur_brute: "{{ states('sensor.pac_' ~ cc ~ '_consigne_en_vigueur') }}"
+      demande_brute: >-
+        {% if trigger.id.endswith('_preset') %}
+          {% set cle = piece ~ ('_consigne_regime_reduit' if trigger.payload == 'eco' else '_consigne_de_confort') %}
+          {{ states.text | selectattr('entity_id', 'search', cle) | map(attribute='state') | first | default('') }}
+        {% else %}{{ trigger.payload }}{% endif %}
+      demande: "{{ demande_brute | float(0) }}"
       etat: "{{ etat_brut | int(1) }}"
-      ecart: "{{ states('sensor.pac_' ~ trigger.id ~ '_derogation_ecart') | float(0) }}"
+      ecart: "{{ states('sensor.pac_' ~ cc ~ '_derogation_ecart') | float(0) }}"
       base: >-
         {{ vigueur_brute | float(0) - (ecart if etat == 2 else (0 - ecart if etat == 0 else 0)) }}
       delta: "{{ ((demande - base) * 2) | round(0) / 2 }}"
@@ -246,7 +255,7 @@ automation:
     actions:
       # Sans valeurs publiées par BSB-LAN (HA vient de démarrer), on ne sait pas calculer l'écart : rien n'est écrit.
       - condition: template
-        value_template: "{{ etat_brut | is_number and vigueur_brute | is_number }}"
+        value_template: "{{ etat_brut | is_number and vigueur_brute | is_number and demande_brute | is_number }}"
       - if:
           - condition: template
             value_template: "{{ delta | abs < 0.25 }}"
@@ -267,7 +276,7 @@ automation:
               payload: "{{ '%.1f' | format(delta | abs) }}"
           # BSB-LAN relit chaque valeur écrite et la publie : sans confirmation (envoi raté sur le bus, constaté le
           # 2026-11-11 : « set failed », collision probable avec l'afficheur), un nouvel essai.
-          - wait_template: "{{ states('sensor.pac_' ~ trigger.id ~ '_derogation_ecart') | float(-1) == delta | abs }}"
+          - wait_template: "{{ states('sensor.pac_' ~ cc ~ '_derogation_ecart') | float(-1) == delta | abs }}"
             timeout: "00:00:08"
             continue_on_timeout: true
           - if:
@@ -290,7 +299,7 @@ automation:
               payload: "{{ 2 if delta > 0 else 0 }}"
       # État final confirmé par BSB-LAN (1 annulation, 2 plus chaud, 0 plus froid), sinon un nouvel essai.
       - wait_template: >-
-          {{ states('sensor.pac_' ~ trigger.id ~ '_derogation_etat') | int(-1) == (1 if delta | abs < 0.25 else (2 if delta > 0 else 0)) }}
+          {{ states('sensor.pac_' ~ cc ~ '_derogation_etat') | int(-1) == (1 if delta | abs < 0.25 else (2 if delta > 0 else 0)) }}
         timeout: "00:00:08"
         continue_on_timeout: true
       - if:

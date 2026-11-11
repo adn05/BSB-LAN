@@ -6,7 +6,7 @@
 # Identifiants d'entité déduits des noms publiés par la discovery (2026-11-09) : « sensor.bsb_lan_<nom> », corrigés par
 # l'utilisateur dans HA le 2026-11-10 (ECS : unité « °C » -> « degc », 5024 / 5030 créées avant les noms courts).
 # Une entité marquée « introuvable » dans une carte : la renommer ici d'après Paramètres -> Entités.
-# Entités notées « après mise à jour » : créées par le firmware alfea-complet (journal J66 à J68), pas encore flashé.
+# Entités notées « après mise à jour » : créées par le firmware alfea-complet (journal J66 à J73).
 
 title: PAC
 views:
@@ -27,12 +27,36 @@ views:
             features:
               - type: climate-preset-modes
                 style: icons
+          # Compte à rebours, affiché seulement pendant une dérogation (doc 12 §6.2)
+          - type: tile
+            entity: sensor.pac_chambre_fin_de_derogation
+            name: Dérogation chambre jusqu'à
+            icon: mdi:timer-sand
+            visibility:
+              - condition: state
+                entity: sensor.pac_chambre_fin_de_derogation
+                state_not: unknown
+              - condition: state
+                entity: sensor.pac_chambre_fin_de_derogation
+                state_not: unavailable
           - type: thermostat
             entity: climate.bsb_lan_thermostat_salon
             name: Salon
             features:
               - type: climate-preset-modes
                 style: icons
+          # Compte à rebours, affiché seulement pendant une dérogation (doc 12 §6.2)
+          - type: tile
+            entity: sensor.pac_salon_fin_de_derogation
+            name: Dérogation salon jusqu'à
+            icon: mdi:timer-sand
+            visibility:
+              - condition: state
+                entity: sensor.pac_salon_fin_de_derogation
+                state_not: unknown
+              - condition: state
+                entity: sensor.pac_salon_fin_de_derogation
+                state_not: unavailable
         column_span: 2
       - type: grid
         cards:
@@ -51,14 +75,13 @@ views:
           - type: tile
             entity: binary_sensor.bsb_lan_ecs_etat_resistance_electrique_ecs
             name: Résistance ECS
-          # Boost : charge unique jusqu'à la consigne nominale, fin automatique (doc 12 §7). Appui = lancer.
           - type: tile
+            grid_options:
+              columns: 12
             entity: select.bsb_lan_ecs_forcage_ecs
             name: Boost ECS
             icon: mdi:water-boiler-alert
-            vertical: true
-            grid_options:
-              columns: 12
+            vertical: false
             tap_action:
               action: perform-action
               perform_action: select.select_option
@@ -67,7 +90,10 @@ views:
               data:
                 option: Rechargement
               confirmation:
-                text: Lancer une chauffe immédiate du ballon jusqu'à la consigne nominale ?
+                text: >-
+                  Lancer une chauffe immédiate du ballon jusqu'à la consigne
+                  nominale ?
+            features_position: bottom
           - type: heading
             heading: Pompe à chaleur
             icon: mdi:heat-pump-outline
@@ -144,8 +170,6 @@ views:
                 name: Consigne en vigueur
               - entity: sensor.bsb_lan_chambre_temperature_modele_d_ambiance_cc1
                 name: Modèle
-              - entity: sensor.bsb_lan_chambre_consigne_de_temperature_de_depart_resultante_cc1
-                name: Consigne de départ
             grid_options:
               columns: 24
               rows: auto
@@ -159,8 +183,6 @@ views:
                 name: Consigne en vigueur
               - entity: sensor.bsb_lan_salon_temperature_de_modele_d_ambiance_cc2
                 name: Modèle
-              - entity: sensor.bsb_lan_salon_consigne_de_temperature_de_depart_resultante_cc2
-                name: Consigne de départ (après mise à jour)
             grid_options:
               columns: 24
               rows: auto
@@ -290,8 +312,6 @@ views:
             icon: mdi:bed
           - type: entities
             entities:
-              - entity: select.bsb_lan_chambre_mode_de_fonctionnement
-                name: Mode
               - entity: text.bsb_lan_chambre_consigne_de_confort_degc
                 name: Consigne Confort (°C)
               - entity: text.bsb_lan_chambre_consigne_regime_reduit_degc
@@ -309,8 +329,6 @@ views:
             icon: mdi:sofa
           - type: entities
             entities:
-              - entity: select.bsb_lan_salon_mode_de_fonctionnement
-                name: Mode
               - entity: text.bsb_lan_salon_consigne_de_confort_degc
                 name: Consigne Confort (°C)
               - entity: text.bsb_lan_salon_consigne_regime_reduit_degc
