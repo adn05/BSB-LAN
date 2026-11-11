@@ -1,10 +1,10 @@
 # BSB-LPB-PPS-LAN
 
-[<img src="https://img.shields.io/github/last-commit/fredlcore/BSB-LAN">]()
-[<img src="https://img.shields.io/github/commit-activity/t/fredlcore/BSB-LAN">]()
-[<img src="https://img.shields.io/github/stars/fredlcore/BSB-LAN?style=plastic">](https://github.com/fredlcore/BSB-LAN/stargazers)
-[<img src="https://img.shields.io/github/forks/fredlcore/BSB-LAN?style=plastic">](https://github.com/fredlcore/BSB-LAN/forks)
-[<img src="https://img.shields.io/github/followers/fredlcore?style=plastic">](https://github.com/fredlcore?tab=followers)
+[<img src="https://img.shields.io/github/last-commit/adn05/BSB-LAN">]()
+[<img src="https://img.shields.io/github/commit-activity/t/adn05/BSB-LAN">]()
+[<img src="https://img.shields.io/github/stars/adn05/BSB-LAN?style=plastic">](https://github.com/adn05/BSB-LAN/stargazers)
+[<img src="https://img.shields.io/github/forks/adn05/BSB-LAN?style=plastic">](https://github.com/adn05/BSB-LAN/forks)
+[<img src="https://img.shields.io/github/followers/adn05?style=plastic">](https://github.com/adn05?tab=followers)
 
 > **About this fork (branch content added on top of upstream BSB-LAN).**
 > This repository adapts BSB-LAN to one **Atlantic Alféa Extensa Duo A.I.** heat pump (Siemens **RVS21**, family 211,
