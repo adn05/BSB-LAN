@@ -37,6 +37,7 @@ IMAGES = {
     'pont-diag': ('pont_bsb.ino', 'pont'),
     'alfea': ('BSB_LAN.ino', 'alfea'),
     'alfea-ecriture': ('BSB_LAN.ino', 'alfea'),
+    'alfea-complet': ('BSB_LAN.ino', 'alfea'),       # liste complète du régulateur (docker/build.sh)
     'test-broches': ('test_broches.ino', 'alfea'),
     'test-broches-pont': ('test_broches.ino', 'pont'),
 }
