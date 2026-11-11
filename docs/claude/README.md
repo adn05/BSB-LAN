@@ -1,118 +1,48 @@
-# docs/claude — Mission BSB-LAN ESP32-C3 / Atlantic Alféa Extensa Duo A.I.
+# docs/claude — BSB-LAN sur ESP32-C3 pour Atlantic Alféa Extensa Duo A.I.
 
-> Résumé : index de la documentation produite pendant la mission `alfea-extensa`.
-> Chaque document commence par un résumé court puis le détail.
-> Convention : **[CONSTATÉ]** = vérifié dans le code/la doc, **[SUPPOSÉ]** = hypothèse, **[À VÉRIFIER]** = question ouverte.
+> Résumé : firmware BSB-LAN adapté à une pompe à chaleur **Atlantic Alféa Extensa** (régulateur Siemens **RVS21**,
+> famille 211, variante 127, bus **BSB** sur X86), sur un **ESP32-C3 SuperMini** monté sur une carte d'interface
+> isolée, intégré à **Home Assistant** par MQTT (auto-discovery).
+> Convention : **[CONSTATÉ]** = vérifié, **[SUPPOSÉ]** = hypothèse, **[À VÉRIFIER]** = question ouverte.
 
-| # | Document | Phase | État |
-|---|---|---|---|
-| 00 | [00_MISSION.md](00_MISSION.md) | 0 | copie de la feuille de route |
-| 01 | [01_architecture_bsb-lan.md](01_architecture_bsb-lan.md) | 1 | structure, cycle de vie, cmdtbl, configuration |
-| 02 | [02_protocole_bsb.md](02_protocole_bsb.md) | 1 | couche physique, trames, CRC, BSB/LPB/PPS, Alféa = BSB |
-| 03 | [03_serveur_web_et_api.md](03_serveur_web_et_api.md) | 1 | routes HTTP, API JSON, sécurité, tri indispensable/supprimable |
-| 04 | [04_integration_home_assistant.md](04_integration_home_assistant.md) | 1 | MQTT, auto-discovery HA, alternatives, recommandation |
-| 05 | [05_fonctionnalites.md](05_fonctionnalites.md) | 1 | inventaire des fonctionnalités, coûts mesurés (.map), tri pour Alféa |
-| 06 | [06_carte_interface_bsb.md](06_carte_interface_bsb.md) | 1 bis | adaptateur officiel : étages, calculs, vigilance |
-| 07 | [07_faisabilite_esp32c3.md](07_faisabilite_esp32c3.md) | 2 | identification Alféa, ESP32 vs C3, cartes, budget mémoire, choix |
-| 08 | [08_plan_migration.md](08_plan_migration.md) | 3 | réduction par gardes `NO_…`, étapes et commits, build, secrets, paramètres HA, tests, risques |
-| 08a | [08a_analyse_liste_parametres.md](08a_analyse_liste_parametres.md) | 3 | analyse de la liste 211/127 contre un dump `/QD`, incohérences, nouvelle liste générée |
-| 09 | [09_design_carte_interface.md](09_design_carte_interface.md) | 3 | carte porteuse SuperMini : schéma, calculs, protections, alimentation, BOM, mesure de X86 |
-| 10 | [10_journal_implementation.md](10_journal_implementation.md) | 4 | journal des étapes E0-E10, décisions et écarts, rapport de taille, diff amont |
-| 11 | [11_mise_en_service_pac.md](11_mise_en_service_pac.md) | 5 | GATE 3 : prérequis, identification de CL+ sur X86, raccordement PAC hors tension, premier essai en lecture seule (T3), relevés à transmettre |
-| 12 | [12_thermostat_home_assistant.md](12_thermostat_home_assistant.md) | 4 | thermostats HA des circuits CC1 et CC2 (paquet MQTT `climate`), installation, limites, essais |
-| 13 | [13_boitier_3d.md](13_boitier_3d.md) | 4 | boîtier imprimable en 3D (fond + couvercle, STEP et STL), ouvertures, quincaillerie, hypothèses à mesurer |
-| 14 | [14_alimentation_gplus.md](14_alimentation_gplus.md) | 4 | proposition (schéma seul) : ESP32 alimenté par G+ de X86 via un convertisseur isolé et un limiteur de courant ; essai de charge de G+ à faire avant |
-| 15 | [15_option_b_non_isolee.md](15_option_b_non_isolee.md) | 4 | proposition (schéma complet, PCB placé non routé) : carte sans optocoupleur, bornier 3 points CL+/CL-/G+, AP63205 sur G+, 74HC14 et 2N7002 ; précautions USB |
-| — | [README_docker.md](README_docker.md) | 4 | build firmware, carte KiCad, simulateur BSB, pile HA de test |
-
-## GATE 1 — synthèse (fin des phases 1, 1 bis et 2)
-
-**Statut : validée le 2026-11-01** (décisions et réponses ci-dessous).
-
-- **Faisabilité : oui, mesurée.** L'amont non modifié compile pour ESP32-C3 (arduino-esp32 3.3.12) : 1 610 749 o de flash (81 % de la partition app) et 65 624 o de RAM statique. Réduction estimée : ≈ 280-300 Ko de flash et ≈ 18 Ko de RAM (05 §3).
-- **Cible** : Atlantic Alféa Extensa Duo A.I. = Siemens **RVS21**, bus **BSB** sur **X86**. Famille et variante probables **211/127** (RVS21.831F/127), à confirmer sur la machine (07 §6.1).
-- **Carte proposée** : **ESP32-C3 SuperMini**, sous condition RF (RSSI ≥ −70 dBm sur site). Repli : kit Ai-Thinker en version 4 Mo (07 §6.5).
-- **Sécurité** : la lecture seule amont est logicielle et contournable par `/Y`, `/YR` et **`/JY`** (01 §5, 03). La cible devra compiler en `FL_RONLY` et exclure ces routes.
-- **Interface** : schéma V3 analysé. Compatible 3,3 V si l'adaptateur est alimenté en 3,3 V. Marge de CTR d'environ ×1,2 à ×2,3 (06 §3).
-
-### Décisions demandées
-1. Valider le choix de carte (SuperMini sous condition RF) et le brochage provisoire RX = GPIO6, TX = GPIO7, LED = GPIO8.
-2. Outillage Docker : `arduino-cli` comme build de référence + environnement PlatformIO, ou PlatformIO seul ?
-3. Liste de paramètres : solliciter le mainteneur (dump `/QD` de votre machine) ou partir d'une liste 211/127 existante ?
-4. Stratégie de réduction : gardes `#if` ajoutées au code amont (diff minimal), comme le recommande la mission ?
-
-### Questions ouvertes
-- Q1. Régulateur exact de votre machine : suffixe RVS21.8xx, valeurs 6225/6226, version OV (lecture sur site).
-- Q2. Brochage physique et polarité de X86 sur votre carte (photo de la carte de régulation ?), tension de repos du bus (multimètre).
-- Q3. Présence d'accessoires sur le bus : Navilink A59/A75/A78, Cozytouch, Typass ? (risque d'écrasement de consignes, adresse de BSB-LAN).
-- Q4. Schéma de l'adaptateur ESP32 v4.x : introuvable dans le dépôt. En avez-vous un exemplaire, ou faut-il concevoir notre propre carte (Phase 3) ?
-- Q5. Budget de courant du BSB sur RVS21 et impédance de la source : non documentés. Le design prévoit une alimentation 5 V externe.
-- Q6. Lot de SuperMini disponible : LDO ME6211 ou LP5907 ? Version de l'antenne ?
-- Q7. Distance et obstacles entre la PAC (module hydraulique) et le point d'accès WiFi.
-- Q8. Broker MQTT existant (Mosquitto, add-on HA) et version de Home Assistant.
-
-### Décisions de l'utilisateur (GATE 1)
-| # | Décision |
-|---|---|
-| D1 | Carte : **ESP32-C3 SuperMini** retenue (condition RF maintenue avant la GATE 3). |
-| D2 | Outillage : **arduino-cli** comme build de référence, en Docker (PlatformIO non retenu pour l'instant). |
-| D3 | Liste de paramètres : **analyser la liste 211/127 existante, relever les incohérences, puis générer une nouvelle liste** → doc 08a. |
-| D4 | Réduction par **gardes `#if`** dans le code amont (diff minimal). |
-| D5 | **Ajouter le support DHT22** (déjà présent en amont) et prévoir son entrée sur la carte. |
-| D6 | Carte d'interface **à concevoir** (KiCad), optocoupleurs conservés, **alimentation non prélevée sur le bus**. |
-| D7 | `MISSION_ALFEA_EXTENSA.md` supprimé de la racine (copie conservée dans `00_MISSION.md`). |
-
-### Réponses aux questions ouvertes
-| # | Réponse | Conséquence |
+| # | Document | Contenu |
 |---|---|---|
-| Q1 | IHM, menu « version logicielle » : **Régulation : RVS21 - 89.006.090** | version applicative Atlantic, différente de la notice R32 (85.002.030). La correspondance avec la version OV (402.6 dans la liste de référence) et avec famille/variante est inconnue : **lecture de 6220-6229 obligatoire à la mise en service** (08a §6) |
-| Q2 | X86 : bornier à vis débrochable `B2 M B1 3 2 1` (photo `images/x86_alfea.jpeg`) ; remesure du 2026-11-04 : **11,5 V entre 1 et 2, 11,6 V entre 2 et 3** (la première, 0 V, prise sur les têtes de vis) | brochage 1 = CL+, 2 = CL-, 3 = G+ cohérent ; R2 = 2 kΩ conservée (> 11 V). Restent la polarité et le départage CL+ / G+ (09 §8) |
-| Q3 | **2 Navilink A59 sans fil**, pas sur X86 | pas d'autre maître sur X86 ; les sondes passent par une liaison radio dont le récepteur n'est pas sur X86 [À VÉRIFIER]. Deux sondes suggèrent deux circuits (CC1 et CC2) : la liste HA inclut CC2 |
-| Q4 | Concevoir notre carte avec KiCad | design dans 09, fichiers KiCad dans `hardware/alfea-esp32c3/` **après la GATE 2** (règle de la mission) |
-| Q5 | Optocoupleurs conservés ; alimentation hors bus ; « alim 5 V de la PAC, sinon chargeur de téléphone » | pas de 5 V documenté sur le RVS21 ; G+ casserait l'isolation. Retenu : **chargeur USB 5 V** par défaut, module rail DIN en option (09 §4) |
-| Q6 | À vérifier (LDO du SuperMini, distance WiFi) | reste ouvert |
-| Q7 | Question non comprise | reformulée dans la synthèse GATE 2 |
+| 00 | [00_MISSION.md](00_MISSION.md) | feuille de route d'origine et règles de travail |
+| 09 | [09_design_carte_interface.md](09_design_carte_interface.md) | carte d'interface rev A : schéma, calculs, protections, alimentation, BOM, mise en service sur banc |
+| 10 | [10_journal_implementation.md](10_journal_implementation.md) | journal des étapes, décisions et mesures |
+| 11 | [11_mise_en_service_pac.md](11_mise_en_service_pac.md) | raccordement à la PAC, premier essai, essai d'endurance |
+| 12 | [12_thermostat_home_assistant.md](12_thermostat_home_assistant.md) | thermostats HA (chambre CC1, salon CC2), dérogations, boost ECS |
+| 13 | [13_boitier_3d.md](13_boitier_3d.md) | boîtier imprimable en 3D |
+| — | [README_docker.md](README_docker.md) | compilation, flash, contrôle de la carte, boîtier |
 
-## GATE 2 — synthèse (fin de la phase 3)
+## Contenu du dépôt
 
-**Statut : design de la carte, paramètres et alimentation validés ; plan amendé, en attente du feu vert pour la Phase 4.**
+| Chemin | Rôle |
+|---|---|
+| `BSB_LAN/` | code amont, modifié par quelques gardes (`git diff 41558d24 -- BSB_LAN/` : 2 fichiers, +85 / −5) |
+| `alfea/config/BSB_LAN_config.h` | configuration du firmware ; secrets dans `alfea_secrets.h` (ignoré par git, modèle `alfea_secrets.h.example`) |
+| `alfea/params/` | liste complète 211/127 générée (`BSB_LAN_custom_defs.h`), sélection annoncée à HA (`selection_ha.txt`), liste blanche d'écriture (`ecriture.txt`), source de la liste (`source/`), dump et sauvegarde des réglages de la PAC |
+| `alfea/tools/` | `flasher.py` (flash et console USB), `gen_custom_defs.py` (génération de la liste), `mapsize.py` (rapport de taille) |
+| `alfea/homeassistant/` | paquet des thermostats (`alfea_thermostats.yaml`) et tableau de bord (`dashboard_pac.yaml`) |
+| `alfea/hardware/carte_bsb_c3/` | carte d'interface rev A (KiCad 9), routée par l'utilisateur, sorties de fabrication |
+| `alfea/hardware/boitier/` | boîtier CadQuery et ses sorties STEP / STL |
+| `docker/` | environnements de build (arduino-cli, KiCad, CadQuery) |
 
-Réponses de l'utilisateur (après la synthèse ci-dessous) :
-- liste de paramètres : **réduite aux paramètres utiles** → 96 entrées, 1 638 533 o (83 %), soit −58 752 o (08a §5.4) ;
-- paramètres HA validés ; **2 circuits** (CC1 : chambre ; CC2 : salon, corrigé le 2026-11-09) ;
-- **écriture** souhaitée pour les **programmes horaires, modes et consignes** (CC1, CC2, ECS) : liste blanche, désactivée par défaut, avertissement et procédure dans 08 §5.2 ;
-- fichiers de la carte dans **`alfea/hardware/`** : projet KiCad 9 généré, ERC/DRC/parité à 0, **non routé** (09 §9) ;
-- alimentation : **chargeur USB**, rail DIN en option ;
-- Q7 : **HA OS**, Core 2026.10.4, pas de broker → add-on Mosquitto (08 §5.3) ; Q6 : à observer pendant les essais.
+## Firmware
 
-- **Liste de paramètres (08a)** : la liste 211/127 de l'issue #622 (903 entrées) est fidèle à un dump `/QD` d'une autre machine 211/127 : 847/882 objets retrouvés, aucun numéro divergent, tailles cohérentes. Les 3 « absents » correspondent aux 3 enregistrements perdus du dump. Incohérences : 73 compteurs typés chaîne dont **3113** (I1), objets cachés manquants (#829, #831), 5057 oublié, niveau d'accès 6 inscriptible (**ramonage 7131**), `VT_VACATIONPROG` (#812). Nouvelle liste générée par script, 912 entrées : **1 697 285 o (86 %)** mesuré.
-- **Plan (08)** : gardes `NO_…` + `FORCE_READ_ONLY`, 10 étapes/commits, arduino-cli en Docker, secrets hors dépôt, **38 paramètres HA** (dont DHT22), tests build → simulateur → HA Docker → PAC.
-- **Carte (09)** : porteuse 50 × 40 mm pour SuperMini, topologie V3 conservée, écarts justifiés (R8 rappel TX, BC547C, TVS + PTC, DHT22 sur GPIO5, entrée 5 V + Schottky), alimentation par chargeur USB 5 V.
+- **Une seule cible** : `sh docker/compiler.sh` → `alfea/build/alfea/` (flash 74 % de la partition app).
+- **Liste complète** du régulateur (908 lignes, consultables par l'interface web) ; **annonces HA limitées** à
+  `selection_ha.txt` (88 lignes).
+- **Écriture** limitée à la liste blanche `ecriture.txt` (programmes horaires, consignes, ECS, dérogations, boost),
+  et seulement en mode d'écriture 1 choisi dans `/C`. `/NE` remet le mode 0 (lecture seule).
+- Sécurité : pas de télégrammes bruts (`/Y`, `/YR`, `/JY`), pas de `/G`, mot de passe HTTP et du point d'accès
+  obligatoires, filtre d'IP de confiance.
+- Ne pas lancer `/QD` sur la PAC : il a provoqué l'erreur IHM 103.23.415.
 
-### Décisions demandées
-1. Valider la stratégie de gardes et l'ordre des étapes E0-E10 (08 §2).
-2. Valider ou amender la liste des 38 paramètres HA (08 §5) ; confirmer l'existence d'un 2e circuit (CC2).
-3. Valider le design (09), en particulier les écarts à V3, et autoriser les fichiers KiCad dans `hardware/alfea-esp32c3/`.
-4. Alimentation : chargeur USB (défaut) ou module rail DIN ?
+## État (2026-11-11)
 
-### Questions ouvertes
-- Q6 : marquage du LDO du SuperMini (ME6211 / LP5907), distance PAC ↔ point d'accès WiFi.
-- Q7 reformulée : Home Assistant est-il déjà installé, comment (HA OS ou Docker) et en quelle version ? Avez-vous un broker MQTT (en général l'add-on Mosquitto de HA) ?
-- Q9 : photo de la sérigraphie de X86, pas du connecteur, mesures de tension (09 §8), à faire avant la GATE 3.
-- ~~Q10~~ : 6224 RVS21.831F/127, famille 211, variante 127, OV 4067 (08a §6.1, 2026-11-09).
-
-## Phase 4 — synthèse (avant la GATE 3)
-
-**Statut : GATE 3 validée le 2026-11-09.** Premier raccordement à la PAC en lecture seule selon la doc 11 (firmware `alfea` flashé).
-
-- **Firmware Alféa** (`sh docker/compiler.sh alfea`) : **1 410 705 o (71 %)**, **49 104 o de RAM** (amont : 1 610 749 o, 65 624 o). Lecture seule par défaut ; variante `alfea-ecriture` limitée à la liste blanche (programmes horaires, modes, consignes).
-- **Diff sur le code amont** : 27 lignes ajoutées, 4 supprimées, dans `BSB_LAN/BSB_LAN.ino` seulement. Le reste est dans `alfea/`, `docker/` et `docs/claude/`.
-- **E6 et E7 écartées après mesure** : environ 4 points de partition, pour des gardes sur une centaine de sites (10 J14).
-- **Validé sans matériel** : builds amont et Alféa, simulateur (autotest 13/13 sur trames réelles), pile Mosquitto + HA 2026.10.4, vérificateur de discovery.
-- **Carte** : schéma principal retouché par l'utilisateur (émission V3), 66 × 33 mm **placée et routée par l'utilisateur** (DRC 0 toutes sévérités, parité 0, isolation ≥ 5,2 mm), contrôlée par `docker/kicad/controler_carte.sh`. Générateur, Freerouting et variante sur plaquette d'essai supprimés (2026-11-03).
-- **Pont de test** : firmware `pont_bsb` pour la NodeMCU ESP-C3-32S-Kit (ET câblé du bus, 10 J18-J19).
-
-### Avant la GATE 3 (de votre côté)
-1. Banc T1/T2 : SuperMini + NodeMCU ESP-C3-32S-Kit en pont (README_docker §3). **Carte principale rev A reçue le 2026-11-09** : mise en service sur banc, bus simulé, selon 09 §10.
-2. ~~Refaire la mesure de X86~~ : 11,5 V (1-2) et 11,6 V (2-3) le 2026-11-04. Reste à confirmer la polarité et quelle borne porte le trafic (09 §8).
-3. ~~Fichier `alfea/config/alfea_secrets.h`~~ : créé (firmware compilé avec, 71 %). L'utilisateur MQTT est resté `bsblan` : à créer tel quel dans l'add-on Mosquitto.
+- PAC raccordée depuis le 2026-11-09, carte rev A (SuperMini enfiché retourné, erratum J4/J5 : journal J51).
+- Thermostats, dérogations et boost ECS validés sur la PAC depuis HA (journal J77).
+- Essai d'endurance de 48 h en cours (doc 11 §7).
+- Questions ouvertes : couverture WiFi (−75 dBm, cible ≥ −70 dBm) ; plantage observé à la reconnexion WiFi
+  (`NetworkEvents::postEvent`, non corrigé).

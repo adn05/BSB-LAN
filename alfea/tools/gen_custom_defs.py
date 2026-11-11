@@ -9,13 +9,13 @@ Les textes et énumérations non référencés sont éliminés à l'édition de 
 
 Avec --ecriture (liste blanche, même format), toute entrée hors liste reçoit FL_RONLY
 (FL_OEM conservé) et le tableau write_whitelist[][2] est émis pour la garde
-WRITE_WHITELIST de set() (BSB_LAN.ino). Voir docs/claude/08_plan_migration.md §5.2.
+WRITE_WHITELIST de set() (BSB_LAN.ino).
 
 Avec --ha (même format, en pratique alfea/params/selection_ha.txt), la fonction alfea_dans_ha(ligne) est émise :
 elle dit si une ligne est annoncée à Home Assistant (filtre MQTT_DISCOVERY_SKIP de alfea/config/BSB_LAN_config.h).
 La liste complète peut ainsi être compilée sans annoncer ses 900 paramètres à HA.
 
-Les corrections sont décrites et justifiées dans docs/claude/08a_analyse_liste_parametres.md.
+Les corrections ont été justifiées dans docs/claude/08 et 08a (supprimés le 2026-11-11, voir l'historique git).
 Chaque ajout porte le commentaire « ALFEA » ; aucune entrée source n'est supprimée.
 """
 import argparse
@@ -25,7 +25,7 @@ import sys
 ENTETE = """\
 // ALFEA : liste générée par alfea/tools/gen_custom_defs.py, ne pas modifier à la main.
 // ALFEA : source = liste 211/127 générée par le mainteneur (RVS21.831F/127, OV 402.6),
-// ALFEA : publiée dans https://github.com/fredlcore/BSB-LAN/issues/622 ; analyse : docs/claude/08a.
+// ALFEA : publiée dans https://github.com/fredlcore/BSB-LAN/issues/622 ; corrections ALFEA : voir alfea/tools/gen_custom_defs.py.
 """
 
 # Textes des entrées ajoutées (déclarés avant la cmdtbl).

@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
-"""Flash et console des deux cartes du banc (docs/claude/README_docker.md §3).
+"""Flash et console du SuperMini ESP32-C3 (docs/claude/README_docker.md).
 
-    python alfea/tools/flasher.py ports              # liste les ports série et reconnaît les cartes
-    python alfea/tools/flasher.py pont               # flashe le pont (NodeMCU ESP-C3-32S-Kit, CH340)
-    python alfea/tools/flasher.py alfea              # 1er flash du SuperMini : image complète en 0x0
+    python alfea/tools/flasher.py ports              # liste les ports série et reconnaît le SuperMini
+    python alfea/tools/flasher.py alfea              # 1er flash : image complète en 0x0
     python alfea/tools/flasher.py alfea --appli      # mises à jour : application seule en 0x10000
-    python alfea/tools/flasher.py test-broches       # test des GPIO du SuperMini (alfea/tools/test_broches)
-    python alfea/tools/flasher.py test-broches-pont  # même test sur la carte du pont
-    python alfea/tools/flasher.py console            # console du SuperMini (Ctrl+C pour quitter)
+    python alfea/tools/flasher.py console            # console USB (Ctrl+C pour quitter)
 
-Le port est détecté par l'identifiant USB ; --port COMx force un port. Les images viennent de
-docker/compiler.sh (alfea/build/<image>).
+Le port est détecté par l'identifiant USB ; --port COMx force un port. L'image vient de
+docker/compiler.sh (alfea/build/alfea).
 
 Image complète en 0x0 : elle contient bootloader, table de partitions et application, et remplit les trous
 de 0xFF, donc efface la NVS (0x9000) où BSB-LAN garde sa configuration. D'où --appli pour les mises à jour.
@@ -27,19 +24,11 @@ from serial.tools import list_ports
 RACINE = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'build'))
 # (VID, PID) -> carte
 CARTES = {
-    (0x1A86, 0x7523): 'pont',     # CH340 de la NodeMCU ESP-C3-32S-Kit
-    (0x1A86, 0x55D4): 'pont',     # CH9102/CH343, selon les lots [SUPPOSÉ]
     (0x303A, 0x1001): 'alfea',    # USB-Serial/JTAG intégré de l'ESP32-C3 (SuperMini)
 }
 # image -> (fichier dans alfea/build/<image>/, carte)
 IMAGES = {
-    'pont': ('pont_bsb.ino', 'pont'),
-    'pont-diag': ('pont_bsb.ino', 'pont'),
     'alfea': ('BSB_LAN.ino', 'alfea'),
-    'alfea-ecriture': ('BSB_LAN.ino', 'alfea'),
-    'alfea-complet': ('BSB_LAN.ino', 'alfea'),       # liste complète du régulateur (docker/build.sh)
-    'test-broches': ('test_broches.ino', 'alfea'),
-    'test-broches-pont': ('test_broches.ino', 'pont'),
 }
 
 
@@ -70,7 +59,7 @@ def flasher(a):
     else:
         adresse, image = '0x0', os.path.join(RACINE, a.image, base + '.merged.bin')
     if not os.path.isfile(image):
-        sys.exit(f'image absente : {image}\ncompiler d\'abord : sh docker/compiler.sh {a.image}')
+        sys.exit(f'image absente : {image}\ncompiler d\'abord : sh docker/compiler.sh')
     port = trouver_port(carte, a.port)
     print(f'{a.image} : {image} -> {port} @ {adresse}')
     esptool.main(['--chip', 'esp32c3', '--port', port, '--baud', str(a.baud),
@@ -99,7 +88,7 @@ def console(a):
             try:
                 ser = serial.Serial()
                 ser.port, ser.baudrate, ser.timeout = port, a.vitesse, 0.1
-                # DTR et RTS inactifs : sur le CH340 du pont, RTS commande EN et DTR commande IO9 (reset, mode boot)
+                # DTR et RTS inactifs : pas de reset de la carte à l'ouverture du port
                 ser.dtr = ser.rts = False
                 ser.open()
                 lien['ser'] = ser

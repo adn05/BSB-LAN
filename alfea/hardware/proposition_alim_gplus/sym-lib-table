@@ -1,4 +1,0 @@
-(sym_lib_table
-	(version 7)
-	(lib (name "alim")(type "KiCad")(uri "${KIPRJMOD}/alim.kicad_sym")(options "")(descr "Module DC/DC de la proposition G+"))
-)

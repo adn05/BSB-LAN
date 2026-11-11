@@ -1,8 +1,10 @@
 # 12 — Thermostats Home Assistant (circuits CC1 et CC2)
 
 > **Résumé**
+>
+> Note (2026-11-11) : les renvois aux docs 01 à 08a, 14 et 15, aux cibles `alfea-ecriture` / `alfea-complet` et aux outils d'essai (simulateur, pont, HA jetable) visent des éléments retirés au ménage du 2026-11-11 ; ils restent consultables dans l'historique de la branche `alfea-extensa`. Il n'y a plus qu'un firmware, `alfea` (README_docker).
 > Deux entités `climate` MQTT, une par circuit, définies dans un paquet HA (`alfea/homeassistant/alfea_thermostats.yaml`), à partir des sujets que BSB-LAN publie déjà. Il n'y a aucune modification du firmware.
-> Elles affichent la température ambiante, la consigne de confort, le mode du régulateur et l'état du circuit, et pilotent consigne et mode par les sujets `set`. Pour piloter, il faut le firmware `alfea-ecriture` en mode d'écriture 1.
+> Elles affichent la température ambiante, la consigne de confort, le mode du régulateur et l'état du circuit, et pilotent consigne et mode par les sujets `set`. Pour piloter, il faut le mode d'écriture 1.
 > Contrôles [CONSTATÉ] :
 > - essai dans un HA 2026.10.4 jetable : `alfea/tools/test_thermostat_ha.py`, 13/13, aucun avertissement MQTT ;
 > - commandes MQTT sur le banc : trames SET justes, 7/7.
@@ -75,7 +77,7 @@ En période réduite (`auto` hors plage horaire, ou `eco`), la consigne réellem
    ```
 3. Aller dans Outils de développement > YAML > Vérifier la configuration, puis redémarrer HA. Le rechargement « Entités MQTT configurées manuellement » suffit pour les modifications suivantes.
 4. Deux entités apparaissent dans l'appareil BSB-LAN : `climate.bsb_lan_thermostat_cc1_salon_cuisine` et `climate.bsb_lan_thermostat_cc2_chambres` (noms affichés « Thermostat chambre » et « Thermostat salon » depuis la correction du 2026-11-09 : CC1 = chambre, CC2 = salon ; les `entity_id` déjà créés gardent l'ancien libellé, à renommer dans HA si souhaité) [SUPPOSÉ : identifiants dérivés du nom de l'appareil ; dans le HA jetable, l'appareil n'avait pas de nom propre]. Ajouter ensuite une carte « Thermostat » au tableau de bord.
-5. Pour piloter : firmware `alfea-ecriture` et mode d'écriture 1 (`/C`, ou `/JW {"Parameter":33,"Value":"1"}`). Seules les lignes de `alfea/params/ecriture.txt` sont modifiables.
+5. Pour piloter : mode d'écriture 1 (`/C`, ou `/JW {"Parameter":33,"Value":"1"}`). Seules les lignes de `alfea/params/ecriture.txt` sont modifiables.
 
 ## 5. Contrôles réalisés
 

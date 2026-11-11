@@ -1,6 +1,6 @@
 // ALFEA : liste générée par alfea/tools/gen_custom_defs.py, ne pas modifier à la main.
 // ALFEA : source = liste 211/127 générée par le mainteneur (RVS21.831F/127, OV 402.6),
-// ALFEA : publiée dans https://github.com/fredlcore/BSB-LAN/issues/622 ; analyse : docs/claude/08a.
+// ALFEA : publiée dans https://github.com/fredlcore/BSB-LAN/issues/622 ; corrections ALFEA : voir alfea/tools/gen_custom_defs.py.
 // 0/RVS21.831F/127/211/127/402.6/146978 
 #define E_CAT_00_TEXT "Heure"
 #define S501_0_TEXT "Cycle de chauffage"

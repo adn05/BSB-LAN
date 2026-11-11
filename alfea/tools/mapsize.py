@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Répartition flash/RAM d'un build à partir du fichier .map de l'éditeur de liens.
 
-Usage : mapsize.py <BSB_LAN.ino.map>  (méthode : docs/claude/05_fonctionnalites.md, annexe)
+Usage : mapsize.py <BSB_LAN.ino.map>
 """
 import re,sys,collections
 lines=open(sys.argv[1],errors='ignore').read().split('\n')

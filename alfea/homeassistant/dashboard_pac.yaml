@@ -6,7 +6,7 @@
 # Identifiants d'entité déduits des noms publiés par la discovery (2026-11-09) : « sensor.bsb_lan_<nom> », corrigés par
 # l'utilisateur dans HA le 2026-11-10 (ECS : unité « °C » -> « degc », 5024 / 5030 créées avant les noms courts).
 # Une entité marquée « introuvable » dans une carte : la renommer ici d'après Paramètres -> Entités.
-# Toutes les entités existent depuis le firmware alfea-complet (journal J66 à J76).
+# Entités créées par le firmware alfea (journal J66 à J76).
 
 title: PAC
 views:

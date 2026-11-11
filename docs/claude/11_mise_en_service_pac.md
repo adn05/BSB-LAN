@@ -1,6 +1,8 @@
 # 11 — Mise en service sur la PAC (GATE 3, essai T3 en lecture seule)
 
 > **Résumé**
+>
+> Note (2026-11-11) : les renvois aux docs 01 à 08a, 14 et 15, aux cibles `alfea-ecriture` / `alfea-complet` et aux outils d'essai (simulateur, pont, HA jetable) visent des éléments retirés au ménage du 2026-11-11 ; ils restent consultables dans l'historique de la branche `alfea-extensa`. Il n'y a plus qu'un firmware, `alfea` (README_docker).
 > **GATE 3 validée par l'utilisateur le 2026-11-09.**
 > Procédure du premier raccordement de la carte principale rev A (isolée) sur X86 du RVS21 de l'Alféa Extensa Duo A.I., **en lecture seule**. Elle ne s'applique qu'**après validation explicite de la GATE 3** par l'utilisateur (00 §2.5).
 > Prérequis : banc réussi (09 §10), CL+ identifié sur X86, firmware `alfea` (lecture seule).
@@ -76,7 +78,7 @@ Débrocher JJ1 : la PAC revient exactement dans son état d'origine (rien n'a é
 **Avant** :
 1. Analyse de la nuit avec la console USB (2026-11-09 au 10) : nombre de plantages, reconnexions WiFi et RSSI (08a §6.1).
 2. Si possible, couverture WiFi améliorée : RSSI ≥ −70 dBm, contre −77 à −83 dBm relevés à la mise en service.
-3. Console retirée, carte alimentée par le chargeur USB, firmware `alfea-ecriture` en mode d'écriture 1 (état actuel). **Aucune écriture volontaire pendant l'essai**, pour isoler la stabilité.
+3. Essai lancé le 2026-11-11 à 14:42 en usage normal (choix de l'utilisateur) : écritures autorisées, console USB gardée pour obtenir la trace d'un éventuel plantage.
 
 **Suivi**, sur le PC de développement allumé pendant 48 h, depuis la racine du dépôt :
 

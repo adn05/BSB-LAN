@@ -1,4 +1,0 @@
-(sym_lib_table
-	(version 7)
-	(lib (name "alfea")(type "KiCad")(uri "${KIPRJMOD}/alfea.kicad_sym")(options "")(descr "Symboles du projet : fiches enfichables des borniers"))
-)

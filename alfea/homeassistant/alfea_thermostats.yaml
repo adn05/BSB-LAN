@@ -4,9 +4,8 @@
 #     packages: !include_dir_named packages
 # Procédure, correspondances et limites : docs/claude/12_thermostat_home_assistant.md.
 #
-# Écriture : il faut le firmware alfea-ecriture ET le mode d'écriture 1 (/C ou /JW). Sinon BSB-LAN refuse les
+# Écriture : il faut le mode d'écriture 1 (/C ou /JW). Sinon BSB-LAN refuse les
 # commandes, sans trame SET ; HA n'étant pas optimiste, le thermostat reste à l'état réel publié par BSB-LAN.
-# Essai dans un HA jetable : python -I alfea/tools/test_thermostat_ha.py
 # Sujets : BSB-LAN/<appareil>/<catégorie>/<paramètre>/status|set (BSB_LAN/include/mqtt_handler.h:582).
 #
 # Consigne des thermostats (2026-11-11, demande de l'utilisateur, doc 12 §6) : comme l'A59 et l'afficheur de la PAC.
@@ -16,7 +15,7 @@
 #   Les consignes confort / réduit (710, 712, 1010, 1012) restent réglables par leurs entités.
 #   Mode : automatique seul (programme horaire) ; 700 / 1000 ne sont plus modifiables (2026-11-11, demande de
 #   l'utilisateur). Préréglage eco / comfort = consigne cible réduit / confort, appliquée par dérogation ou annulation.
-#   Il faut le firmware alfea-complet du 2026-11-11 (701, 701.3, 701.4, 1001.x dans la liste blanche).
+#   701, 701.3, 701.4 et 1001.x sont dans la liste blanche (alfea/params/ecriture.txt).
 
 mqtt:
   climate:

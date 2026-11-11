@@ -1,6 +1,5 @@
-# Liste blanche d'écriture : seuls ces paramètres peuvent être modifiés, et seulement si le firmware
-# est compilé avec ALFEA_ECRITURE puis le mode d'écriture 1 choisi dans /C.
-# Avertissement, effets d'une erreur et procédure : docs/claude/08_plan_migration.md §5.2.
+# Liste blanche d'écriture : seuls ces paramètres peuvent être modifiés, et seulement après avoir choisi
+# le mode d'écriture 1 dans /C. Chaque ajout se fait avec l'accord de l'utilisateur (règle de la mission).
 # Format : numéros ou plages « a-b » (sous-lignes comprises), commentaires « # ».
 
 # Programmes horaires : CC1 (chambre), CC2 (salon), ECS
@@ -24,10 +23,10 @@
 5024
 5030
 
-# Boost ECS : forçage 5072 = 1 « Rechargement » (niveau d'accès 6, 08a I5 ; accord de l'utilisateur le 2026-11-11)
+# Boost ECS : forçage 5072 = 1 « Rechargement » (niveau d'accès 6 ; accord de l'utilisateur le 2026-11-11)
 5072
 
-# Dérogation temporaire CC1 / CC2 (objets cachés #829, niveau d'accès 6, 08a I5) : thermostats HA pilotés comme
+# Dérogation temporaire CC1 / CC2 (objets cachés #829, niveau d'accès 6) : thermostats HA pilotés comme
 # l'A59 (doc 12 §6). Accord de l'utilisateur le 2026-11-11. Séquence : état 1, écart, durée, état 2 ou 0 ; annulation : état 1.
 701.0
 701.3

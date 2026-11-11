@@ -1,3 +1,0 @@
-# Configuration minimale de test. L'intégration MQTT s'ajoute par l'interface
-# (Paramètres > Appareils et services > Ajouter > MQTT, broker « mosquitto », port 1883).
-default_config:

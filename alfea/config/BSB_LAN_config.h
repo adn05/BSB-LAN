@@ -2,8 +2,8 @@
 /* Configuration BSB-LAN pour Atlantic Alféa Extensa Duo A.I. (RVS21, bus BSB)      */
 /* sur ESP32-C3 SuperMini + carte d'interface alfea/hardware.                        */
 /* Dérivée de BSB_LAN/BSB_LAN_config.h.default (CONFIG_VERSION 43).                 */
-/* Copiée dans le répertoire de build par docker/build.sh (cible alfea).            */
-/* Justifications : docs/claude/08_plan_migration.md §1.2, §4, §5.                   */
+/* Copiée dans le répertoire de build par docker/build.sh.                          */
+/* Choix et mesures : docs/claude/10_journal_implementation.md.                     */
 /* Les secrets (WiFi, MQTT, mots de passe) sont dans alfea_secrets.h, hors dépôt.   */
 /************************************************************************************/
 
@@ -60,17 +60,11 @@ byte QAA_TYPE = 0x53;
 byte bus_pins[2] = {6,7};
 
 /*
- * Lecture seule par défaut (docs/claude/08 §1.3 et §5.2).
- * FL_RONLY : aucun paramètre n'est modifiable, quel que soit le mode d'écriture choisi dans /C.
- * L'écriture des programmes horaires, modes et consignes demande de compiler avec ALFEA_ECRITURE
- * (liste blanche alfea_lignes_ecriture), puis de choisir le mode d'écriture 1 dans /C.
+ * Écriture limitée à la liste blanche (alfea/params/ecriture.txt), et seulement après avoir choisi le mode
+ * d'écriture 1 dans /C (mode 0 = lecture seule, valeur remise par /NE).
  */
-#if defined(ALFEA_ECRITURE)
 #define DEFAULT_FLAG FL_SW_CTL_RONLY
 #define WRITE_WHITELIST               // garde de set() : seules les lignes de write_whitelist[] (alfea/params/ecriture.txt)
-#else
-#define DEFAULT_FLAG FL_RONLY
-#endif
 
 // Pas de carte SD sur le C3 : les broches SD par défaut (18, 19) sont celles de l'USB natif.
 uint8_t LogDestination = FLASH;
@@ -85,7 +79,7 @@ uint8_t LogDestination = FLASH;
 uint8_t logTelegram = LOGTELEGRAM_OFF;
 
 /*
- * Paramètres journalisés et publiés en MQTT (docs/claude/08 §5.1) : 45 entrées, tableau de 48 (taille inchangée : la
+ * Paramètres journalisés et publiés en MQTT : 45 entrées, tableau de 48 (taille inchangée : la
  * modifier déplace la configuration enregistrée et la réinitialise).
  * 2026-11-11 : 8460, 8743, 3110, 3116, 8744, 8774 retirés (sans valeur sur la PAC) ; 701, 1001, 5072 ajoutés.
  * Les 8 dernières (8742 à 1001.3) sont ajoutées à la demande de l'utilisateur (2026-11-10) ; 701.3, 1001.3, 3110 et
@@ -141,7 +135,7 @@ parameter log_parameters[48] = {
 };
 
 /*
- * MQTT vers le broker Mosquitto de Home Assistant (docs/claude/08 §5.3).
+ * MQTT vers le broker Mosquitto de Home Assistant (add-on de HA OS).
  */
 char mqtt_broker_addr[65] = ALFEA_MQTT_BROKER;
 char MQTTUsername[65] = ALFEA_MQTT_USER;
@@ -190,7 +184,7 @@ bool show_unknown = false;
 #define CONFIG_VERSION 43
 
 
-// Sécurité (docs/claude/08 §1.3) : pas de télégrammes bruts (/Y, /YR, /JY contournent la lecture seule),
+// Sécurité : pas de télégrammes bruts (/Y, /YR, /JY contournent la lecture seule),
 // pas de pilotage de GPIO par URL (/G).
 #define NO_RAW_TELEGRAMS
 #define NO_GPIO_URL
@@ -201,7 +195,7 @@ static_assert(sizeof(AP_PASSWORD) >= 9, "ALFEA_AP_PASSWORD : au moins 8 caractè
 
 // Discovery MQTT republiée à chaque démarrage, dès que la PAC est identifiée, et à chaque changement du mode
 // d'écriture (entités modifiables ou non ; journal J28). Sans cela, BSB-LAN ne la renvoie
-// que si le broker a perdu la session persistante, ou sur /M1!0 (docs/claude/04 §1.1, journal J27).
+// que si le broker a perdu la session persistante, ou sur /M1!0 (journal J27).
 #define MQTT_DISCOVERY_ON_BOOT
 // Le type d'entité (sensor, select, text...) dépend du mode d'écriture : chaque publication de discovery efface les
 // configurations retenues des autres types pour le même unique_id (sinon doublons périmés dans HA, journal J28).
@@ -214,7 +208,7 @@ static_assert(sizeof(AP_PASSWORD) >= 9, "ALFEA_AP_PASSWORD : au moins 8 caractè
 // 6220, 6221 et 6225-6229 (versions, famille, variante). Restent 6222 (heures de fonctionnement) et 6224 (identification).
 #define ALFEA_HORS_HA(l) (((l) >= 1 && (l) < 4) || (l) == 6220 || (l) == 6221 || ((l) >= 6225 && (l) < 6230))
 // Seules les lignes de alfea/params/selection_ha.txt sont annoncées (alfea_dans_ha(), émise par gen_custom_defs.py --ha) :
-// le firmware peut contenir la liste complète du régulateur (cible alfea-complet) sans 900 entités dans HA.
+// le firmware peut contenir la liste complète du régulateur sans 900 entités dans HA.
 #define MQTT_DISCOVERY_SKIP(line) (ALFEA_HORS_HA(line) || ((line) < 10100 && !alfea_dans_ha(line)) || \
                                    ((line) >= 10100 && !((line) >= BSP_DHT22 && (line) < BSP_BME280)))
 // Noms courts des entités HA : « <pièce ou fonction> - <description> » au lieu de
@@ -244,7 +238,7 @@ static inline const char *alfea_prefixe(float l) {
   return "";   // heure (0-3), température extérieure (8700), DHT22 (20100) : la description suffit
 }
 
-// Broker Mosquitto local en 1883 : TLS inutile (docs/claude/08 §1.2).
+// Broker Mosquitto local en 1883 : TLS inutile.
 #define NO_TLS
 // Pas de /QDB : économise la table temporaire de 500 entrées en RAM (/QD reste disponible).
 #undef MAX_HEATINGTBL

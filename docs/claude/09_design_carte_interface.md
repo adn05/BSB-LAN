@@ -1,6 +1,8 @@
 # 09 — Design de la carte d'interface BSB pour ESP32-C3 SuperMini
 
 > **Résumé**
+>
+> Note (2026-11-11) : les renvois aux docs 01 à 08a, 14 et 15, aux cibles `alfea-ecriture` / `alfea-complet` et aux outils d'essai (simulateur, pont, HA jetable) visent des éléments retirés au ménage du 2026-11-11 ; ils restent consultables dans l'historique de la branche `alfea-extensa`. Il n'y a plus qu'un firmware, `alfea` (README_docker).
 > Carte porteuse 2 couches de **66 × 33 mm** (§6), **placée et routée à la main par l'utilisateur** : J1 et le SuperMini sur le même axe, borniers enfichables au pas de 3,5 mm, barrette pour le DHT22, 4N25 en DIP-6, trous M3 aux 4 coins, transistors en SOT-23, composants passifs sous le module. Le SuperMini s'y enfiche (2 × 8 broches au pas de 2,54 mm). Elle reprend **la topologie éprouvée de l'adaptateur officiel V3** : 2 × 4N25, BC547/BC557, mêmes valeurs. Les **écarts sont limités et justifiés** : rappel de TX au démarrage, transistor de bus en gain C, TVS sur l'entrée (PTC retirée, §7), R2 à 2 kΩ, retrait de l'EEPROM, entrée DHT22 protégée, entrée 5 V avec diode anti-retour.
 > **Isolation galvanique conservée** : rien n'est prélevé sur le bus pour l'ESP32. L'alimentation vient d'un **chargeur USB 5 V** (défaut, aucune intervention sur le 230 V) ou d'un module 5 V rail DIN (option).
 > Brochage : RX = GPIO6, TX = GPIO7, DHT22 = GPIO5, LED = GPIO8 (sur le SuperMini). **Projet KiCad 9 dans `alfea/hardware/carte_bsb_c3/`** : le schéma principal est celui retouché dans KiCad (émission conforme à V3, §2.3) ; PCB routé par l'utilisateur, plan de masse côté ESP32 ; ERC 0, DRC 0 (toutes sévérités), parité 0, isolation bus/ESP32 ≥ 5,2 mm (§7, §9). Gerber produits par l'utilisateur.
@@ -128,7 +130,7 @@ Configuration logicielle : `bus_pins = {6, 7}`, `DHT_Pins[0] = 5` (08 §1.2), sa
 
 **Pas d'alimentation par le bus.** Ni la puissance disponible sur X86 ni l'impédance de source ne sont documentées (06 §3.4, Q5). Surtout, alimenter l'ESP32 depuis G+ ou CL+ **relierait sa masse au bus**, ce qui annulerait l'isolation des optocoupleurs (décision D6). Une surconsommation pourrait aussi faire redémarrer le régulateur.
 
-Une **proposition d'alimentation par G+ à travers un convertisseur isolé**, qui conserve cette isolation, est étudiée dans le doc 14 (schéma seul, subordonnée à un essai de charge de G+).
+Une **proposition d'alimentation par G+ à travers un convertisseur isolé**, qui conserve cette isolation, avait été étudiée (doc 14, schéma seul, non retenue).
 
 **Pas de 5 V documenté sur le RVS21** : je n'ai trouvé aucune sortie 5 V dans la notice R32 ni dans la doc BSB-LAN. G+ (alimentation des sondes d'ambiance) n'est pas prévu pour 100 à 350 mA.
 
