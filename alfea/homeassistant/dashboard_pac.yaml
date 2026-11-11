@@ -96,7 +96,7 @@ views:
               target:
                 entity_id: select.bsb_lan_ecs_forcage_ecs
               data:
-                option: Rechargement
+                option: 1 - Rechargement
               confirmation:
                 text: >-
                   Lancer une chauffe immédiate du ballon jusqu'à la consigne
