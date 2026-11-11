@@ -85,7 +85,9 @@ uint8_t LogDestination = FLASH;
 uint8_t logTelegram = LOGTELEGRAM_OFF;
 
 /*
- * Paramètres journalisés et publiés en MQTT (docs/claude/08 §5.1) : 48 entrées, tableau de 48.
+ * Paramètres journalisés et publiés en MQTT (docs/claude/08 §5.1) : 47 entrées, tableau de 48 (taille inchangée : la
+ * modifier déplace la configuration enregistrée et la réinitialise).
+ * 2026-11-11 : 8460, 8743, 3110, 3116 retirés (sans valeur sur la PAC) ; 701 et 1001 (état de dérogation) ajoutés.
  * Les 8 dernières (8742 à 1001.3) sont ajoutées à la demande de l'utilisateur (2026-11-10) ; 701.3, 1001.3, 3110 et
  * 3116 n'existent que dans les listes régénérées à cette date (sinon ligne inconnue, ignorée).
  */
@@ -94,7 +96,6 @@ parameter log_parameters[48] = {
   {8700, -1},    // Température extérieure
   {8740, -1},    // Température ambiante CC1 (chambre)
   {8741, -1},    // Consigne ambiante actuelle CC1
-  {8743, -1},    // Température de départ CC1
   {8744, -1},    // Consigne de départ résultante CC1
   {8770, -1},    // Température ambiante CC2 (salon)
   {8771, -1},    // Consigne ambiante actuelle CC2
@@ -104,7 +105,6 @@ parameter log_parameters[48] = {
   {8412, -1},    // Température de départ PAC
   {8400, -1},    // État compresseur 1
   {8413, -1},    // Modulation compresseur
-  {8460, -1},    // Débit PAC
   {8402, -1},    // Résistance électrique départ 1
   {8403, -1},    // Résistance électrique départ 2
   {8830, -1},    // Température ECS haut (B3)
@@ -135,8 +135,9 @@ parameter log_parameters[48] = {
   {8772, -1},    // Température modèle d'ambiance CC2 (salon)
   {8774, -1},    // Consigne de départ résultante CC2 (salon)
   {6701, -1},    // Erreur 2
-  {3110, -1},    // Chaleur fournie
-  {3116, -1},    // COP
+  {701, -1},     // Dérogation temporaire : état CC1 (0 plus froid, 1 neutre, 2 plus chaud)
+  {1001, -1},    // Dérogation temporaire : état CC2
+  {5072, -1},    // Boost ECS (forçage) : 0 « ... », 1 « Rechargement »
   {701.3, -1},   // Dérogation temporaire : écart de consigne CC1 (#829)
   {1001.3, -1},  // Dérogation temporaire : écart de consigne CC2 (#829)
 };
@@ -235,7 +236,7 @@ static inline const char *alfea_prefixe(float l) {
   if (l >= 700 && l < 1000) return "Chambre";
   if (l >= 1000 && l < 1300) return "Salon";
   if ((l >= 1600 && l < 1700) || (l >= 5000 && l < 5200)) return "ECS";
-  if (l == 3110 || (l >= 3113 && l < 3114) || l == 3116) return "Énergie";
+  if (l >= 3113 && l < 3114) return "Énergie";
   if (l >= 6220 && l < 6230) return "Config";
   if (l >= 6700 && l < 6710) return "Défaut";
   if (l == 8000 || (l >= 8740 && l < 8750)) return "Chambre";

@@ -47,10 +47,15 @@ views:
             name: Consigne en vigueur
           - type: tile
             entity: binary_sensor.bsb_lan_ecs_etat_pompe_ecs
-            name: Charge ECS (après mise à jour)
+            name: Charge ECS
           - type: tile
             entity: binary_sensor.bsb_lan_ecs_etat_resistance_electrique_ecs
             name: Résistance ECS
+          - type: tile
+            entity: select.bsb_lan_ecs_forcage_ecs
+            name: Boost ECS
+            features:
+              - type: select-options
           - type: heading
             heading: Pompe à chaleur
             icon: mdi:heat-pump-outline
@@ -250,15 +255,6 @@ views:
                 name: Chauffage
               - entity: sensor.bsb_lan_energie_energie_utilisee_ecs_compteur_ihm
                 name: Eau chaude
-          - type: heading
-            heading: Rendement (après mise à jour)
-            heading_style: subtitle
-          - type: tile
-            entity: sensor.bsb_lan_energie_chaleur_fournie
-            name: Chaleur fournie
-          - type: tile
-            entity: sensor.bsb_lan_energie_cop
-            name: COP
   - title: Réglages
     path: reglages
     icon: mdi:tune
@@ -284,12 +280,16 @@ views:
             entities:
               - entity: select.bsb_lan_chambre_mode_de_fonctionnement
                 name: Mode
-              - entity: text.bsb_lan_chambre_consigne_de_confort_c
-                name: Consigne confort (°C)
-              - entity: text.bsb_lan_chambre_consigne_regime_reduit_c
-                name: Consigne réduit (°C)
-              - entity: sensor.bsb_lan_chambre_derogation_temporaire_ecart_de_consigne
-                name: Dérogation en cours (après mise à jour)
+              - entity: text.bsb_lan_chambre_consigne_de_confort_degc
+                name: Consigne Confort (°C)
+              - entity: text.bsb_lan_chambre_consigne_regime_reduit_degc
+                name: Consigne Eco (°C)
+              - type: section
+                label: Dérogation (thermostat)
+              - entity: sensor.pac_cc1_derogation_ecart
+                name: Écart
+              - entity: sensor.pac_chambre_fin_de_derogation
+                name: Fin de dérogation
       - type: grid
         cards:
           - type: heading
@@ -299,12 +299,25 @@ views:
             entities:
               - entity: select.bsb_lan_salon_mode_de_fonctionnement
                 name: Mode
-              - entity: text.bsb_lan_salon_consigne_de_confort_c
-                name: Consigne confort (°C)
-              - entity: text.bsb_lan_salon_consigne_regime_reduit_c
-                name: Consigne réduit (°C)
-              - entity: sensor.bsb_lan_salon_derogation_temporaire_ecart_de_consigne
-                name: Dérogation en cours (après mise à jour)
+              - entity: text.bsb_lan_salon_consigne_de_confort_degc
+                name: Consigne Confort (°C)
+              - entity: text.bsb_lan_salon_consigne_regime_reduit_degc
+                name: Consigne Eco (°C)
+              - type: section
+                label: Dérogation (thermostat)
+              - entity: sensor.pac_cc2_derogation_ecart
+                name: Écart
+              - entity: sensor.pac_salon_fin_de_derogation
+                name: Fin de dérogation
+      - type: grid
+        cards:
+          - type: heading
+            heading: Thermostats
+            icon: mdi:timer-outline
+          - type: entities
+            entities:
+              - entity: input_number.pac_duree_derogation
+                name: Durée d'une dérogation lancée depuis HA
       - type: grid
         cards:
           - type: heading
@@ -312,6 +325,8 @@ views:
             icon: mdi:water-boiler
           - type: entities
             entities:
+              - entity: select.bsb_lan_ecs_forcage_ecs
+                name: Boost ECS (Rechargement = chauffe immédiate)
               - entity: text.bsb_lan_ecs_consigne_nominale_de_temperature_ecs_degc
                 name: Consigne (°C)
               - entity: text.bsb_lan_ecs_consigne_reduite_de_temperature_ecs_degc

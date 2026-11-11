@@ -120,3 +120,13 @@ Deuxième essai (même jour, ~08:50) [CONSTATÉ] :
 Reste à vérifier : fin anticipée au changement de plage horaire, écriture en mémoire permanente ou non.
 Séquence à reproduire depuis HA : 701 = 1, 701.3 = écart (positif), 701.4 = durée, 701 = 2 (plus chaud) ou 0 (plus froid) ; annulation : 701 = 1 ; avec l'accord de l'utilisateur pour la liste blanche (08a I5).
 
+### 6.2 Réalisation (2026-11-11) [CONSTATÉ sur HA jetable, à confirmer sur la PAC]
+- Firmware : 701, 701.3, 701.4, 1001, 1001.3, 1001.4 dans la liste HA et la liste blanche (accord de l'utilisateur) ; 701 et 1001 lus chaque minute. 701.4 / 1001.4 ne sont pas interrogés : la durée est écrite avant chaque activation et publiée au passage.
+- Paquet `alfea/homeassistant/alfea_thermostats.yaml` : consigne affichée = 8741 / 8771 ; commande publiée sur `alfea/thermostat/cc1|cc2/consigne` et traitée par l'automatisation `pac_thermostat_derogation` (séquence de l'A59, écart arrondi au 0,5 °C, durée `input_number.pac_duree_derogation`, 3 h au démarrage de HA ; retour à la consigne du programme = annulation). Aucune écriture tant que HA n'a pas reçu l'état de dérogation et la consigne en vigueur.
+- Compte à rebours : `sensor.pac_chambre_fin_de_derogation` / `sensor.pac_salon_fin_de_derogation` (horodatage). Le régulateur ne publie pas le temps restant (701.4 constant) et l'afficheur le calcule lui-même [SUPPOSÉ : aucun objet interrogé par l'afficheur ne varie pendant la dérogation] ; HA note la fin quand il constate la dérogation.
+- Essai : `python -I alfea/tools/test_thermostat_ha.py` (HA 2026.10.4 jetable), « TOUT OK » : séquences plus chaud, plus froid depuis une dérogation en cours, annulation, compte à rebours, préréglages, modes, indisponibilité.
+
+## 7. Boost ECS (forçage 5072)
+Capture du 2026-11-11 [CONSTATÉ] : l'afficheur écrit une seule trame, **5072 = 1 « Rechargement »** (`DC 8A 00 0D 03 05 31 05 73 01 01`). Effets dans la minute : consigne ECS en vigueur 40 -> 55 °C (consigne nominale 1610), 8003 = 93 « Push, Consigne nominale », pompe ECS 8820 activée, compresseur en marche.
+Dans HA : entité de la discovery « ECS - Forçage ECS » (liste « ... » / « Rechargement »), 5072 dans la liste blanche (accord de l'utilisateur) et lu chaque minute.
+Reste à vérifier : retour automatique de 5072 à 0 en fin de charge.
