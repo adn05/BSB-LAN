@@ -188,6 +188,13 @@
    "valeur": "90",
    "unite": "min",
    "erreur": 0
+  },
+  "1612": {
+   "nom": "Consigne réduite de température ECS",
+   "valeur": "40.0",
+   "unite": "°C",
+   "erreur": 0,
+   "releve": "2026-11-11, avant toute écriture (firmware alfea-complet)"
   }
  }
 }

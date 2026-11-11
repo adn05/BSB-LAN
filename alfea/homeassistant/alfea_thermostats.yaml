@@ -34,14 +34,19 @@ mqtt:
       mode_command_topic: "BSB-LAN/0/8/700/set"
       mode_command_template: "{{ {'off': 0, 'auto': 1, 'heat': 3}[value] }}"
       preset_modes: ["eco", "comfort"]
-      # Préréglage affiché = régime réel du circuit (8000), y compris en automatique :
-      # 112-115 optimisation / réchauffement / confort / optimisation de coupure -> comfort ;
-      # 116 réduit, 119 Eco de jour, 120 réduction -> eco ; été, hors-gel, autres -> none.
-      # La commande reste sur le mode (700) : choisir eco ou comfort quitte le mode automatique.
-      preset_mode_state_topic: "BSB-LAN/0/28/8000/status"
+      # Préréglage affiché = consigne en vigueur (8741) comparée aux consignes confort et réduit, y compris en
+      # automatique. L'état du circuit (8000) ne suffit pas : 122 « Limitation de la température ambiante » apparaît
+      # en confort comme en réduit (constaté le 2026-11-11). Entités cherchées par nom, quel que soit le suffixe d'unité.
+      # « none » pendant une dérogation ou en protection. La commande reste sur le mode (700) : choisir eco ou
+      # comfort quitte le mode automatique.
+      preset_mode_state_topic: "BSB-LAN/0/32/8741/status"
       preset_mode_value_template: >-
-        {% set c = value.split(' - ')[0] | int(-1) %}{{ 'comfort' if c in [112, 113, 114, 115]
-        else ('eco' if c in [116, 119, 120] else 'none') }}
+        {% set v = value | float(-99) %}
+        {% set c = states.text | selectattr('entity_id', 'search', 'chambre_consigne_de_confort')
+           | map(attribute='state') | first | default('') | float(-98) %}
+        {% set r = states.text | selectattr('entity_id', 'search', 'chambre_consigne_regime_reduit')
+           | map(attribute='state') | first | default('') | float(-98) %}
+        {{ 'comfort' if v == c else ('eco' if v == r else 'none') }}
       preset_mode_command_topic: "BSB-LAN/0/8/700/set"
       preset_mode_command_template: "{{ {'eco': 2, 'comfort': 3}[value] }}"
       # État du circuit (8000) : régime de chauffe en cours -> heating, circuit arrêté -> off, sinon idle.
@@ -71,14 +76,19 @@ mqtt:
       mode_command_topic: "BSB-LAN/0/10/1000/set"
       mode_command_template: "{{ {'off': 0, 'auto': 1, 'heat': 3}[value] }}"
       preset_modes: ["eco", "comfort"]
-      # Préréglage affiché = régime réel du circuit (8001), y compris en automatique :
-      # 112-115 optimisation / réchauffement / confort / optimisation de coupure -> comfort ;
-      # 116 réduit, 119 Eco de jour, 120 réduction -> eco ; été, hors-gel, autres -> none.
-      # La commande reste sur le mode (1000) : choisir eco ou comfort quitte le mode automatique.
-      preset_mode_state_topic: "BSB-LAN/0/29/8001/status"
+      # Préréglage affiché = consigne en vigueur (8771) comparée aux consignes confort et réduit, y compris en
+      # automatique. L'état du circuit (8001) ne suffit pas : 122 « Limitation de la température ambiante » apparaît
+      # en confort comme en réduit (constaté le 2026-11-11). Entités cherchées par nom, quel que soit le suffixe d'unité.
+      # « none » pendant une dérogation ou en protection. La commande reste sur le mode (1000) : choisir eco ou
+      # comfort quitte le mode automatique.
+      preset_mode_state_topic: "BSB-LAN/0/32/8771/status"
       preset_mode_value_template: >-
-        {% set c = value.split(' - ')[0] | int(-1) %}{{ 'comfort' if c in [112, 113, 114, 115]
-        else ('eco' if c in [116, 119, 120] else 'none') }}
+        {% set v = value | float(-99) %}
+        {% set c = states.text | selectattr('entity_id', 'search', 'salon_consigne_de_confort')
+           | map(attribute='state') | first | default('') | float(-98) %}
+        {% set r = states.text | selectattr('entity_id', 'search', 'salon_consigne_regime_reduit')
+           | map(attribute='state') | first | default('') | float(-98) %}
+        {{ 'comfort' if v == c else ('eco' if v == r else 'none') }}
       preset_mode_command_topic: "BSB-LAN/0/10/1000/set"
       preset_mode_command_template: "{{ {'eco': 2, 'comfort': 3}[value] }}"
       action_topic: "BSB-LAN/0/29/8001/status"
