@@ -6,6 +6,19 @@
 [<img src="https://img.shields.io/github/forks/fredlcore/BSB-LAN?style=plastic">](https://github.com/fredlcore/BSB-LAN/forks)
 [<img src="https://img.shields.io/github/followers/fredlcore?style=plastic">](https://github.com/fredlcore?tab=followers)
 
+> **About this fork (branch content added on top of upstream BSB-LAN).**
+> This repository adapts BSB-LAN to one **Atlantic Alféa Extensa Duo A.I.** heat pump (Siemens **RVS21**, family 211,
+> variant 127, BSB bus on X86), running on an **ESP32-C3 SuperMini** plugged into a custom isolated interface board,
+> and integrated into **Home Assistant** over MQTT. It is a personal project, not an official BSB-LAN release:
+> for any other installation, use the [upstream project](https://github.com/fredlcore/BSB-LAN).
+>
+> Additions (the upstream code in `BSB_LAN/` only gets a few compile-time guards):
+> - `alfea/config/`, `alfea/params/`: configuration, full 211/127 parameter list, Home Assistant selection, write whitelist;
+> - `alfea/homeassistant/`: thermostat package (room setpoint overrides, DHW boost) and dashboard;
+> - `alfea/hardware/`: interface board (KiCad 9) and 3D-printable enclosure;
+> - `alfea/tools/`, `docker/`: build in Docker (`sh docker/compiler.sh`), flashing and USB console (`alfea/tools/flasher.py`);
+> - documentation, in French: [`docs/claude/README.md`](docs/claude/README.md).
+
 Die deutsche Fassung dieser Datei gibt es [hier](README_de.md).
 
 Before getting started, please read through the manual [here](https://docs.bsb-lan.de).

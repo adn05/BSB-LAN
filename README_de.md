@@ -1,5 +1,18 @@
 # BSB-LPB-PPS-LAN
 
+> **Über diesen Fork (Ergänzungen auf Basis des BSB-LAN-Originals).**
+> Dieses Repository passt BSB-LAN an eine **Atlantic Alféa Extensa Duo A.I.** Wärmepumpe an (Siemens **RVS21**,
+> Familie 211, Variante 127, BSB-Bus an X86), auf einem **ESP32-C3 SuperMini** mit eigener, galvanisch getrennter
+> Adapterplatine, eingebunden in **Home Assistant** über MQTT. Es ist ein privates Projekt, keine offizielle
+> BSB-LAN-Version: für andere Anlagen bitte das [Originalprojekt](https://github.com/fredlcore/BSB-LAN) verwenden.
+>
+> Ergänzungen (der Originalcode in `BSB_LAN/` erhält nur einige Compiler-Schalter):
+> - `alfea/config/`, `alfea/params/`: Konfiguration, vollständige Parameterliste 211/127, Auswahl für Home Assistant, Schreib-Whitelist;
+> - `alfea/homeassistant/`: Thermostat-Paket (Sollwert-Übersteuerung, Warmwasser-Push) und Dashboard;
+> - `alfea/hardware/`: Adapterplatine (KiCad 9) und 3D-druckbares Gehäuse;
+> - `alfea/tools/`, `docker/`: Kompilieren in Docker (`sh docker/compiler.sh`), Flashen und USB-Konsole (`alfea/tools/flasher.py`);
+> - Dokumentation (auf Französisch): [`docs/claude/README.md`](docs/claude/README.md).
+
 English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README.md">here</A>. 
 
 Das (englische) Handbuch findet sich [hier](https://docs.bsb-lan.de).
