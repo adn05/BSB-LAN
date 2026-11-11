@@ -265,7 +265,20 @@ automation:
             data:
               topic: "{{ racine }}.3/set"
               payload: "{{ '%.1f' | format(delta | abs) }}"
-          - delay: "00:00:02"
+          # BSB-LAN relit chaque valeur écrite et la publie : sans confirmation (envoi raté sur le bus, constaté le
+          # 2026-11-11 : « set failed », collision probable avec l'afficheur), un nouvel essai.
+          - wait_template: "{{ states('sensor.pac_' ~ trigger.id ~ '_derogation_ecart') | float(-1) == delta | abs }}"
+            timeout: "00:00:08"
+            continue_on_timeout: true
+          - if:
+              - condition: template
+                value_template: "{{ not wait.completed }}"
+            then:
+              - action: mqtt.publish
+                data:
+                  topic: "{{ racine }}.3/set"
+                  payload: "{{ '%.1f' | format(delta | abs) }}"
+              - delay: "00:00:02"
           - action: mqtt.publish
             data:
               topic: "{{ racine }}.4/set"
@@ -275,3 +288,16 @@ automation:
             data:
               topic: "{{ racine }}/set"
               payload: "{{ 2 if delta > 0 else 0 }}"
+      # État final confirmé par BSB-LAN (1 annulation, 2 plus chaud, 0 plus froid), sinon un nouvel essai.
+      - wait_template: >-
+          {{ states('sensor.pac_' ~ trigger.id ~ '_derogation_etat') | int(-1) == (1 if delta | abs < 0.25 else (2 if delta > 0 else 0)) }}
+        timeout: "00:00:08"
+        continue_on_timeout: true
+      - if:
+          - condition: template
+            value_template: "{{ not wait.completed }}"
+        then:
+          - action: mqtt.publish
+            data:
+              topic: "{{ racine }}/set"
+              payload: "{{ 1 if delta | abs < 0.25 else (2 if delta > 0 else 0) }}"

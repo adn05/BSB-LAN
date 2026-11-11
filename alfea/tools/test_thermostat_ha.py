@@ -99,7 +99,12 @@ def ecoute():
     s.sendall(b'\x82' + v.longueur(len(c)) + c); s.settimeout(None)
     for e, cc in v.paquets(s):
         if e >> 4 == 3:
-            n = struct.unpack('>H', cc[:2])[0]; recus.append((cc[2:2 + n].decode(), cc[2 + n:].decode()))
+            n = struct.unpack('>H', cc[:2])[0]; t, p = cc[2:2 + n].decode(), cc[2 + n:].decode(); recus.append((t, p))
+            # comme BSB-LAN : la valeur écrite est relue puis publiée (l'automatisation de dérogation l'attend)
+            if t.endswith(('/701/set', '/1001/set')):
+                threading.Thread(target=pub, args=(t[:-3] + 'status', {'0': '0 - Plus froid', '1': '1 - ...', '2': '2 - Plus chaud'}.get(p, p))).start()
+            elif t.endswith(('/701.3/set', '/1001.3/set', '/701.4/set', '/1001.4/set')):
+                threading.Thread(target=pub, args=(t[:-3] + 'status', p)).start()
 
 
 def verifie(eid, attendu):

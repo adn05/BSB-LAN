@@ -126,6 +126,10 @@ Séquence à reproduire depuis HA : 701 = 1, 701.3 = écart (positif), 701.4 = d
 - Compte à rebours : `sensor.pac_chambre_fin_de_derogation` / `sensor.pac_salon_fin_de_derogation` (horodatage). Le régulateur ne publie pas le temps restant (701.4 constant) et l'afficheur le calcule lui-même [SUPPOSÉ : aucun objet interrogé par l'afficheur ne varie pendant la dérogation] ; HA note la fin quand il constate la dérogation.
 - Essai : `python -I alfea/tools/test_thermostat_ha.py` (HA 2026.10.4 jetable), « TOUT OK » : séquences plus chaud, plus froid depuis une dérogation en cours, annulation, compte à rebours, préréglages, modes, indisponibilité.
 
+### 6.3 Premier essai sur la PAC (2026-11-11, ~10:39) [CONSTATÉ]
+Salon passé en confort permanent depuis HA (1000 = 3, 8771 = 22,5 °C), puis consigne 24,0 °C demandée au thermostat : 1001.3 = 1,5 °C, 1001.4 = 3 h, 1001 = 2 écrits et acquittés, **8771 = 24,0 °C**. L'écriture initiale 1001 = 1 a échoué à l'envoi (« set failed », `bus->Send` différent de BUS_OK, aucune trame émise : collision probable avec l'afficheur, BSB-LAN ne réessaie pas) : l'automatisation attend désormais la confirmation de l'écart et de l'état final (8 s) et réécrit une fois sinon.
+**Un changement de mode du circuit annule la dérogation** : retour en automatique (1000 = 1), le régulateur remet lui-même 1001 à 1 et 8771 revient à 18,0 °C (période réduite).
+
 ## 7. Boost ECS (forçage 5072)
 Capture du 2026-11-11 [CONSTATÉ] : l'afficheur écrit une seule trame, **5072 = 1 « Rechargement »** (`DC 8A 00 0D 03 05 31 05 73 01 01`). Effets dans la minute : consigne ECS en vigueur 40 -> 55 °C (consigne nominale 1610), 8003 = 93 « Push, Consigne nominale », pompe ECS 8820 activée, compresseur en marche.
 Dans HA : entité de la discovery « ECS - Forçage ECS » (liste « ... » / « Rechargement »), 5072 dans la liste blanche (accord de l'utilisateur) et lu chaque minute.
