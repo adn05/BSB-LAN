@@ -36,10 +36,11 @@ mqtt:
       temperature_state_topic: "BSB-LAN/0/32/8741/status"
       temperature_command_topic: "alfea/thermostat/cc1/consigne"
       temperature_command_template: "{{ '%.1f' | format(value | float) }}"
-      # Mode : automatique seul. Sans sujet d'état, HA afficherait « off » : l'état suit la disponibilité de 700.
-      modes: ["auto"]
+      # Mode unique « heat » (programme horaire de la PAC) : arc rempli jusqu'à la consigne ; « auto » colorait tout l'arc.
+      # Sans sujet d'état, HA afficherait « off » : l'état suit la disponibilité de 700.
+      modes: ["heat"]
       mode_state_topic: "BSB-LAN/0/8/700/status"
-      mode_state_template: "auto"
+      mode_state_template: "heat"
       preset_modes: ["eco", "comfort"]
       # Préréglage affiché = consigne en vigueur (8741) comparée aux consignes confort et réduit, y compris en
       # automatique. L'état du circuit (8000) ne suffit pas : 122 « Limitation de la température ambiante » apparaît
@@ -75,10 +76,11 @@ mqtt:
       temperature_state_topic: "BSB-LAN/0/32/8771/status"
       temperature_command_topic: "alfea/thermostat/cc2/consigne"
       temperature_command_template: "{{ '%.1f' | format(value | float) }}"
-      # Mode : automatique seul. Sans sujet d'état, HA afficherait « off » : l'état suit la disponibilité de 1000.
-      modes: ["auto"]
+      # Mode unique « heat » (programme horaire de la PAC) : arc rempli jusqu'à la consigne ; « auto » colorait tout l'arc.
+      # Sans sujet d'état, HA afficherait « off » : l'état suit la disponibilité de 1000.
+      modes: ["heat"]
       mode_state_topic: "BSB-LAN/0/10/1000/status"
-      mode_state_template: "auto"
+      mode_state_template: "heat"
       preset_modes: ["eco", "comfort"]
       # Préréglage affiché = consigne en vigueur (8771) comparée aux consignes confort et réduit, y compris en
       # automatique. L'état du circuit (8001) ne suffit pas : 122 « Limitation de la température ambiante » apparaît

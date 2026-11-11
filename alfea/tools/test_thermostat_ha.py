@@ -186,8 +186,8 @@ def essai():
     cc1 = next(e for e in ents if 'chambre' in e or 'cc1' in e); cc2 = next(e for e in ents if 'salon' in e or 'cc2' in e)
     s = req('GET', '/api/states/' + cc1)['attributes']
     print('attributs CC1 :', {k: s.get(k) for k in ('hvac_modes', 'preset_modes', 'min_temp', 'max_temp', 'target_temp_step')})
-    verifie(cc1, {'state': 'auto', 'current_temperature': 20.2, 'temperature': 20.5, 'hvac_action': 'heating', 'preset_mode': 'comfort'})
-    verifie(cc2, {'state': 'auto', 'current_temperature': 18.7, 'temperature': 18.0, 'hvac_action': 'idle', 'preset_mode': 'eco'})
+    verifie(cc1, {'state': 'heat', 'current_temperature': 20.2, 'temperature': 20.5, 'hvac_action': 'heating', 'preset_mode': 'comfort'})
+    verifie(cc2, {'state': 'heat', 'current_temperature': 18.7, 'temperature': 18.0, 'hvac_action': 'idle', 'preset_mode': 'eco'})
     verifie('input_number.pac_duree_derogation', {'state': '3.0'})
 
     # 4. consigne -> dérogation (séquence de l'A59, doc 12 §6.1) ; consigne du programme : CC1 20,5, CC2 18,0
@@ -225,7 +225,7 @@ def essai():
 
     # 6. retour d'état de BSB-LAN et indisponibilité ; le mode reste « auto » quel que soit 700
     pub('BSB-LAN/0/8/700/status', '3 - Confort'); pub('BSB-LAN/0/32/8741/status', '20.5')
-    verifie(cc1, {'state': 'auto', 'temperature': 20.5, 'preset_mode': 'comfort'})
+    verifie(cc1, {'state': 'heat', 'temperature': 20.5, 'preset_mode': 'comfort'})
     pub('BSB-LAN/0/32/8740/status', 'None')
     verifie(cc1, {'current_temperature': None})
     pub('BSB-LAN/status', 'offline')
