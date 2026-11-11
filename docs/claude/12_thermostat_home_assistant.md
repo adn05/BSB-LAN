@@ -129,4 +129,4 @@ Séquence à reproduire depuis HA : 701 = 1, 701.3 = écart (positif), 701.4 = d
 ## 7. Boost ECS (forçage 5072)
 Capture du 2026-11-11 [CONSTATÉ] : l'afficheur écrit une seule trame, **5072 = 1 « Rechargement »** (`DC 8A 00 0D 03 05 31 05 73 01 01`). Effets dans la minute : consigne ECS en vigueur 40 -> 55 °C (consigne nominale 1610), 8003 = 93 « Push, Consigne nominale », pompe ECS 8820 activée, compresseur en marche.
 Dans HA : entité de la discovery « ECS - Forçage ECS » (liste « ... » / « Rechargement »), 5072 dans la liste blanche (accord de l'utilisateur) et lu chaque minute.
-Reste à vérifier : retour automatique de 5072 à 0 en fin de charge.
+Fin [CONSTATÉ] : lancé vers 09:44, ballon de 52 à **55,1 °C** ; vers 10:12 le régulateur remet **lui-même 5072 à 0** « ... », sans trame SET, la consigne en vigueur revient à 40 °C (consigne réduite hors plage) et 8003 passe à 17 « Retard à l'arrêt activ » (post-circulation de la pompe ECS), compresseur arrêté. Le boost est donc une charge unique jusqu'à la consigne nominale.
