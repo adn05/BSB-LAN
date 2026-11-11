@@ -228,7 +228,7 @@ views:
             expand_legend: false
             energy_date_selection: true
             collection_key: energy_pac
-        column_span: 4
+        column_span: 2
       - type: grid
         cards:
           - type: heading
@@ -254,7 +254,7 @@ views:
             expand_legend: false
             energy_date_selection: true
             collection_key: energy_pac
-        column_span: 4
+        column_span: 2
       - type: grid
         cards:
           - type: heading
@@ -278,7 +278,31 @@ views:
             expand_legend: false
             energy_date_selection: true
             collection_key: energy_pac
-        column_span: 4
+        column_span: 2
+      - type: grid
+        column_span: 2
+        cards:
+          - type: heading
+            heading: Consommation
+            heading_style: title
+            icon: mdi:chart-bar
+          - type: statistics-graph
+            grid_options:
+              columns: full
+            entities:
+              - entity: sensor.bsb_lan_energie_energie_utilisee_chauffage_compteur_ihm
+                name: Chauffage
+              - entity: sensor.bsb_lan_energie_energie_utilisee_ecs_compteur_ihm
+                name: Eau chaude
+            days_to_show: 30
+            period: hour
+            chart_type: bar-stack
+            stat_types:
+              - change
+            hide_legend: false
+            expand_legend: false
+            energy_date_selection: true
+            collection_key: energy_pac
       - type: grid
         cards:
           - type: heading
@@ -306,32 +330,7 @@ views:
             expand_legend: false
             energy_date_selection: true
             collection_key: energy_pac
-        column_span: 4
-      - type: grid
-        cards:
-          - type: heading
-            heading: Modulation du compresseur
-            heading_style: title
-            icon: mdi:speedometer
-          - type: statistics-graph
-            grid_options:
-              columns: full
-            entities:
-              - entity: sensor.bsb_lan_pac_modulation_compresseur
-                name: Modulation
-            days_to_show: 30
-            period: 5minute
-            chart_type: line
-            stat_types:
-              - mean
-              - max
-            hide_legend: false
-            expand_legend: false
-            energy_date_selection: true
-            collection_key: energy_pac
-        column_span: 4
-      # Marche / arrêt : pas de statistiques à long terme pour les binary_sensor, d'où un historique (24 h) qui ne
-      # suit pas le sélecteur de dates du bas.
+        column_span: 2
       - type: grid
         cards:
           - type: heading
@@ -353,31 +352,7 @@ views:
                 name: Charge ECS
               - entity: binary_sensor.bsb_lan_ecs_etat_resistance_electrique_ecs
                 name: Résistance ECS
-        column_span: 4
-      - type: grid
-        column_span: 4
-        cards:
-          - type: heading
-            heading: Consommation
-            heading_style: title
-            icon: mdi:chart-bar
-          - type: statistics-graph
-            grid_options:
-              columns: full
-            entities:
-              - entity: sensor.bsb_lan_energie_energie_utilisee_chauffage_compteur_ihm
-                name: Chauffage
-              - entity: sensor.bsb_lan_energie_energie_utilisee_ecs_compteur_ihm
-                name: Eau chaude
-            days_to_show: 30
-            period: hour
-            chart_type: bar-stack
-            stat_types:
-              - change
-            hide_legend: false
-            expand_legend: false
-            energy_date_selection: true
-            collection_key: energy_pac
+        column_span: 2
     cards: []
     footer:
       card:
