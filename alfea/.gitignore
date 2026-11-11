@@ -1,0 +1,15 @@
+# Fichiers locaux de KiCad et de Python, régénérés à chaque ouverture ou exécution
+__pycache__/
+*.kicad_prl
+*-backups/
+fp-info-cache
+\#auto_saved_files\#
+_autosave-*
+*.lck
+# Sorties de compilation (docker/compiler.sh)
+build/
+# Secrets locaux (modèle versionné : config/alfea_secrets.h.example)
+config/alfea_secrets.h
+# Plugin Fabrication Toolkit : sorties (Gerber, BOM et CPL produits par l utilisateur) et réglages
+hardware/**/production/
+hardware/**/fabrication-toolkit-options.json

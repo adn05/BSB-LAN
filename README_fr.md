@@ -1,10 +1,23 @@
 #BSB-LPB-PPS-LAN
 
-[<img src="https://img.shields.io/github/last-commit/fredlcore/BSB-LAN">]()
-[<img src="https://img.shields.io/github/commit-activity/t/fredlcore/BSB-LAN">]()
-[<img src="https://img.shields.io/github/stars/fredlcore/BSB-LAN?style=plastic">](https://github.com/fredlcore/BSB-LAN/stargazers)
-[<img src="https://img.shields.io/github/forks/fredlcore/BSB-LAN?style=plastic">](https://github.com/fredlcore/BSB-LAN/forks)
-[<img src="https://img.shields.io/github/followers/fredlcore?style=plastic">](https://github.com/fredlcore?tab=followers)
+[<img src="https://img.shields.io/github/last-commit/adn05/BSB-LAN">]()
+[<img src="https://img.shields.io/github/commit-activity/t/adn05/BSB-LAN">]()
+[<img src="https://img.shields.io/github/stars/adn05/BSB-LAN?style=plastic">](https://github.com/adn05/BSB-LAN/stargazers)
+[<img src="https://img.shields.io/github/forks/adn05/BSB-LAN?style=plastic">](https://github.com/adn05/BSB-LAN/forks)
+[<img src="https://img.shields.io/github/followers/adn05?style=plastic">](https://github.com/adn05?tab=followers)
+
+> **À propos de ce fork (ajouts au-dessus de BSB-LAN amont).**
+> Ce dépôt adapte BSB-LAN à une pompe à chaleur **Atlantic Alféa Extensa Duo A.I.** (régulateur Siemens **RVS21**,
+> famille 211, variante 127, bus BSB sur X86), sur un **ESP32-C3 SuperMini** monté sur une carte d'interface isolée
+> conçue pour l'occasion, et l'intègre à **Home Assistant** par MQTT. C'est un projet personnel, pas une version
+> officielle de BSB-LAN : pour toute autre installation, utiliser le [projet amont](https://github.com/fredlcore/BSB-LAN).
+>
+> Ajouts (le code amont de `BSB_LAN/` ne reçoit que quelques gardes de compilation) :
+> - `alfea/config/`, `alfea/params/` : configuration, liste complète 211/127, sélection annoncée à Home Assistant, liste blanche d'écriture ;
+> - `alfea/homeassistant/` : paquet des thermostats (dérogations de consigne, boost ECS) et tableau de bord ;
+> - `alfea/hardware/` : carte d'interface (KiCad 9) et boîtier imprimable en 3D ;
+> - `alfea/tools/`, `docker/` : compilation dans Docker (`sh docker/compiler.sh`), flash et console USB (`alfea/tools/flasher.py`) ;
+> - documentation : [`docs/claude/README.md`](docs/claude/README.md).
 
 Die deutsche Fassung dieser Datei gibt es [hier](README_de.md).
 

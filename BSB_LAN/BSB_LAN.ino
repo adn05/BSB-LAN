@@ -1379,12 +1379,23 @@ bool programIsreadOnly(uint16_t param_len) {
       case 0: return true; //All read-only.
       case 1: if ((param_len & FL_OEM) == FL_OEM || ((param_len & FL_RONLY) == FL_RONLY && (default_flag & FL_RONLY) != FL_RONLY)) return true; else return false; //All writable except read-only and OEM
       case 2: if ((param_len & FL_RONLY) == FL_RONLY) return true; else return false; //All writable except read-only
+      default: return true; //Unknown mode (e.g. never saved: erased EEPROM/NVS reads 0xFF): read-only, not writable
     }
   } else { //defs-controlled.
     if ((param_len & FL_RONLY) == FL_RONLY) return true;
   }
   return false;
 }
+
+#ifdef WRITE_WHITELIST
+// true if line is outside the ranges of write_whitelist[][2] (defined in BSB_LAN_custom_defs.h): read-only then
+bool notInWriteWhitelist(float line) {
+  for (size_t k = 0; k < sizeof(write_whitelist) / sizeof(write_whitelist[0]); k++) {
+    if (line >= write_whitelist[k][0] && line <= write_whitelist[k][1]) return false;
+  }
+  return true;
+}
+#endif
 
  /** *****************************************************************
   *  Function:  loadPrognrElementsFromTable(int, int)
@@ -1410,7 +1421,11 @@ void loadPrognrElementsFromTable(float nr, int i) {
   decodedTelegram.enumstr_len=active_cmdtbl[i].enumstr_len;
   decodedTelegram.enumstr = active_cmdtbl[i].enumstr;
   decodedTelegram.flags=active_cmdtbl[i].flags;
-  if (programIsreadOnly(decodedTelegram.flags)) {
+  bool read_only = programIsreadOnly(decodedTelegram.flags);
+#ifdef WRITE_WHITELIST
+  read_only = read_only || notInWriteWhitelist(nr);  // also shown read-only in web UI and MQTT discovery
+#endif
+  if (read_only) {
     decodedTelegram.readwrite = FL_RONLY; //read only
   } else if ((decodedTelegram.flags & FL_WONLY) == FL_WONLY) {
     decodedTelegram.readwrite = FL_WONLY; //write only
@@ -2923,6 +2938,13 @@ int set(float line      // the ProgNr of the heater parameter
     printlnToDebug("Parameter is readonly!");
     return 2;   // return value for trying to set a readonly parameter
   }
+#ifdef WRITE_WHITELIST
+  // Only parameters within the ranges of write_whitelist[][2] (defined in BSB_LAN_custom_defs.h) may be written
+  if (notInWriteWhitelist(line)) {
+    printlnToDebug("Parameter is not in write whitelist!");
+    return 2;   // same return value as for a readonly parameter
+  }
+#endif
   if ((dev_flags & FL_FORCE_INF) && setcmd) {
     printlnToDebug("Parameter is of FORCE_INF type and thus requires setting via INF, not SET, doing the switch for you now...");
     setcmd = false;     // FORCE_INF indicates that parameter requires setting a value via INF, not SET. So in case a command is sent via the web interface's "Set" button, make sure that it is still successful.
@@ -4670,8 +4692,11 @@ void loop() {
 
     IPAddress remoteIP = client.remoteIP();
     // Use the overriden operater for a safe comparison, note, that != is not overriden.
-    if ((trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
-       && (trusted_ip_addr2[0] != 0 && ! (remoteIP == trusted_ip_addr2))) {
+    // Reject if at least one trusted address is set and the client matches none of the set ones
+    // (the former condition let everybody in when only one trusted address was set).
+    if ((trusted_ip_addr[0] != 0 || trusted_ip_addr2[0] != 0)
+       && !(trusted_ip_addr[0] != 0 && remoteIP == trusted_ip_addr)
+       && !(trusted_ip_addr2[0] != 0 && remoteIP == trusted_ip_addr2)) {
           // reject clients from unauthorized IP addresses;
       printFmtToDebug("Rejected access from %d.%d.%d.%d (Trusted 1: %d.%d.%d.%d, Trusted 2: %d.%d.%d.%d.\r\n",
         remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3],
@@ -5627,6 +5652,7 @@ void loop() {
           forcedflushToWebClient();
           break;
         }
+#ifndef NO_RAW_TELEGRAMS    // /Y and /YR send arbitrary telegrams, bypassing the read-only checks of set()
         if (p[1]=='Y') {
           if (p[2]=='R' && debug_mode) {
             printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
@@ -5742,6 +5768,7 @@ void loop() {
             break;
           }
         }
+#endif
         if (p[1]=='J') {
           uint32_t cmd=0;
           // Parse potential JSON payload
@@ -5801,6 +5828,7 @@ void loop() {
             break;
           }
 
+#ifndef NO_RAW_TELEGRAMS    // /JY sends arbitrary telegrams, bypassing the read-only checks of set()
           if (p[2] == 'Y') {  // raw data query
             uint8_t destAddr = bus->getBusDest();
             uint8_t tempDestAddr = destAddr;
@@ -5860,6 +5888,7 @@ void loop() {
             forcedflushToWebClient();
             break;
           }
+#endif
 
           if (p[2] == 'I'){ // dump configuration in JSON
             bool not_first = false;
@@ -6837,6 +6866,7 @@ next_parameter:
                 avgCounter = 1;
               }
             }
+#ifndef NO_GPIO_URL         // /G reads and drives any GPIO, including the bus TX pin and strapping pins
           } else if (range[0]=='G') { // handle gpio command
             uint8_t val;
             uint8_t pin;
@@ -6882,6 +6912,7 @@ next_parameter:
               digitalWrite(pin, val);
             }
             printFmtToWebClient("GPIO%hu: %d", pin, val!=LOW?1:0);
+#endif
           } else if (range[0]=='B') {
             if (range[1]=='0') { // reset furnace duration
               printToWebClient(STR20006);
@@ -6998,6 +7029,18 @@ next_parameter:
 
       mqtt_connect();        //Luposoft, connect to mqtt
       MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
+#ifdef MQTT_DISCOVERY_ON_BOOT
+      // Publish the discovery once per boot, as soon as the heater is identified, and again whenever the write mode
+      // changes (entities become read-only or writable): mqtt_connect() only does it when the broker lost the
+      // (persistent) session, and a discovery sent before identification is incomplete.
+      static bool boot_discovery_done = false;
+      static byte discovery_write_mode = 0;
+      if ((!boot_discovery_done || discovery_write_mode != programWriteMode) && MQTTPubSubClient->connected() && my_dev_fam != DEV_FAM(DEV_NONE)) {
+        printlnToDebug("Publishing MQTT discovery after boot or write mode change...");
+        discovery_write_mode = programWriteMode;
+        boot_discovery_done = mqtt_send_discovery(true);
+      }
+#endif
 
       if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
         lastMQTTTime = millis();
@@ -7662,17 +7705,20 @@ void startLoggingDevice() {
   #endif
 }
 
+#ifndef AP_PASSWORD
+#define AP_PASSWORD "BSB-LPB-PPS-LAN"   // publicly known default, override in BSB_LAN_config.h (at least 8 characters)
+#endif
 void createTemporaryAP () {
 #if defined (ESP32)
   esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
   printlnToDebug("Setting up AP 'BSB-LAN'");
-  WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
+  WiFi.softAP("BSB-LAN", AP_PASSWORD);
   IPAddress t = WiFi.softAPIP();
   localAP = true;
   localAPtimeout = millis();
   esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20
   printFmtToDebug("IP address of BSB-LAN: %d.%d.%d.%d\r\n", t[0], t[1], t[2], t[3]);
-  printlnToDebug("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address.");
+  printlnToDebug("Connect to access point 'BSB-LAN' with the AP password (default 'BSB-LPB-PPS-LAN', see AP_PASSWORD) and open the IP address.");
 #endif
 }
 

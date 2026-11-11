@@ -1,0 +1,313 @@
+# Thermostats Home Assistant des deux circuits de l'Alféa Extensa Duo A.I. (RVS21), pilotés par BSB-LAN en MQTT.
+# Paquet HA : copier ce fichier dans /config/packages/ puis ajouter à configuration.yaml :
+#   homeassistant:
+#     packages: !include_dir_named packages
+# Procédure, correspondances et limites : docs/claude/12_thermostat_home_assistant.md.
+#
+# Écriture : il faut le mode d'écriture 1 (/C ou /JW). Sinon BSB-LAN refuse les
+# commandes, sans trame SET ; HA n'étant pas optimiste, le thermostat reste à l'état réel publié par BSB-LAN.
+# Sujets : BSB-LAN/<appareil>/<catégorie>/<paramètre>/status|set (BSB_LAN/include/mqtt_handler.h:582).
+#
+# Consigne des thermostats (2026-11-11, demande de l'utilisateur, doc 12 §6) : comme l'A59 et l'afficheur de la PAC.
+#   - affichée : consigne en vigueur (8741 chambre, 8771 salon), qui suit le programme et les dérogations ;
+#   - modifiée : dérogation temporaire (701.x / 1001.x), qui prend fin d'elle-même après la durée choisie
+#     (input_number.pac_duree_derogation) ; revenir à la consigne du programme annule la dérogation.
+#   Les consignes confort / réduit (710, 712, 1010, 1012) restent réglables par leurs entités.
+#   Mode : automatique seul (programme horaire) ; 700 / 1000 ne sont plus modifiables (2026-11-11, demande de
+#   l'utilisateur). Préréglage eco / comfort = consigne cible réduit / confort, appliquée par dérogation ou annulation.
+#   701, 701.3, 701.4 et 1001.x sont dans la liste blanche (alfea/params/ecriture.txt).
+
+mqtt:
+  climate:
+    - name: "Thermostat chambre"
+      unique_id: alfea_thermostat_cc1
+      device:
+        identifiers: ["BSB-LAN-DC067567DA2C"]   # appareil créé par la discovery de BSB-LAN
+      availability_topic: "BSB-LAN/status"
+      temperature_unit: "C"
+      precision: 0.1
+      temp_step: 0.5
+      min_temp: 16
+      max_temp: 26
+      # Température ambiante mesurée (8740) ; consigne affichée = consigne en vigueur (8741) ; consigne demandée
+      # publiée sur un sujet interne, traitée par l'automatisation pac_thermostat_derogation (plus bas).
+      current_temperature_topic: "BSB-LAN/0/32/8740/status"
+      temperature_state_topic: "BSB-LAN/0/32/8741/status"
+      temperature_command_topic: "alfea/thermostat/cc1/consigne"
+      temperature_command_template: "{{ '%.1f' | format(value | float) }}"
+      # Mode unique « heat » (programme horaire de la PAC) : arc rempli jusqu'à la consigne ; « auto » colorait tout l'arc.
+      # Sans sujet d'état, HA afficherait « off » : l'état suit la disponibilité de 700.
+      modes: ["heat"]
+      mode_state_topic: "BSB-LAN/0/8/700/status"
+      mode_state_template: "heat"
+      preset_modes: ["eco", "comfort"]
+      # Préréglage affiché = consigne en vigueur (8741) comparée aux consignes confort et réduit, y compris en
+      # automatique. L'état du circuit (8000) ne suffit pas : 122 « Limitation de la température ambiante » apparaît
+      # en confort comme en réduit (constaté le 2026-11-11). Entités cherchées par nom, quel que soit le suffixe d'unité.
+      # « none » pendant une dérogation.
+      preset_mode_state_topic: "BSB-LAN/0/32/8741/status"
+      preset_mode_value_template: >-
+        {% set v = value | float(-99) %}
+        {% set c = states.text | selectattr('entity_id', 'search', 'chambre_consigne_de_confort')
+           | map(attribute='state') | first | default('') | float(-98) %}
+        {% set r = states.text | selectattr('entity_id', 'search', 'chambre_consigne_regime_reduit')
+           | map(attribute='state') | first | default('') | float(-98) %}
+        {{ 'comfort' if v == c else ('eco' if v == r else 'none') }}
+      # Préréglage choisi -> consigne cible réduit / confort, par dérogation ou annulation (automatisation plus bas).
+      preset_mode_command_topic: "alfea/thermostat/cc1/preset"
+      # État du circuit (8000) : régime de chauffe en cours -> heating, circuit arrêté -> off, sinon idle.
+      action_topic: "BSB-LAN/0/28/8000/status"
+      action_template: >-
+        {% set c = value.split(' - ')[0] | int(-1) %}{{ 'heating' if c in [103, 104, 105, 106, 111, 112, 113, 114, 116]
+        else ('off' if c in [25, 162] else 'idle') }}
+
+    - name: "Thermostat salon"
+      unique_id: alfea_thermostat_cc2
+      device:
+        identifiers: ["BSB-LAN-DC067567DA2C"]
+      availability_topic: "BSB-LAN/status"
+      temperature_unit: "C"
+      precision: 0.1
+      temp_step: 0.5
+      min_temp: 16
+      max_temp: 26
+      current_temperature_topic: "BSB-LAN/0/32/8770/status"
+      temperature_state_topic: "BSB-LAN/0/32/8771/status"
+      temperature_command_topic: "alfea/thermostat/cc2/consigne"
+      temperature_command_template: "{{ '%.1f' | format(value | float) }}"
+      # Mode unique « heat » (programme horaire de la PAC) : arc rempli jusqu'à la consigne ; « auto » colorait tout l'arc.
+      # Sans sujet d'état, HA afficherait « off » : l'état suit la disponibilité de 1000.
+      modes: ["heat"]
+      mode_state_topic: "BSB-LAN/0/10/1000/status"
+      mode_state_template: "heat"
+      preset_modes: ["eco", "comfort"]
+      # Préréglage affiché = consigne en vigueur (8771) comparée aux consignes confort et réduit, y compris en
+      # automatique. L'état du circuit (8001) ne suffit pas : 122 « Limitation de la température ambiante » apparaît
+      # en confort comme en réduit (constaté le 2026-11-11). Entités cherchées par nom, quel que soit le suffixe d'unité.
+      # « none » pendant une dérogation.
+      preset_mode_state_topic: "BSB-LAN/0/32/8771/status"
+      preset_mode_value_template: >-
+        {% set v = value | float(-99) %}
+        {% set c = states.text | selectattr('entity_id', 'search', 'salon_consigne_de_confort')
+           | map(attribute='state') | first | default('') | float(-98) %}
+        {% set r = states.text | selectattr('entity_id', 'search', 'salon_consigne_regime_reduit')
+           | map(attribute='state') | first | default('') | float(-98) %}
+        {{ 'comfort' if v == c else ('eco' if v == r else 'none') }}
+      # Préréglage choisi -> consigne cible réduit / confort, par dérogation ou annulation (automatisation plus bas).
+      preset_mode_command_topic: "alfea/thermostat/cc2/preset"
+      action_topic: "BSB-LAN/0/29/8001/status"
+      action_template: >-
+        {% set c = value.split(' - ')[0] | int(-1) %}{{ 'heating' if c in [103, 104, 105, 106, 111, 112, 113, 114, 116]
+        else ('off' if c in [25, 162] else 'idle') }}
+
+# Durée des dérogations lancées depuis HA (l'A59 envoie toujours 24 h). Revient à 3 h au redémarrage de HA.
+input_number:
+  pac_duree_derogation:
+    name: "Durée dérogation thermostats"
+    min: 1
+    max: 24
+    step: 1
+    initial: 3
+    unit_of_measurement: "h"
+    mode: box
+    icon: mdi:timer-outline
+
+# Copies internes des valeurs publiées par BSB-LAN (chaque minute), sans dépendre des identifiants d'entité de la discovery.
+template:
+  - triggers:
+      - trigger: mqtt
+        topic: "BSB-LAN/0/8/701/status"
+    sensor:
+      - name: "PAC cc1 dérogation état"
+        unique_id: pac_cc1_derogation_etat
+        icon: mdi:thermometer-chevron-up
+        state: "{{ trigger.payload.split(' - ')[0] }}"
+  - triggers:
+      - trigger: mqtt
+        topic: "BSB-LAN/0/8/701.3/status"
+    sensor:
+      - name: "PAC cc1 dérogation écart"
+        unique_id: pac_cc1_derogation_ecart
+        unit_of_measurement: "°C"
+        state: "{{ trigger.payload | float(0) }}"
+  - triggers:
+      - trigger: mqtt
+        topic: "BSB-LAN/0/32/8741/status"
+    sensor:
+      - name: "PAC cc1 consigne en vigueur"
+        unique_id: pac_cc1_consigne_en_vigueur
+        unit_of_measurement: "°C"
+        state: "{{ trigger.payload | float(0) }}"
+  - triggers:
+      - trigger: mqtt
+        topic: "BSB-LAN/0/10/1001/status"
+    sensor:
+      - name: "PAC cc2 dérogation état"
+        unique_id: pac_cc2_derogation_etat
+        icon: mdi:thermometer-chevron-up
+        state: "{{ trigger.payload.split(' - ')[0] }}"
+  - triggers:
+      - trigger: mqtt
+        topic: "BSB-LAN/0/10/1001.3/status"
+    sensor:
+      - name: "PAC cc2 dérogation écart"
+        unique_id: pac_cc2_derogation_ecart
+        unit_of_measurement: "°C"
+        state: "{{ trigger.payload | float(0) }}"
+  - triggers:
+      - trigger: mqtt
+        topic: "BSB-LAN/0/32/8771/status"
+    sensor:
+      - name: "PAC cc2 consigne en vigueur"
+        unique_id: pac_cc2_consigne_en_vigueur
+        unit_of_measurement: "°C"
+        state: "{{ trigger.payload | float(0) }}"
+
+  # Fin de dérogation (compte à rebours, demande de l'utilisateur 2026-11-11). Le régulateur ne publie pas le temps restant
+  # (701.4 / 1001.4 = durée réglée, constant) : HA note l'heure de fin dès qu'il constate la dérogation (état 0 ou 2),
+  # avec la durée écrite juste avant par l'A59, l'afficheur ou HA (publiée au passage par BSB-LAN). Si la dérogation a
+  # commencé pendant un arrêt de HA, la fin est comptée depuis le moment où HA la constate. Annulée : « inconnu ».
+  # Affichage HA d'un horodatage : « dans 2 heures ».
+  - triggers:
+      - trigger: mqtt
+        topic: "BSB-LAN/0/8/701/status"
+        id: etat
+      - trigger: mqtt
+        topic: "BSB-LAN/0/8/701.4/status"
+        id: duree
+    sensor:
+      - name: "PAC chambre fin de dérogation"
+        unique_id: pac_cc1_fin_derogation
+        device_class: timestamp
+        icon: mdi:timer-sand
+        state: >-
+          {% set fin = this.state if this.state not in ['unknown', 'unavailable', 'None', ''] else none %}
+          {% set e = trigger.payload.split(' - ')[0] | int(1) if trigger.id == 'etat' else -1 %}
+          {% if trigger.id == 'duree' %}{{ fin }}
+          {% elif e == 1 %}{{ none }}
+          {% elif fin %}{{ fin }}
+          {% else %}{{ (now() + timedelta(hours=(this.attributes.duree | default(24)) | int(24))).isoformat() }}{% endif %}
+        attributes:
+          duree: >-
+            {{ trigger.payload.split(' ')[0] | int(24) if trigger.id == 'duree' else this.attributes.get('duree', 24) }}
+  - triggers:
+      - trigger: mqtt
+        topic: "BSB-LAN/0/10/1001/status"
+        id: etat
+      - trigger: mqtt
+        topic: "BSB-LAN/0/10/1001.4/status"
+        id: duree
+    sensor:
+      - name: "PAC salon fin de dérogation"
+        unique_id: pac_cc2_fin_derogation
+        device_class: timestamp
+        icon: mdi:timer-sand
+        state: >-
+          {% set fin = this.state if this.state not in ['unknown', 'unavailable', 'None', ''] else none %}
+          {% set e = trigger.payload.split(' - ')[0] | int(1) if trigger.id == 'etat' else -1 %}
+          {% if trigger.id == 'duree' %}{{ fin }}
+          {% elif e == 1 %}{{ none }}
+          {% elif fin %}{{ fin }}
+          {% else %}{{ (now() + timedelta(hours=(this.attributes.duree | default(24)) | int(24))).isoformat() }}{% endif %}
+        attributes:
+          duree: >-
+            {{ trigger.payload.split(' ')[0] | int(24) if trigger.id == 'duree' else this.attributes.get('duree', 24) }}
+
+# Consigne demandée au thermostat -> dérogation temporaire, séquence de l'A59 capturée le 2026-11-11 (doc 12 §6.1) :
+#   état 1 (neutre), écart (toujours positif), durée (h), état 2 (plus chaud) ou 0 (plus froid) ; annulation : état 1.
+# Consigne du programme = consigne en vigueur moins la dérogation en cours. Écart arrondi au 0,5 °C.
+automation:
+  - id: pac_thermostat_derogation
+    alias: "PAC : consigne des thermostats par dérogation"
+    mode: queued
+    max: 5
+    triggers:
+      - trigger: mqtt
+        topic: "alfea/thermostat/cc1/consigne"
+        id: cc1
+      - trigger: mqtt
+        topic: "alfea/thermostat/cc2/consigne"
+        id: cc2
+      # préréglage : eco -> consigne réduit (712 / 1012), comfort -> consigne confort (710 / 1010)
+      - trigger: mqtt
+        topic: "alfea/thermostat/cc1/preset"
+        id: cc1_preset
+      - trigger: mqtt
+        topic: "alfea/thermostat/cc2/preset"
+        id: cc2_preset
+    variables:
+      cc: "{{ trigger.id[:3] }}"
+      piece: "{{ 'chambre' if cc == 'cc1' else 'salon' }}"
+      racine: "BSB-LAN/0/{{ 8 if cc == 'cc1' else 10 }}/{{ 701 if cc == 'cc1' else 1001 }}"
+      etat_brut: "{{ states('sensor.pac_' ~ cc ~ '_derogation_etat') }}"
+      vigueur_brute: "{{ states('sensor.pac_' ~ cc ~ '_consigne_en_vigueur') }}"
+      demande_brute: >-
+        {% if trigger.id.endswith('_preset') %}
+          {% set cle = piece ~ ('_consigne_regime_reduit' if trigger.payload == 'eco' else '_consigne_de_confort') %}
+          {{ states.text | selectattr('entity_id', 'search', cle) | map(attribute='state') | first | default('') }}
+        {% else %}{{ trigger.payload }}{% endif %}
+      demande: "{{ demande_brute | float(0) }}"
+      etat: "{{ etat_brut | int(1) }}"
+      ecart: "{{ states('sensor.pac_' ~ cc ~ '_derogation_ecart') | float(0) }}"
+      base: >-
+        {{ vigueur_brute | float(0) - (ecart if etat == 2 else (0 - ecart if etat == 0 else 0)) }}
+      delta: "{{ ((demande - base) * 2) | round(0) / 2 }}"
+      duree: "{{ states('input_number.pac_duree_derogation') | int(3) }}"
+    actions:
+      # Sans valeurs publiées par BSB-LAN (HA vient de démarrer), on ne sait pas calculer l'écart : rien n'est écrit.
+      - condition: template
+        value_template: "{{ etat_brut | is_number and vigueur_brute | is_number and demande_brute | is_number }}"
+      - if:
+          - condition: template
+            value_template: "{{ delta | abs < 0.25 }}"
+        then:
+          - action: mqtt.publish
+            data:
+              topic: "{{ racine }}/set"
+              payload: "1"
+        else:
+          - action: mqtt.publish
+            data:
+              topic: "{{ racine }}/set"
+              payload: "1"
+          - delay: "00:00:02"
+          - action: mqtt.publish
+            data:
+              topic: "{{ racine }}.3/set"
+              payload: "{{ '%.1f' | format(delta | abs) }}"
+          # BSB-LAN relit chaque valeur écrite et la publie : sans confirmation (envoi raté sur le bus, constaté le
+          # 2026-11-11 : « set failed », collision probable avec l'afficheur), un nouvel essai.
+          - wait_template: "{{ states('sensor.pac_' ~ cc ~ '_derogation_ecart') | float(-1) == delta | abs }}"
+            timeout: "00:00:08"
+            continue_on_timeout: true
+          - if:
+              - condition: template
+                value_template: "{{ not wait.completed }}"
+            then:
+              - action: mqtt.publish
+                data:
+                  topic: "{{ racine }}.3/set"
+                  payload: "{{ '%.1f' | format(delta | abs) }}"
+              - delay: "00:00:02"
+          - action: mqtt.publish
+            data:
+              topic: "{{ racine }}.4/set"
+              payload: "{{ duree }}"
+          - delay: "00:00:02"
+          - action: mqtt.publish
+            data:
+              topic: "{{ racine }}/set"
+              payload: "{{ 2 if delta > 0 else 0 }}"
+      # État final confirmé par BSB-LAN (1 annulation, 2 plus chaud, 0 plus froid), sinon un nouvel essai.
+      - wait_template: >-
+          {{ states('sensor.pac_' ~ cc ~ '_derogation_etat') | int(-1) == (1 if delta | abs < 0.25 else (2 if delta > 0 else 0)) }}
+        timeout: "00:00:08"
+        continue_on_timeout: true
+      - if:
+          - condition: template
+            value_template: "{{ not wait.completed }}"
+        then:
+          - action: mqtt.publish
+            data:
+              topic: "{{ racine }}/set"
+              payload: "{{ 1 if delta | abs < 0.25 else (2 if delta > 0 else 0) }}"

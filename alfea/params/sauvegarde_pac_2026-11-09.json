@@ -1,0 +1,200 @@
+{
+ "date": "2026-11-09T20:45:19",
+ "source": "BSB-LAN /JQ, firmware alfea (lecture seule), RVS21.831F/127 211/127 OV 4067",
+ "restauration": "docs/claude/08_plan_migration.md §4 : réécrire chaque valeur (/S<ligne>=<valeur>) avec le firmware alfea-ecriture, puis relire",
+ "valeurs": {
+  "501": {
+   "nom": "Lundi",
+   "valeur": "00:00-01:00 06:00-08:10 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "502": {
+   "nom": "Mardi",
+   "valeur": "00:00-01:00 06:00-08:10 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "503": {
+   "nom": "Mercredi",
+   "valeur": "00:00-01:00 06:00-08:10 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "504": {
+   "nom": "Jeudi",
+   "valeur": "00:00-01:00 06:00-08:10 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "505": {
+   "nom": "Vendredi",
+   "valeur": "00:00-01:00 06:00-08:10 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "506": {
+   "nom": "Samedi",
+   "valeur": "00:00-02:00 06:30-17:30 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "507": {
+   "nom": "Dimanche",
+   "valeur": "00:00-02:00 06:30-17:30 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "521": {
+   "nom": "Lundi",
+   "valeur": "00:00-01:00 07:00-08:10 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "522": {
+   "nom": "Mardi",
+   "valeur": "00:00-01:00 07:00-08:10 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "523": {
+   "nom": "Mercredi",
+   "valeur": "00:00-01:00 07:00-08:10 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "524": {
+   "nom": "Jeudi",
+   "valeur": "00:00-01:00 07:00-08:10 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "525": {
+   "nom": "Vendredi",
+   "valeur": "00:00-01:00 07:00-08:10 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "526": {
+   "nom": "Samedi",
+   "valeur": "00:00-01:00 07:00-17:30 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "527": {
+   "nom": "Dimanche",
+   "valeur": "00:00-01:00 07:00-17:30 17:40-24:00",
+   "unite": "",
+   "erreur": 0
+  },
+  "561": {
+   "nom": "Lundi",
+   "valeur": "02:00-05:00 15:00-17:00 ##:##-##:##",
+   "unite": "",
+   "erreur": 0
+  },
+  "562": {
+   "nom": "Mardi",
+   "valeur": "02:00-05:00 15:00-17:00 ##:##-##:##",
+   "unite": "",
+   "erreur": 0
+  },
+  "563": {
+   "nom": "Mercredi",
+   "valeur": "02:00-05:00 15:00-17:00 ##:##-##:##",
+   "unite": "",
+   "erreur": 0
+  },
+  "564": {
+   "nom": "Jeudi",
+   "valeur": "02:00-05:00 15:00-17:00 ##:##-##:##",
+   "unite": "",
+   "erreur": 0
+  },
+  "565": {
+   "nom": "Vendredi",
+   "valeur": "02:00-05:00 15:00-17:00 ##:##-##:##",
+   "unite": "",
+   "erreur": 0
+  },
+  "566": {
+   "nom": "Samedi",
+   "valeur": "02:00-05:00 15:00-17:00 ##:##-##:##",
+   "unite": "",
+   "erreur": 0
+  },
+  "567": {
+   "nom": "Dimanche",
+   "valeur": "02:00-05:00 15:00-17:00 ##:##-##:##",
+   "unite": "",
+   "erreur": 0
+  },
+  "700": {
+   "nom": "Mode de fonctionnement",
+   "valeur": "1",
+   "unite": "",
+   "erreur": 0
+  },
+  "1000": {
+   "nom": "Mode de fonctionnement",
+   "valeur": "1",
+   "unite": "",
+   "erreur": 0
+  },
+  "1600": {
+   "nom": "Mode de fonctionnement",
+   "valeur": "1",
+   "unite": "",
+   "erreur": 0
+  },
+  "710": {
+   "nom": "Consigne de confort",
+   "valeur": "23.0",
+   "unite": "°C",
+   "erreur": 0
+  },
+  "712": {
+   "nom": "Consigne régime REDUIT",
+   "valeur": "18.0",
+   "unite": "°C",
+   "erreur": 0
+  },
+  "1010": {
+   "nom": "Consigne de confort",
+   "valeur": "22.5",
+   "unite": "°C",
+   "erreur": 0
+  },
+  "1012": {
+   "nom": "Consigne régime REDUIT",
+   "valeur": "18.0",
+   "unite": "°C",
+   "erreur": 0
+  },
+  "1610": {
+   "nom": "Consigne nominale de température ECS",
+   "valeur": "55.0",
+   "unite": "°C",
+   "erreur": 0
+  },
+  "5024": {
+   "nom": "Différentiel ECS",
+   "valeur": "5.0",
+   "unite": "°C",
+   "erreur": 0
+  },
+  "5030": {
+   "nom": "Limitation du temps de charge ECS",
+   "valeur": "90",
+   "unite": "min",
+   "erreur": 0
+  },
+  "1612": {
+   "nom": "Consigne réduite de température ECS",
+   "valeur": "40.0",
+   "unite": "°C",
+   "erreur": 0,
+   "releve": "2026-11-11, avant toute écriture (firmware alfea-complet)"
+  }
+ }
+}

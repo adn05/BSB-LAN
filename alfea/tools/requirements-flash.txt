@@ -1,0 +1,6 @@
+# Environnement de flash et de banc, côté hôte (docs/claude/README_docker.md §3).
+# L'accès aux ports USB depuis Docker Desktop sous Windows demande usbipd + WSL : le flash se fait donc hors Docker.
+#   python -m venv alfea/build/venv
+#   alfea/build/venv/Scripts/python -m pip install -r alfea/tools/requirements-flash.txt
+esptool==5.6.0
+pyserial==3.5

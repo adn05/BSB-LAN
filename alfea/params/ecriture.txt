@@ -1,0 +1,36 @@
+# Liste blanche d'écriture : seuls ces paramètres peuvent être modifiés, et seulement après avoir choisi
+# le mode d'écriture 1 dans /C. Chaque ajout se fait avec l'accord de l'utilisateur (règle de la mission).
+# Format : numéros ou plages « a-b » (sous-lignes comprises), commentaires « # ».
+
+# Programmes horaires : CC1 (chambre), CC2 (salon), ECS
+501-507
+521-527
+561-567
+
+# Modes de fonctionnement : plus aucun modifiable (2026-11-11, demande de l'utilisateur : thermostats HA en automatique
+# seul, préréglages appliqués par dérogation). 700, 1000 et 1600 restent lisibles.
+
+# Consignes : confort et réduit CC1 et CC2, nominale et réduite (Eco) ECS (1612 ajoutée le 2026-11-11, demande de l'utilisateur)
+710
+712
+1010
+1012
+1610
+1612
+
+# ECS : différentiel de relance et durée maximale de charge (demande de l'utilisateur, 2026-11-09)
+# Valeurs d'origine relevées sur la PAC : 5024 = 5,0 K, 5030 = 90 min
+5024
+5030
+
+# Boost ECS : forçage 5072 = 1 « Rechargement » (niveau d'accès 6 ; accord de l'utilisateur le 2026-11-11)
+5072
+
+# Dérogation temporaire CC1 / CC2 (objets cachés #829, niveau d'accès 6) : thermostats HA pilotés comme
+# l'A59 (doc 12 §6). Accord de l'utilisateur le 2026-11-11. Séquence : état 1, écart, durée, état 2 ou 0 ; annulation : état 1.
+701.0
+701.3
+701.4
+1001.0
+1001.3
+1001.4

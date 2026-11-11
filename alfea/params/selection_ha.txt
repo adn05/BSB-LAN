@@ -1,0 +1,71 @@
+# Sélection des paramètres compilés dans le firmware Alféa (liste réduite).
+# Une ligne = un numéro de paramètre BSB-LAN ; « a-b » = plage inclusive (sous-lignes .1, .2… comprises).
+# Les entrées génériques (famille 255) des lignes retenues sont conservées, les autres sont retirées.
+# Justification d'origine : docs/claude/08 et 08a (supprimés le 2026-11-11, voir l'historique git) ; évolutions : journal (docs/claude/10).
+
+# Date et heure du régulateur
+0-3
+# Identification (famille, variante, versions) : indispensable à la mise en service
+6220-6229
+
+# Programmes horaires : CC1 (chambre), CC2 (salon), ECS
+501-507
+521-527
+561-567
+# Programmes horaires cachés (niveau 6) vus dans le dump, à comparer à l'IHM
+10020-10033
+
+# Modes et consignes
+700
+710
+712
+1000
+1010
+1012
+# 1600 (mode ECS) retiré le 2026-11-11 ; 1612 consigne réduite (Eco) ECS ajoutée (demande de l'utilisateur)
+1610
+1612
+# ECS : différentiel de relance (K) et durée maximale de charge (min), demande de l'utilisateur (2026-11-09)
+5024
+5030
+# Boost ECS = forçage (0 « ... », 1 « Rechargement ») : charge immédiate à la consigne nominale (capture du 2026-11-11)
+5072
+
+# Températures
+# Retirés le 2026-11-11 (sans valeur sur la PAC, accord de l'utilisateur) : 8460 débit, 8743 départ CC1, 8832 ECS bas, 3110, 3116
+8700
+# 8744 / 8774 (consignes de départ résultantes) retirées le 2026-11-11 : sans valeur hors demande de chaleur
+8740-8742
+8770-8773
+8410-8413
+8830-8831
+
+# États, PAC, appoints, ECS
+8000
+8001
+8003
+8006
+8400
+8402
+8403
+8821
+# État pompe ECS, interrogé par l'afficheur de la PAC (picto ECS probable, 2026-11-11)
+8820
+
+# Énergie et compteurs
+3113-3113.4
+8450
+8451
+# Dérogation temporaire, CC1 (chambre) et CC2 (salon), objets cachés #829 (doc 12 §6.1) : état (0 plus froid,
+# 1 neutre, 2 plus chaud), écart (toujours positif), durée réglée en heures. Thermostats HA pilotés par dérogation.
+701.0
+701.3
+701.4
+1001.0
+1001.3
+1001.4
+
+# Défauts
+6700
+6701
+6708

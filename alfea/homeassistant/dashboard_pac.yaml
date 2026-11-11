@@ -1,0 +1,482 @@
+# Tableau de bord « PAC » pour Home Assistant : Alféa Extensa (RVS21) via BSB-LAN. Cartes natives uniquement (pas de HACS).
+# Vues en mise en forme « sections » (grille de 12 colonnes par section, titres par cartes heading).
+# Installation : Paramètres -> Tableaux de bord -> Ajouter un tableau de bord -> « Nouveau tableau de bord vierge »,
+# l'ouvrir, crayon (Modifier) -> menu ⋮ -> « Éditeur de configuration brute », coller ce fichier, Enregistrer.
+#
+# Identifiants d'entité déduits des noms publiés par la discovery (2026-11-09) : « sensor.bsb_lan_<nom> », corrigés par
+# l'utilisateur dans HA le 2026-11-10 (ECS : unité « °C » -> « degc », 5024 / 5030 créées avant les noms courts).
+# Une entité marquée « introuvable » dans une carte : la renommer ici d'après Paramètres -> Entités.
+# Entités créées par le firmware alfea (journal J66 à J76).
+
+title: PAC
+views:
+  - title: Vue d'ensemble
+    path: pac
+    icon: mdi:heat-pump
+    type: sections
+    max_columns: 4
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Thermostats
+            icon: mdi:thermostat
+          - type: thermostat
+            entity: climate.bsb_lan_thermostat_chambre
+            name: Chambre
+            features:
+              - type: climate-preset-modes
+                style: icons
+          - type: thermostat
+            entity: climate.bsb_lan_thermostat_salon
+            name: Salon
+            features:
+              - type: climate-preset-modes
+                style: icons
+          - type: tile
+            entity: sensor.pac_chambre_fin_de_derogation
+            name: Dérogation chambre jusqu'à
+            icon: mdi:timer-sand
+            visibility:
+              - condition: state
+                entity: sensor.pac_chambre_fin_de_derogation
+                state_not: unknown
+              - condition: state
+                entity: sensor.pac_chambre_fin_de_derogation
+                state_not: unavailable
+            grid_options:
+              columns: 12
+              rows: 1
+          - type: tile
+            entity: sensor.pac_salon_fin_de_derogation
+            name: Dérogation salon jusqu'à
+            icon: mdi:timer-sand
+            visibility:
+              - condition: state
+                entity: sensor.pac_salon_fin_de_derogation
+                state_not: unknown
+              - condition: state
+                entity: sensor.pac_salon_fin_de_derogation
+                state_not: unavailable
+            grid_options:
+              columns: 12
+              rows: 1
+        column_span: 2
+      - type: grid
+        cards:
+          - type: heading
+            heading: Eau chaude sanitaire
+            icon: mdi:water-boiler
+          - type: tile
+            entity: sensor.bsb_lan_ecs_temperature_mesuree_ecs_en_haut_b3
+            name: Ballon
+            icon: mdi:water-thermometer
+          - type: tile
+            entity: sensor.bsb_lan_ecs_consigne_actuelle_de_temperature_ecs
+            name: Consigne en vigueur
+            icon: mdi:thermometer-check
+          - type: tile
+            entity: binary_sensor.bsb_lan_ecs_etat_pompe_ecs
+            name: Charge ECS
+            icon: mdi:pump
+          - type: tile
+            entity: binary_sensor.bsb_lan_ecs_etat_resistance_electrique_ecs
+            name: Résistance ECS
+            icon: mdi:heating-coil
+          - type: tile
+            grid_options:
+              columns: 12
+            entity: select.bsb_lan_ecs_forcage_ecs
+            name: Boost ECS
+            icon: mdi:water-boiler-alert
+            vertical: false
+            tap_action:
+              action: perform-action
+              perform_action: select.select_option
+              target:
+                entity_id: select.bsb_lan_ecs_forcage_ecs
+              data:
+                option: 1 - Rechargement
+              confirmation:
+                text: >-
+                  Lancer une chauffe immédiate du ballon jusqu'à la consigne
+                  nominale ?
+            features_position: bottom
+          - type: heading
+            heading: Pompe à chaleur
+            icon: mdi:heat-pump-outline
+          - type: tile
+            entity: sensor.bsb_lan_temperature_exterieure
+            name: Extérieur
+            icon: mdi:sun-thermometer-outline
+          - type: tile
+            entity: binary_sensor.bsb_lan_pac_etat_compresseur_1
+            name: Compresseur
+            icon: mdi:heat-pump
+          - type: tile
+            entity: sensor.bsb_lan_pac_modulation_compresseur
+            name: Modulation
+            icon: mdi:speedometer
+          - type: tile
+            entity: sensor.bsb_lan_pac_consigne_pompe_a_chaleur
+            name: Consigne
+            icon: mdi:thermometer-check
+          - type: tile
+            entity: sensor.bsb_lan_pac_temperature_de_depart_pompe_a_chaleur
+            name: Départ
+            icon: mdi:thermometer-chevron-up
+          - type: tile
+            entity: sensor.bsb_lan_pac_temperature_de_retour_pompe_a_chaleur
+            name: Retour
+            icon: mdi:thermometer-chevron-down
+          - type: tile
+            entity: binary_sensor.bsb_lan_pac_etat_resistance_electrique_1_depart
+            name: Appoint 1
+            icon: mdi:heating-coil
+          - type: tile
+            entity: binary_sensor.bsb_lan_pac_etat_resistance_electrique_2_depart
+            name: Appoint 2
+            icon: mdi:heating-coil
+      - type: grid
+        cards:
+          - type: heading
+            heading: États
+            icon: mdi:list-status
+          - type: entities
+            state_color: true
+            entities:
+              - entity: sensor.bsb_lan_pac_etat_pompe_a_chaleur
+                name: PAC
+              - entity: sensor.bsb_lan_chambre_etat_du_circuit_de_chauffage_1
+                name: Circuit chambre
+              - entity: sensor.bsb_lan_salon_etat_du_circuit_de_chauffage_2
+                name: Circuit salon
+              - entity: sensor.bsb_lan_ecs_etat_de_l_ecs
+                name: Eau chaude
+        column_span: 1
+      - type: grid
+        cards:
+          - type: heading
+            heading: Compteurs
+            icon: mdi:counter
+          - type: markdown
+            content: Estimations du régulateur, au kWh près.
+          - type: tile
+            entity: sensor.bsb_lan_energie_energie_utilisee_totale_compteur_ihm
+            name: Énergie totale
+            icon: mdi:lightning-bolt
+          - type: tile
+            entity: sensor.bsb_lan_energie_energie_utilisee_chauffage_compteur_ihm
+            name: Chauffage
+            icon: mdi:radiator
+          - type: tile
+            entity: sensor.bsb_lan_energie_energie_utilisee_ecs_compteur_ihm
+            name: Eau chaude
+            icon: mdi:water-boiler
+          - type: tile
+            entity: sensor.bsb_lan_pac_heures_de_fonctionnement_compresseur_1
+            name: Heures compresseur
+            icon: mdi:timer-outline
+          - type: tile
+            entity: sensor.bsb_lan_pac_compteur_de_demarrages_compresseur_1
+            name: Démarrages
+            icon: mdi:restart
+      - type: grid
+        cards:
+          - type: heading
+            heading: Défauts
+            heading_style: title
+            icon: mdi:alert-circle-outline
+          - type: entities
+            entities:
+              - entity: sensor.bsb_lan_defaut_erreur
+                name: Erreur
+              - entity: sensor.bsb_lan_defaut_erreur_2
+                name: Erreur 2
+              - entity: sensor.bsb_lan_defaut_message_erreur_pac
+                name: Message PAC
+    dense_section_placement: false
+    cards: []
+  - title: Courbes
+    path: courbes
+    icon: mdi:chart-line
+    type: sections
+    max_columns: 4
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Chambre
+            heading_style: title
+            icon: mdi:bed
+          - type: statistics-graph
+            grid_options:
+              columns: full
+            entities:
+              - entity: sensor.bsb_lan_chambre_temperature_ambiante_reelle_cc1
+                name: Mesurée
+              - entity: sensor.bsb_lan_chambre_consigne_temperature_ambiante_actuelle_cc1
+                name: Consigne
+              - entity: sensor.bsb_lan_chambre_temperature_modele_d_ambiance_cc1
+                name: Modèle
+            days_to_show: 30
+            period: 5minute
+            chart_type: line
+            stat_types:
+              - mean
+            hide_legend: false
+            expand_legend: false
+            energy_date_selection: true
+            collection_key: energy_pac
+        column_span: 2
+      - type: grid
+        cards:
+          - type: heading
+            heading: Salon
+            heading_style: title
+            icon: mdi:sofa
+          - type: statistics-graph
+            grid_options:
+              columns: full
+            entities:
+              - entity: sensor.bsb_lan_salon_temperature_ambiante_actuelle_cc_2
+                name: Mesurée
+              - entity: sensor.bsb_lan_salon_consigne_actuelle_de_temperature_ambiante_cc2
+                name: Consigne
+              - entity: sensor.bsb_lan_salon_temperature_de_modele_d_ambiance_cc2
+                name: Modèle
+            days_to_show: 30
+            period: 5minute
+            chart_type: line
+            stat_types:
+              - mean
+            hide_legend: false
+            expand_legend: false
+            energy_date_selection: true
+            collection_key: energy_pac
+        column_span: 2
+      - type: grid
+        cards:
+          - type: heading
+            heading: Eau chaude
+            heading_style: title
+            icon: mdi:water-boiler
+          - type: statistics-graph
+            grid_options:
+              columns: full
+            entities:
+              - entity: sensor.bsb_lan_ecs_temperature_mesuree_ecs_en_haut_b3
+                name: Ballon
+              - entity: sensor.bsb_lan_ecs_consigne_actuelle_de_temperature_ecs
+                name: Consigne
+            days_to_show: 30
+            period: 5minute
+            chart_type: line
+            stat_types:
+              - mean
+            hide_legend: false
+            expand_legend: false
+            energy_date_selection: true
+            collection_key: energy_pac
+        column_span: 2
+      - type: grid
+        column_span: 2
+        cards:
+          - type: heading
+            heading: Consommation
+            heading_style: title
+            icon: mdi:chart-bar
+          - type: statistics-graph
+            grid_options:
+              columns: full
+            entities:
+              - entity: sensor.bsb_lan_energie_energie_utilisee_chauffage_compteur_ihm
+                name: Chauffage
+              - entity: sensor.bsb_lan_energie_energie_utilisee_ecs_compteur_ihm
+                name: Eau chaude
+            days_to_show: 30
+            period: hour
+            chart_type: bar-stack
+            stat_types:
+              - change
+            hide_legend: false
+            expand_legend: false
+            energy_date_selection: true
+            collection_key: energy_pac
+      - type: grid
+        cards:
+          - type: heading
+            heading: Production
+            heading_style: title
+            icon: mdi:heat-pump-outline
+          - type: statistics-graph
+            grid_options:
+              columns: full
+            entities:
+              - entity: sensor.bsb_lan_pac_temperature_de_depart_pompe_a_chaleur
+                name: Départ PAC
+              - entity: sensor.bsb_lan_pac_temperature_de_retour_pompe_a_chaleur
+                name: Retour PAC
+              - entity: sensor.bsb_lan_pac_consigne_pompe_a_chaleur
+                name: Consigne PAC
+              - entity: sensor.bsb_lan_temperature_exterieure
+                name: Extérieur
+            days_to_show: 30
+            period: 5minute
+            chart_type: line
+            stat_types:
+              - mean
+            hide_legend: false
+            expand_legend: false
+            energy_date_selection: true
+            collection_key: energy_pac
+        column_span: 2
+      - type: grid
+        cards:
+          - type: heading
+            heading: Fonctionnement (24 h)
+            heading_style: title
+            icon: mdi:toggle-switch-outline
+          - type: history-graph
+            hours_to_show: 24
+            grid_options:
+              columns: full
+            entities:
+              - entity: binary_sensor.bsb_lan_pac_etat_compresseur_1
+                name: Compresseur
+              - entity: binary_sensor.bsb_lan_pac_etat_resistance_electrique_1_depart
+                name: Appoint 1
+              - entity: binary_sensor.bsb_lan_pac_etat_resistance_electrique_2_depart
+                name: Appoint 2
+              - entity: binary_sensor.bsb_lan_ecs_etat_pompe_ecs
+                name: Charge ECS
+              - entity: binary_sensor.bsb_lan_ecs_etat_resistance_electrique_ecs
+                name: Résistance ECS
+        column_span: 2
+    cards: []
+    footer:
+      card:
+        type: energy-date-selection
+        vertical_opening_direction: up
+        opening_direction: auto
+        collection_key: energy_pac
+        disable_compare: true
+  - title: Réglages
+    path: reglages
+    icon: mdi:tune
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        column_span: 4
+        cards:
+          - type: markdown
+            grid_options:
+              columns: full
+            content: >-
+              Chaque modification est **écrite dans la mémoire permanente du
+              régulateur** : changer à la main de temps en temps, pas depuis une
+              automatisation fréquente.
+      - type: grid
+        cards:
+          - type: heading
+            heading: Chambre
+            icon: mdi:bed
+          - type: entities
+            entities:
+              - entity: text.bsb_lan_chambre_consigne_de_confort_degc
+                name: Consigne confort (°C)
+              - entity: text.bsb_lan_chambre_consigne_regime_reduit_degc
+                name: Consigne éco (°C)
+              - type: section
+                label: Dérogation (thermostat)
+              - entity: sensor.pac_cc1_derogation_ecart
+                name: Écart
+              - entity: sensor.pac_chambre_fin_de_derogation
+                name: Fin de dérogation
+      - type: grid
+        cards:
+          - type: heading
+            heading: Salon
+            icon: mdi:sofa
+          - type: entities
+            entities:
+              - entity: text.bsb_lan_salon_consigne_de_confort_degc
+                name: Consigne confort (°C)
+              - entity: text.bsb_lan_salon_consigne_regime_reduit_degc
+                name: Consigne éco (°C)
+              - type: section
+                label: Dérogation (thermostat)
+              - entity: sensor.pac_cc2_derogation_ecart
+                name: Écart
+              - entity: sensor.pac_salon_fin_de_derogation
+                name: Fin de dérogation
+      - type: grid
+        cards:
+          - type: heading
+            heading: Eau chaude
+            icon: mdi:water-boiler
+          - type: entities
+            entities:
+              - entity: select.bsb_lan_ecs_forcage_ecs
+                name: Boost ECS (« Rechargement » = chauffe immédiate)
+              - entity: text.bsb_lan_ecs_consigne_nominale_de_temperature_ecs_degc
+                name: Consigne (°C)
+              - entity: text.bsb_lan_ecs_consigne_reduite_de_temperature_ecs_degc
+                name: Consigne réduite (°C)
+              - entity: text.bsb_lan_00_22_accumulateur_eau_potable_5024_differentiel_ecs_degc
+                name: Différentiel de relance (K)
+              - entity: text.bsb_lan_00_22_accumulateur_eau_potable_5030_limitation_du_temps_de_charge_ecs_min
+                name: Durée maximale de charge (min)
+      - type: grid
+        cards:
+          - type: heading
+            heading: Thermostats
+            icon: mdi:timer-outline
+          - type: entities
+            entities:
+              - entity: input_number.pac_duree_derogation
+                name: Durée d'une dérogation lancée depuis HA
+      - type: grid
+        cards:
+          - type: heading
+            heading: Programmes horaires
+            icon: mdi:calendar-clock
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - type: section
+                label: Salon
+              - entity: text.bsb_lan_prog_salon_lundi
+              - entity: text.bsb_lan_prog_salon_mardi
+              - entity: text.bsb_lan_prog_salon_mercredi
+              - entity: text.bsb_lan_prog_salon_jeudi
+              - entity: text.bsb_lan_prog_salon_vendredi
+              - entity: text.bsb_lan_prog_salon_samedi
+              - entity: text.bsb_lan_prog_salon_dimanche
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - type: section
+                label: Chambre
+              - entity: text.bsb_lan_prog_chambre_lundi
+              - entity: text.bsb_lan_prog_chambre_mardi
+              - entity: text.bsb_lan_prog_chambre_mercredi
+              - entity: text.bsb_lan_prog_chambre_jeudi
+              - entity: text.bsb_lan_prog_chambre_vendredi
+              - entity: text.bsb_lan_prog_chambre_samedi
+              - entity: text.bsb_lan_prog_chambre_dimanche
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - type: section
+                label: Eau chaude
+              - entity: text.bsb_lan_prog_ecs_lundi
+              - entity: text.bsb_lan_prog_ecs_mardi
+              - entity: text.bsb_lan_prog_ecs_mercredi
+              - entity: text.bsb_lan_prog_ecs_jeudi
+              - entity: text.bsb_lan_prog_ecs_vendredi
+              - entity: text.bsb_lan_prog_ecs_samedi
+              - entity: text.bsb_lan_prog_ecs_dimanche
+        column_span: 3
+    cards: []

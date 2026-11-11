@@ -194,6 +194,9 @@ bool mqtt_send_discovery(bool create=true) {
     if (bus->getBusType() != BUS_PPS && line >= 15000 && line <= 16000) continue;
     if (line == 19999) continue;    // skip entry for unknown parameter
     if (line > 20999) break;
+#ifdef MQTT_DISCOVERY_SKIP
+    if (MQTT_DISCOVERY_SKIP(line)) continue;    // lines excluded by the configuration (e.g. unused virtual parameters)
+#endif
     if (LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS) {
       boolean isLogged = false;
       for (int i=0;i<numLogValues;i++) {
@@ -277,6 +280,12 @@ bool mqtt_send_discovery(bool create=true) {
             if (decodedTelegram.data_type == DT_VALS && (decodedTelegram.unit_enum != UNIT_HOUR) && (decodedTelegram.unit_enum != UNIT_KWH)) {    // do not add state_class for potentially cumulative parameters 
               appendStringBuffer(&sb_payload, "\"state_class\":\"measurement\",");
             }
+#ifdef MQTT_DISCOVERY_ENERGY_TOTAL
+            // ALFEA: kWh counters declared as cumulative, so that Home Assistant accepts them in its Energy dashboard
+            if (decodedTelegram.data_type == DT_VALS && decodedTelegram.unit_enum == UNIT_KWH) {
+              appendStringBuffer(&sb_payload, "\"state_class\":\"total_increasing\",");
+            }
+#endif
             sensor_type = MQTT_SENSOR;
           }
         } else {
@@ -315,7 +324,18 @@ bool mqtt_send_discovery(bool create=true) {
             sensor_type = MQTT_TEXT;
           }
         }
+#ifdef MQTT_DISCOVERY_SHORT_NAMES
+        {                                           // short names: "<prefix> - <description>" (prefix from the configuration)
+          const char *prefix = alfea_prefixe(line);
+          if (prefix[0]) {
+            appendStringBuffer(&sb_payload, "\"name\":\"%s - %s", prefix, decodedTelegram.prognrdescaddr);
+          } else {
+            appendStringBuffer(&sb_payload, "\"name\":\"%s", decodedTelegram.prognrdescaddr);
+          }
+        }
+#else
         appendStringBuffer(&sb_payload, "\"name\":\"%02d-%02d %s - %g - %s", bus->getBusDest(), decodedTelegram.cat, decodedTelegram.catdescaddr, line, decodedTelegram.prognrdescaddr);
+#endif
         if (sensor_type == MQTT_TEXT && (decodedTelegram.unit_enum != UNIT_NONE) && decodedTelegram.unit_mqtt[0]) {
           appendStringBuffer(&sb_payload, " (%s)", decodedTelegram.unit_mqtt);
         }
@@ -329,6 +349,20 @@ bool mqtt_send_discovery(bool create=true) {
         }
         if (bus->getBusDest() == 0 || line < 15000) {     // do not send (again) parameters > 15000 when using non-zero device ID
           if (MQTTPubSubClient->connected()) {
+#ifdef MQTT_DISCOVERY_CLEAN_TYPES
+            // The component (sensor, select, text...) depends on the write mode: remove the retained configs of the
+            // other components for this unique_id, otherwise Home Assistant keeps stale duplicates after a mode change.
+            if (create) {
+              static const char* const components[] = {"sensor/", "binary_sensor/", "switch/", "select/", "text/"};
+              const char* rest = strstr(MQTTTopic, "BSB-LAN/");
+              char other_topic[sizeof(MQTTTopic)];
+              for (uint8_t c = 0; rest && c < sizeof(components) / sizeof(components[0]); c++) {
+                if (strncmp(MQTTTopic + strlen("homeassistant/"), components[c], strlen(components[c])) == 0) continue;
+                snprintf(other_topic, sizeof(other_topic), "homeassistant/%s%s", components[c], rest);
+                MQTTPubSubClient->publish(other_topic, "", true);
+              }
+            }
+#endif
             MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, 1, true);
           } else {
             printlnToDebug("No connection to MQTT broker, aborting...");
