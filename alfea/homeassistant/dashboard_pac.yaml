@@ -51,11 +51,23 @@ views:
           - type: tile
             entity: binary_sensor.bsb_lan_ecs_etat_resistance_electrique_ecs
             name: Résistance ECS
+          # Boost : charge unique jusqu'à la consigne nominale, fin automatique (doc 12 §7). Appui = lancer.
           - type: tile
             entity: select.bsb_lan_ecs_forcage_ecs
             name: Boost ECS
-            features:
-              - type: select-options
+            icon: mdi:water-boiler-alert
+            vertical: true
+            grid_options:
+              columns: 12
+            tap_action:
+              action: perform-action
+              perform_action: select.select_option
+              target:
+                entity_id: select.bsb_lan_ecs_forcage_ecs
+              data:
+                option: Rechargement
+              confirmation:
+                text: Lancer une chauffe immédiate du ballon jusqu'à la consigne nominale ?
           - type: heading
             heading: Pompe à chaleur
             icon: mdi:heat-pump-outline
