@@ -43,6 +43,6 @@
 
 - PAC raccordée depuis le 2026-11-09, carte rev A (SuperMini enfiché retourné, erratum J4/J5 : journal J51).
 - Thermostats, dérogations et boost ECS validés sur la PAC depuis HA (journal J77).
-- Essai d'endurance de 48 h en cours (doc 11 §7).
+- Essai d'endurance réussi : 100 h sans redémarrage (doc 11 §7.1).
 - Questions ouvertes : couverture WiFi (−75 dBm, cible ≥ −70 dBm) ; plantage observé à la reconnexion WiFi
   (`NetworkEvents::postEvent`, non corrigé).
