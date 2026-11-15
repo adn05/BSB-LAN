@@ -80,7 +80,7 @@ Débrocher JJ1 : la PAC revient exactement dans son état d'origine (rien n'a é
 2. Si possible, couverture WiFi améliorée : RSSI ≥ −70 dBm, contre −77 à −83 dBm relevés à la mise en service.
 3. Essai lancé le 2026-11-11 à 14:42 en usage normal (choix de l'utilisateur) : écritures autorisées, console USB gardée pour obtenir la trace d'un éventuel plantage.
 
-**Suivi**, sur le PC de développement allumé pendant 48 h, depuis la racine du dépôt :
+**Suivi**, sur le PC de développement allumé pendant 48 h, par `alfea/tools/suivi_endurance.py` (retiré après le bilan, disponible dans l'historique : commit `5deb550b`) :
 
     python alfea/tools/suivi_endurance.py            # Ctrl+C à la fin
     python alfea/tools/suivi_endurance.py --resume   # bilan
@@ -101,4 +101,19 @@ L'outil est passif vis-à-vis de la PAC : aucune trame supplémentaire sur le bu
 | Valeurs dans HA | continues, plausibles (comparaison ponctuelle avec l'IHM) |
 
 En cas de redémarrage, rebrancher la console USB pour obtenir la trace (`python alfea/tools/flasher.py console`), puis la décoder (08a §6.1).
+
+### 7.1 Bilan (2026-11-15) : essai réussi
+
+Du 2026-11-11 15:47 au 2026-11-15 19:46, soit **100 h sans redémarrage** (uptime continu depuis le passage sur chargeur USB du 2026-11-11 15:44, exclu à la demande de l'utilisateur) [CONSTATÉ]. Console USB débranchée le 2026-11-11 à 15:42 ; suivi PC interrompu du 2026-11-11 22:17 au 2026-11-13 16:14 (PC arrêté), puis **48 h suivies sans trou** jusqu'au 2026-11-15 19:46.
+
+| Critère | Résultat |
+|---|---|
+| Redémarrages | 0 (uptime de la carte continu sur 100 h, y compris pendant l'interruption du suivi) |
+| Relevés `/JI` | 711, aucun sans réponse |
+| Mémoire libre | début 166 820 o, fin 167 080 o, pas de baisse continue. Baisses passagères d'environ 20 Ko (min 145 576 o) le 2026-11-14 entre 20:25 et 20:50, récupérées à chaque fois : consultation de l'interface web par l'utilisateur (confirmé) |
+| Disponibilité MQTT | 160 391 messages, 0 « offline » (les « online » correspondent aux démarrages du suivi) ; non surveillée pendant l'interruption du suivi |
+| Erreurs PAC | 6700, 6701, 6708 : aucune valeur non nulle |
+| Usage pendant l'essai | normal, écritures autorisées (dérogations, boost ECS) |
+
+Reste ouvert : le plantage à la reconnexion WiFi (`NetworkEvents::postEvent`) ne s'est pas reproduit, aucune reconnexion n'ayant eu lieu ; il n'est donc ni corrigé ni écarté.
 
